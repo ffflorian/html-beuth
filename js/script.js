@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {		// warte darauf, das
 //============== Hauptfunktionen ===============//
 
 function initialize() {
-	//window.setTimeout(slideshow, 1000);						// Slideshow mit einer Verzoegerung von 1000ms starten.
+	window.setTimeout(slideshow, 1000);						// Slideshow mit einer Verzoegerung von 1000ms starten.
 	var today = new Date();									// neues Datum erzeugen
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
@@ -79,7 +79,7 @@ function save(entry) {
 	for (var i = 0; i < td.length; i++) {												// fuer alle td-Elemente
 		if (td[i].className === 'edit') {												// wenn die jeweilige Klasse bearbeitbar ist
 			td[i].style.display = 'none';												// dann verstecke sie
-		} else if (td[i].className === 'editable') {										// wenn die jeweilige Klasse nicht bearbeitbar ist
+		} else if (td[i].className === 'editable') {									// wenn die jeweilige Klasse nicht bearbeitbar ist
 			td[i].style.display = 'table-cell';											// dann zeige sie an
 		}
 	}
@@ -97,7 +97,7 @@ function deleteEntry(entry) {
 
 function slideshow() {
 	var images = document.getElementById('slideshow').getElementsByTagName('img');		// spreche alle Bilder im DIV 'slideshow' an
-	if (typeof(counter) != "number") {													// wenn counter noch nicht gesetzt
+	if (typeof(counter) != "number") {													// wenn Counter noch nicht gesetzt
 		counter = 0;
 	}
 	counter++;																			// Index auf naechstes Bild setzen
