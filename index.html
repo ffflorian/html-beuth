@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Wetter</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<meta name="author" content="Maurice Stolte, Florian Keller" />
+		<meta name="description" content="Eine kleine Wetter-Seite" />
+		<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<header><br>
+			<br>
+			<h1>Wetter</h1>
+		</header><br>
+		<div class="linkespalte">
+			<img src="img/karte.jpg" class="kleinesbild" /><br>
+			<br>
+			<form>
+				<i class="fa fa-bars"></i> <input type="text" placeholder="Nach Ort suchen" /> <i class="fa fa-search"></i>
+			</form><br>
+			<br>
+			<footer>
+				<hr />
+				Multimedia-Engineering I<br>
+				Beuth-Hochschule f&uuml;r Technik<br>
+				WS 14/15<br>
+				Maurice Stolte, Florian Keller
+			</footer>
+		</div>
+		<div class="content">
+			<table>
+				<thead>
+					<tr>
+						<th>Datum</th>
+						<th>Temperatur</th>
+						<th>Ort</th>
+						<th>Bild</th>
+						<th>Kommentar</th>
+					</tr>
+				</thead>
+				<tr>
+					<td>
+						01.10.2014
+					</td>
+					<td>
+						19 &deg;C
+					</td>
+					<td>
+						Berlin
+					</td>
+					<td>
+						<img src="img/mitte20141001.jpg" class="wetterbild" alt="Wetterbild am 01.10.2014" />
+					</td>
+					<td>
+						Tolles Wetter :-)
+					</td>
+					<td>
+						<i class="fa fa-pencil-square fa-2x"></i> <i class="fa fa-times-circle fa-2x delete"></i>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						08.10.2014
+					</td>
+					<td>
+						14 &deg;C
+					</td>
+					<td>
+						Berlin
+					</td>
+					<td>
+						<img src="img/mitte20141008.jpg" class="wetterbild" alt="Wetterbild am 08.10.2014" />
+					</td>
+					<td>
+						Es wird langsam kalt
+					</td>
+					<td>
+						<i class="fa fa-pencil-square fa-2x"></i> <i class="fa fa-times-circle fa-2x delete"></i>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						15.10.2014
+					</td>
+					<td>
+						14 &deg;C
+					</td>
+					<td>
+						Berlin
+					</td>
+					<td>
+						<img src="img/mitte20141015.jpg" class="wetterbild" alt="Wetterbild am 15.10.2014" />
+					</td>
+					<td>
+						Das Wetter h&auml;lt sich noch
+					</td>
+					<td>
+						<i class="fa fa-pencil-square fa-2x"></i> <i class="fa fa-times-circle fa-2x delete"></i>
+					</td>
+				</tr>
+			</table><br>
+			<br>
+			<form>
+				Neue Daten eingeben:<br>
+				<table style="padding-bottom: 10px">
+					<thead>
+						<!--<tr>
+							<th>Datum</th>
+							<th>Temperatur</th>
+							<th>Ort</th>
+							<th>Bild</th>
+							<th>Kommentar</th>
+						</tr>-->
+					</thead>
+					<tr>
+						<td>
+							<input type="date" placeholder="Datum" />
+						</td>
+						<td>
+							<input type="number" max="60" min="-72" placeholder="Temp." /> &deg;C
+						</td>
+						<td>
+							<select name="Orte">
+								<option value="" disabled selected>Stadt</option>
+								<option value="berlin">Berlin</option>
+								<option value="koeln">K&ouml;ln</option>
+								<option value="frankfurt">Frankfurt</option>
+								<option value="hamburg">Hamburg</option>
+								<option value="muenchen">M&uuml;nchen</option>
+							</select>
+						</td>
+						<td>
+							<button>Bild hochladen</button>
+						</td>
+						<td>
+							<input type="text" placeholder="Kommentar" />
+						</td>
+						<td>
+							<i class="fa fa-check-square fa-2x speichern"></i>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>
