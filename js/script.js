@@ -16,16 +16,16 @@ document.addEventListener('DOMContentLoaded', function() {		// warte darauf, das
 		}
 	}, false);
 
-	var trs = document.getElementsByTagName('tr');
+	/*var trs = document.getElementsByTagName('tr');
 	for (var x=0; x<trs.length; x++) {
 		var tds = trs[x].getElementsByTagName('td');
 		trs[x].addEventListener('mouseover', function() {
-			tds[tds.length-2].style.visibility = 'visible';
+			console.log(tds[11]);
 		}, false);
 		trs[x].addEventListener('mouseout', function() {
 			tds[tds.length-2].style.visibility = 'hidden';
 		}, false);
-	}
+	}*/
 
 	document.getElementById('newcityformlist').addEventListener('change', function(event) {
 		checkSelect('newcityform');
