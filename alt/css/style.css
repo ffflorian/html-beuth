@@ -1,0 +1,90 @@
+body {
+	max-height: auto;
+	font-family: Arial;
+	background-color: #ddd;
+	/*background-color: #4586C3;*/
+}
+
+table, td {
+	background-color: #FFE9AD;
+	border: none;
+	text-align: center;
+}
+
+td {
+	width: 100px;
+}
+
+button {
+	border: 5px solid #fff;
+    border-radius: 4px;
+	background-color: #fff;
+}
+
+.speichern {
+	color: #7CFF4E;
+}
+
+input {
+	border-radius: 3px;
+	border: 1px solid #ccc;
+}
+
+table {
+	width: 100%;
+    border-radius: 4px;
+}
+
+
+.delete {
+	color: #FF584A;
+}
+
+h1, th {
+	color: #1A222F;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+footer {
+	position: absolute;
+	bottom: 10px;
+	font-size: 10pt;
+}
+
+.content {
+	float: right;
+	width: 75%;
+}
+header {
+	text-align: left;
+	background: url('../img/header.jpg') no-repeat;
+	height: 150px;
+}
+
+header h1 {
+	padding-left: 300px;
+}
+
+.kleinesbild {
+	width: 300px;
+}
+
+.linkespalte {
+	float: left;
+	width: 25%;
+}
+
+.wetterbild {
+	width: 30%;
+}
+
+.wetterbild:hover {
+	width: 100%;
+}

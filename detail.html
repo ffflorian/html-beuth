@@ -5,34 +5,41 @@
 		<title>Wetter</title>
 		<meta name="author" content="Maurice Stolte, Florian Keller" />
 		<meta name="description" content="Eine kleine Wetter-Seite" />
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/style2.css" />
 		<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 		<script src="js/script.js" type="text/javascript"></script>
 	</head>
-	<body>
+	<body onload="initialize()">
 		<div id="content">
 			<header>
 				<h1>Wetter</h1>
 				<div class="city"><span>Berlin</span>
-					<form action="form_response.php" name="cityform" id="cityform" method="post">
+					<form action="form_response.php" name="cityform" method="post">
 						<input type="text" class="searchbox" name="city" placeholder="Stadt suchen..." /><input type="submit" class="invisible" /> <a href="#" onclick="document.cityform.submit()"><i class="fa fa-search"></i></a>
 					</form>
 				</div>
 			</header>
-			<div id="menu">
+			<div class="menu">
 				<strong>Neue Daten eingeben</strong><br />
-				<form action="form_response.php" method="post" id="newcityform">
+				<form action="form_response.php" method="post" onsubmit="return checkForm();">
 					<input type="date" id="formdate" name="date" required /><br />
 					<input type="number" name="temp" max="100" min="-72" placeholder="Temp." required /> &deg;C<br />
-					<select name="Orte" id="newcityformlist" required>
+					<select name="Orte" id="formcities" required onchange="checkSelect();">
+						<option value="" disabled selected>Stadt</option>
+						<option value="berlin">Berlin</option>
+						<option value="koeln">K&ouml;ln</option>
+						<option value="frankfurt">Frankfurt</option>
+						<option value="hamburg">Hamburg</option>
+						<option value="muenchen">M&uuml;nchen</option>
+						<option value="neuestadt">Neue Stadt...</option>
 					</select><br />
 					<button id="formupload">Bild hochladen <i class="fa fa-file-image-o"></i></button><br />
 					<input type="text" name="comment" placeholder="Kommentar" style="height: 30px" required /><br />
-					<input type="email" name="email" id="formemail" placeholder="name@beuth-hochschule.de" style="height: 30px" required /><br />
-					<button class="submitForm">Abspeichern <i class="fa fa-check save"></i></button>
+					<input type="email" name="email" id="formemail" placeholder="name@adresse.de" style="height: 30px" required /><br />
+					<button class="save">Abspeichern <i class="fa fa-check"></i></button>
 				</form>
 			</div>
-			<div id="table">
+			<div class="table">
 				<table>
 					<thead>
 						<tr>
@@ -50,32 +57,46 @@
 						<td class="edit"><input type="number" value="19" min="-72" max="100" /> &deg;C</td>
 						<td class="editable">Berlin</td>
 						<td class="edit">
-							<select name="Orte" id="entry1list" onchange="checkSelect('entry1');">
+							<select name="Orte">
+								<option value="" disabled>Stadt</option>
+								<option value="berlin" selected>Berlin</option>
+								<option value="koeln">K&ouml;ln</option>
+								<option value="frankfurt">Frankfurt</option>
+								<option value="hamburg">Hamburg</option>
+								<option value="muenchen">M&uuml;nchen</option>
+								<option value="">Neue Stadt...</option>
 							</select>
 						</td>
-						<td class="editable"><a href="#" onclick="showZoom('img/mitte20141001.jpg');"><img src="img/mitte20141001.jpg" class="wetterbild" alt="Wetterbild am 01.10.2014" /></a></td>
-						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
+						<td class="editable"><img src="img/mitte20141001.jpg" class="wetterbild" alt="Wetterbild am 01.10.2014" /></td>
+						<td class="edit"><i class="fa fa-upload"></i></td>
 						<td class="editable">Tolles Wetter!</td>
 						<td class="edit"><input type="text" value="Tolles Wetter!" /></td>
-						<td class="editable" name="editme" style="visibility: hidden"><a href="#" onclick="makeEditable('entry1');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry1');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry1');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry1');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="editable"><a href="#" onclick="makeEditable('entry1');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry1');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" onclick="makeFix('entry1');"><i class="fa fa-check"></i></a><br><a href="#" onclick="deleteEntry('entry1');"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry2">
 						<td class="editable">08.10.2014</td>
-						<td class="edit"><input type="date" name="date" value="2014-10-08" /></td>
+						<td class="edit"><input type="date" value="2014-10-08" /></td>
 						<td class="editable">14 &deg;C</td>
-						<td class="edit"><input type="number" name="degrees" value="14" min="-72" max="100" /> &deg;C</td>
+						<td class="edit"><input type="number" value="14" min="-72" max="100" /> &deg;C</td>
 						<td class="editable">Berlin</td>
 						<td class="edit">
-							<select name="Orte" id="entry2list" onchange="checkSelect('entry2');">
+							<select name="Orte">
+								<option value="" disabled>Stadt</option>
+								<option value="berlin" selected>Berlin</option>
+								<option value="koeln">K&ouml;ln</option>
+								<option value="frankfurt">Frankfurt</option>
+								<option value="hamburg">Hamburg</option>
+								<option value="muenchen">M&uuml;nchen</option>
+								<option value="">Neue Stadt...</option>
 							</select>
 						</td>
-						<td class="editable"><a href="#" onclick="showZoom('img/mitte20141008.jpg');"><img src="img/mitte20141008.jpg" class="wetterbild" alt="Wetterbild am 08.10.2014" /></a></td>
-						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
+						<td class="editable"><img src="img/mitte20141008.jpg" class="wetterbild" alt="Wetterbild am 08.10.2014" /></td>
+						<td class="edit"><i class="fa fa-upload"></i></td>
 						<td class="editable">Es wird langsam kalt</td>
 						<td class="edit"><input type="text" value="Es wird langsam kalt" /></td>
 						<td class="editable"><a href="#" onclick="makeEditable('entry2');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry2');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry2');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry2');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" onclick="makeFix('entry2');"><i class="fa fa-check"></i></a><br><a href="#" onclick="deleteEntry('entry2');"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry3">
 						<td class="editable">15.10.2014</td>
@@ -84,15 +105,22 @@
 						<td class="edit"><input type="number" value="14" min="-72" max="100" /> &deg;C</td>
 						<td class="editable">Berlin</td>
 						<td class="edit">
-							<select name="Orte" id="entry3list" onchange="checkSelect('entry3');">
+							<select name="Orte">
+								<option value="" disabled>Stadt</option>
+								<option value="berlin" selected>Berlin</option>
+								<option value="koeln">K&ouml;ln</option>
+								<option value="frankfurt">Frankfurt</option>
+								<option value="hamburg">Hamburg</option>
+								<option value="muenchen">M&uuml;nchen</option>
+								<option value="">Neue Stadt...</option>
 							</select>
 						</td>
-						<td class="editable"><a href="#" onclick="showZoom('img/mitte20141015.jpg');"><img src="img/mitte20141015.jpg" class="wetterbild" alt="Wetterbild am 15.10.2014" /></a></td>
-						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
+						<td class="editable"><img src="img/mitte20141015.jpg" class="wetterbild" alt="Wetterbild am 15.10.2014" /></td>
+						<td class="edit"><i class="fa fa-upload"></i></td>
 						<td class="editable">Das Wetter h&auml;lt sich noch</td>
 						<td class="edit"><input type="text" value="Das Wetter h&auml;lt sich noch" /></td>
 						<td class="editable"><a href="#" onclick="makeEditable('entry3');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry3');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry3');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry3');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" onclick="makeFix('entry3');"><i class="fa fa-check"></i></a><br><a href="#" onclick="deleteEntry('entry3');"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry4">
 						<td class="editable">22.10.2014</td>
@@ -101,15 +129,22 @@
 						<td class="edit"><input type="number" value="9" min="-72" max="100" /> &deg;C</td>
 						<td class="editable">Berlin</td>
 						<td class="edit">
-							<select name="Orte" id="entry4list" onchange="checkSelect('entry4');">
+							<select name="Orte">
+								<option value="" disabled>Stadt</option>
+								<option value="berlin" selected>Berlin</option>
+								<option value="koeln">K&ouml;ln</option>
+								<option value="frankfurt">Frankfurt</option>
+								<option value="hamburg">Hamburg</option>
+								<option value="muenchen">M&uuml;nchen</option>
+								<option value="">Neue Stadt...</option>
 							</select>
 						</td>
-						<td class="editable"><a href="#" onclick="showZoom('img/mitte20141022.jpg');"><img src="img/mitte20141022.jpg" class="wetterbild" alt="Wetterbild am 22.10.2014" /></a></td>
-						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
+						<td class="editable"><img src="img/mitte20141022.jpg" class="wetterbild" alt="Wetterbild am 22.10.2014" /></td>
+						<td class="edit"><i class="fa fa-upload"></i></td>
 						<td class="editable">Es regnet!</td>
 						<td class="edit"><input type="text" value="Es regnet!" /></td>
 						<td class="editable"><a href="#" onclick="makeEditable('entry4');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry4');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry4');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry4');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" onclick="makeFix('entry4');"><i class="fa fa-check"></i></a><br><a href="#" onclick="deleteEntry('entry4');"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry5">
 						<td class="editable">29.10.2014</td>
@@ -118,15 +153,22 @@
 						<td class="edit"><input type="number" value="7" min="-72" max="100" /> &deg;C</td>
 						<td class="editable">Berlin</td>
 						<td class="edit">
-							<select name="Orte" id="entry5list" onchange="checkSelect('entry5');">
+							<select name="Orte">
+								<option value="" disabled>Stadt</option>
+								<option value="berlin" selected>Berlin</option>
+								<option value="koeln">K&ouml;ln</option>
+								<option value="frankfurt">Frankfurt</option>
+								<option value="hamburg">Hamburg</option>
+								<option value="muenchen">M&uuml;nchen</option>
+								<option value="">Neue Stadt...</option>
 							</select>
 						</td>
-						<td class="editable"><a href="#" onclick="showZoom('img/mitte20141029.jpg');"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></a></td>
-						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
+						<td class="editable"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></td>
+						<td class="edit"><i class="fa fa-upload"></i></td>
 						<td class="editable">Echtes Herbstwetter</td>
 						<td class="edit"><input type="text" value="Echtes Herbstwetter" /></td>
 						<td class="editable"><a href="#" onclick="makeEditable('entry5');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry5');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry5');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry5');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" onclick="makeFix('entry5');"><i class="fa fa-check"></i></a><br><a href="#" onclick="deleteEntry('entry5');"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 				</table>
 			</div>
@@ -137,8 +179,8 @@
 				Maurice Stolte, Florian Keller
 			</footer>
 		</div>
-		<p id="slideshow">
-			<img src="img/wetter/wetter1.jpg" alt="" class="next" style="opacity: 1, filter: alpha(opacity=1)" />
+		<p id="myFade">
+			<img src="img/wetter/wetter1.jpg" alt="" class="next" />
 			<img src="img/wetter/wetter2.jpg" alt="" class="next" />
 			<img src="img/wetter/wetter3.jpg" alt="" class="next" />
 			<img src="img/wetter/wetter4.jpg" alt="" class="next" />
@@ -146,13 +188,5 @@
 			<img src="img/wetter/wetter6.jpg" alt="" class="next" />
 			<img src="img/wetter/wetter7.jpg" alt="" class="next" />
 		</p>
-		<div id="zoomwrap">
-			<div id="zoom">
-				<div class="close">
-					<a href="#" onclick="hideZoom()">&times;</a>
-				</div>
-				<img src="" alt="" id="zoomImage" />
-			</div>
-		</div>
 	</body>
 </html>
