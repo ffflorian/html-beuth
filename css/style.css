@@ -4,11 +4,15 @@ body {
 	height: 100%;
 	font-family: 'Roboto', Arial, sans-serif;
 	background: url('../img/wetter_bg.jpg') no-repeat center top;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-ms-background-size: cover;
+	-o-background-size: cover;
 	background-size: cover;
 }
 
 #content {
-	margin: 50px;
+	margin: 20px 50px 0 50px;
 }
 
 header {
@@ -172,7 +176,7 @@ input[type=number] {
 
 footer {
 	color: #fff;
-	margin-top: 60px;
+	margin-top: 40px;
 	font-size: 10pt;
 }
 
@@ -209,21 +213,20 @@ button.submitForm {
 	}
 }
 
-.next {
+#slideshow, #slideshow img {
+	height: 100%;
+	overflow: hidden;
+	z-index: -1;
+}
+
+#slideshow img {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	overflow: hidden;
-	z-index: -1;
 	filter: alpha(opacity=0);
 	opacity: 0;
-}
-
-#myFade {
-	height: 100%;
-	width: 100%;
-	overflow: hidden;
 }
 
 #zoomwrap {
