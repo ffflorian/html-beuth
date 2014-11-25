@@ -177,6 +177,8 @@ footer {
 }
 
 button.submitForm {
+	position: relative;
+	top: -35px;
 	background-color: #0f0;
 	border: 4px solid #0f0;
 }
@@ -254,4 +256,19 @@ button.submitForm {
 #zoom a {
 	color: #f00;
 	text-decoration: none;
+}
+
+#emailerror {
+	visibility: hidden;
+	position: relative;
+	top: -40px;
+	right: -150px;
+	color: #f00;
+	font-size: 9pt;
+	font-weight: bold;
+	line-height: 10pt;
+	border-radius: 10px;
+	background-color: rgba(255,255,255,0.8);
+	width: 120px;
+	padding: 8px;
 }

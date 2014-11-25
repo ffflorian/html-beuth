@@ -8,22 +8,25 @@ document.addEventListener('DOMContentLoaded', function() {		// warte darauf, das
 	}, false);
 
 	document.getElementById('newcityform').addEventListener('submit', function(event) {
-		var formemail = document.getElementById('formemail');
+		var formemail  = document.getElementById('formemail');
+		var emailerror = document.getElementById('emailerror');
+		emailerror.style.visibility = 'hidden';
 		if (formemail.value.substring(formemail.value.length-20,
 									  formemail.value.length) != "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
-			alert ("Nur Beuth-Hochschul-Adressen erlaubt!");
+			emailerror.style.visibility = 'visible';
 			event.preventDefault();																// Abbruch
 		}
 	}, false);
 
 	/*var trs = document.getElementsByTagName('tr');
 	for (var x=0; x<trs.length; x++) {
-		var tds = trs[x].getElementsByTagName('td');
 		trs[x].addEventListener('mouseover', function() {
-			console.log(tds[11]);
+			var tds = this.getElementsByTagName('td');
+			tds[10].style.visibility = 'visible';
 		}, false);
 		trs[x].addEventListener('mouseout', function() {
-			tds[tds.length-2].style.visibility = 'hidden';
+			var tds = this.getElementsByTagName('td');
+			tds[10].style.visibility = 'hidden';
 		}, false);
 	}*/
 
@@ -60,7 +63,7 @@ function makeEditable(entry) {
 	var tr = document.getElementById(entry);				// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');					// dessen td-Elemente ansprechen
 	for (var i = 0; i < td.length; i++) {					// fuer alle td-Elemente
-		if (td[i].className == 'edit') {					// wenn die jeweilige Klasse bearbeitbar ist
+		if (td[i].className === 'edit') {					// wenn die jeweilige Klasse bearbeitbar ist
 			td[i].style.display = 'table-cell';				// dann zeige sie an
 		} else if (td[i].className === 'editable') {		// wenn die jeweilige Klasse nicht bearbeitbar ist
 			td[i].style.display = 'none';					// dann verstecke sie
