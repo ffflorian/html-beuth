@@ -33,8 +33,13 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 	var trs = document.getElementsByTagName('tr');
 	for (var x=1; x<trs.length; x++) {
 		var entry = document.getElementById('entry'+x+'list');
+		var link = document.getElementById('entry'+x+'link');
 		entry.addEventListener('change', function() {
 			checkSelect('entry'+x);
+		}, false);
+		link.addEventListener('click', function() {
+			var image = this.getElementsByTagName('img')[0].src;
+			showZoom(image);
 		}, false);
 	}
 
