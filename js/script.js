@@ -1,4 +1,7 @@
 //============== Eventhandler ==================//
+var byId = function(id) {
+	return document.getElementById(id);
+}
 
 window.addEventListener('load', function() {					// warte darauf, dass der Inhalt geladen wurde
 	document.addEventListener('keydown', function(event) {
@@ -7,9 +10,9 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}
 	}, false);
 
-	document.getElementById('newcityform').addEventListener('submit', function(event) {
-		var formemail  = document.getElementById('formemail');
-		var emailerror = document.getElementById('emailerror');
+	byId('newcityform').addEventListener('submit', function(event) {
+		var formemail  = byId('formemail');
+		var emailerror = byId('emailerror');
 		emailerror.style.visibility = 'hidden';
 		if (formemail.value.substring(formemail.value.length-20,
 									  formemail.value.length) != "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
@@ -18,11 +21,11 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}
 	}, false);
 
-	document.getElementById('submitForm').addEventListener('click', function() {
-		document.getElementbyId('cityform').submit();
+	byId('submitForm').addEventListener('click', function() {
+		byId('cityform').submit();
 	}, false);
 
-	document.getElementById('zoom').getElementsByTagName('a')[0].addEventListener('click', hideZoom, false);
+	byId('zoom').getElementsByTagName('a')[0].addEventListener('click', hideZoom, false);
 
 	/*var trs = document.getElementsByTagName('tr');
 	for (var x=0; x<trs.length; x++) {
@@ -38,12 +41,12 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 
 	var trs = document.getElementsByTagName('tr');
 	for (var x=1; x<trs.length; x++) {
-		var entry = document.getElementById('entry'+x+'list');
-		var zLink = document.getElementById('entry'+x+'zoomlink');
-		var eLink = document.getElementById('entry'+x+'editlink');
-		var sLink = document.getElementById('entry'+x+'savelink');
-		var dLink1 = document.getElementById('entry'+x+'deletelink1');
-		var dLink2 = document.getElementById('entry'+x+'deletelink2');
+		var entry = byId('entry'+x+'list');
+		var zLink = byId('entry'+x+'zoomlink');
+		var eLink = byId('entry'+x+'editlink');
+		var sLink = byId('entry'+x+'savelink');
+		var dLink1 = byId('entry'+x+'deletelink1');
+		var dLink2 = byId('entry'+x+'deletelink2');
 		entry.addEventListener('change', function() {
 			var id = this.parentNode.parentNode.getAttribute('id');
 			checkSelect(id);
@@ -70,7 +73,7 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}, false);
 	}
 
-	document.getElementById('newcityformlist').addEventListener('change', function(event) {
+	byId('newcityformlist').addEventListener('change', function(event) {
 		checkSelect('newcityform');
 	}, false);
 
@@ -86,21 +89,21 @@ function initialize() {
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
-	var formdate = document.getElementById('formdate');		// formdate-input ansprechen
+	var formdate = byId('formdate');		// formdate-input ansprechen
 	    formdate.value = yyyy + "-" + mm + "-" + dd;		// formdate auf das heutige Datum setzen
 	fillLists();											// alle Staedte-Listen auffuellen
 }
 
 function fillLists() {
-	var trs = document.getElementById('table').getElementsByTagName('tr');
+	var trs = byId('table').getElementsByTagName('tr');
 	for (var i=1; i<trs.length-1; i++) {
-		addCities(document.getElementById('entry'+i+'list'));
+		addCities(byId('entry'+i+'list'));
 	}
-	addCities(document.getElementById('newcityformlist'));
+	addCities(byId('newcityformlist'));
 }
 
 function editEntry(entry) {
-	var tr = document.getElementById(entry);				// DIV mit angegebenem Namen ansprechen
+	var tr = byId(entry);				// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');					// dessen td-Elemente ansprechen
 	for (var i = 0; i < td.length; i++) {					// fuer alle td-Elemente
 		if (td[i].className === 'edit') {					// wenn die jeweilige Klasse bearbeitbar ist
@@ -112,7 +115,7 @@ function editEntry(entry) {
 }
 
 function saveEntry(entry) {
-	var tr = document.getElementById(entry);											// DIV mit angegebenem Namen ansprechen
+	var tr = byId(entry);											// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');												// dessen td-Elemente ansprechen
 	    td[0].innerHTML = formatDate(td[1].getElementsByTagName('input')[0].value);		// td mit Index 0 auf bearbeitetes Feld setzen
 	    td[2].innerHTML = td[3].getElementsByTagName('input')[0].value + " &deg;C";		// usw...
@@ -130,7 +133,7 @@ function saveEntry(entry) {
 
 function deleteEntry(entry) {
 	if (confirm("Eintrag wirklich löschen?")) {				// Wenn Ja/Nein-Dialog bestaetigt wurde
-		var tr = document.getElementById(entry);			// DIV mit angegebenem Namen ansprechen
+		var tr = byId(entry);			// DIV mit angegebenem Namen ansprechen
 		var td = tr.getElementsByTagName('td');				// dessen td-Elemente ansprechen
 		for (var i = 0; i < td.length; i++) {				// fuer alle td-Elemente
 			td[i].style.display = 'none';					// verstecke alle Elemente (temporaer -
@@ -139,7 +142,7 @@ function deleteEntry(entry) {
 }
 
 function slideshow() {
-	var images = document.getElementById('slideshow').getElementsByTagName('img');		// spreche alle Bilder im DIV 'slideshow' an
+	var images = byId('slideshow').getElementsByTagName('img');		// spreche alle Bilder im DIV 'slideshow' an
 	if (typeof(counter) != "number") {													// wenn Counter noch nicht gesetzt
 		counter = 0;
 	}
@@ -170,7 +173,7 @@ function fadeIn(step, obj) {
 }
 
 function checkSelect(id) {
-	var element = document.getElementById(id+"list");									// select mit angegebenem Namen ansprechen
+	var element = byId(id+"list");									// select mit angegebenem Namen ansprechen
 	var i = element.selectedIndex;														// hole den Index des aktuell ausgewaehlten Eintrags
 	var selValue = element.options[i].value;											// hole den Text des aktuell ausgewaehlten Eintrags
 	if (selValue === "neuestadt") {														// wenn eine neue Stadt eingetragen werden soll
@@ -194,12 +197,12 @@ function addCities(select) {															// damit man nicht alle Staedte mehrf
 }
 
 function showZoom(img) {
-	var y = document.getElementById('zoomImage').src = img;
-	document.getElementById('zoomwrap').style.visibility = 'visible';
+	var y = byId('zoomImage').src = img;
+	byId('zoomwrap').style.visibility = 'visible';
 }
 
 function hideZoom() {
-	var z = document.getElementById('zoomwrap').style.visibility = 'hidden';
+	var z = byId('zoomwrap').style.visibility = 'hidden';
 }
 
 
