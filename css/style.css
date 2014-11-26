@@ -229,6 +229,11 @@ button.submitForm {
 	opacity: 0;
 }
 
+#slideshow img:first-child {
+	filter: alpha(opacity=1);
+	opacity: 1;
+}
+
 #zoomwrap {
 	position: absolute;
 	top: 0;

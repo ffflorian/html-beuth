@@ -1,4 +1,5 @@
-//============== Eventhandler ==================//
+//============== Basics ========================//
+
 var $ = function(id) {											// Abkuerzung
 	return document.getElementById(id);
 }
@@ -6,6 +7,9 @@ var $ = function(id) {											// Abkuerzung
 var parent = function(element) {
 	return element.parentNode.parentNode.getAttribute('id');
 }
+
+
+//============== Eventhandler ==================//
 
 window.addEventListener('load', function() {					// warte darauf, dass der Inhalt geladen wurde
 	document.addEventListener('keydown', function(event) {
@@ -93,7 +97,7 @@ function initialize() {
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
-	var formdate = $('formdate');		// formdate-input ansprechen
+	var formdate = $('formdate');							// formdate-input ansprechen
 	    formdate.value = yyyy + "-" + mm + "-" + dd;		// formdate auf das heutige Datum setzen
 	fillLists();											// alle Staedte-Listen auffuellen
 }
@@ -107,7 +111,7 @@ function fillLists() {
 }
 
 function editEntry(entry) {
-	var tr = $(entry);				// DIV mit angegebenem Namen ansprechen
+	var tr = $(entry);										// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');					// dessen td-Elemente ansprechen
 	for (var i = 0; i < td.length; i++) {					// fuer alle td-Elemente
 		if (td[i].className === 'edit') {					// wenn die jeweilige Klasse bearbeitbar ist
@@ -119,7 +123,7 @@ function editEntry(entry) {
 }
 
 function saveEntry(entry) {
-	var tr = $(entry);											// DIV mit angegebenem Namen ansprechen
+	var tr = $(entry);																	// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');												// dessen td-Elemente ansprechen
 	    td[0].innerHTML = formatDate(td[1].getElementsByTagName('input')[0].value);		// td mit Index 0 auf bearbeitetes Feld setzen
 	    td[2].innerHTML = td[3].getElementsByTagName('input')[0].value + " &deg;C";		// usw...
@@ -137,7 +141,7 @@ function saveEntry(entry) {
 
 function deleteEntry(entry) {
 	if (confirm("Eintrag wirklich löschen?")) {				// Wenn Ja/Nein-Dialog bestaetigt wurde
-		var tr = $(entry);			// DIV mit angegebenem Namen ansprechen
+		var tr = $(entry);									// DIV mit angegebenem Namen ansprechen
 		var td = tr.getElementsByTagName('td');				// dessen td-Elemente ansprechen
 		for (var i = 0; i < td.length; i++) {				// fuer alle td-Elemente
 			td[i].style.display = 'none';					// verstecke alle Elemente (temporaer -
@@ -146,13 +150,13 @@ function deleteEntry(entry) {
 }
 
 function slideshow() {
-	var images = $('slideshow').getElementsByTagName('img');		// spreche alle Bilder im DIV 'slideshow' an
-	if (typeof(counter) != "number") {													// wenn Counter noch nicht gesetzt
+	var images = $('slideshow').getElementsByTagName('img');				// spreche alle Bilder im DIV 'slideshow' an
+	if (typeof(counter) != "number") {										// wenn Counter noch nicht gesetzt
 		counter = 0;
 	}
-	counter++;																			// Index auf naechstes Bild setzen
-	if (counter < images.length) {														// wenn noch nicht alle Bilder angezeigt werden
-		fadeIn(0, images);																// starte das einblenden des Bildes
+	counter++;																// Index auf naechstes Bild setzen
+	if (counter < images.length) {											// wenn noch nicht alle Bilder angezeigt werden
+		fadeIn(0, images);													// starte das einblenden des Bildes
 	} else {
 		for (var x = 1; x<images.length; x++) {
 			images[x].style.opacity = 0;
@@ -164,20 +168,22 @@ function slideshow() {
 }
 
 function fadeIn(step, obj) {
-	obj[counter].style.opacity = step/100;												// setze die Transparenz des Objekts auf 1/100 von Step
-	obj[counter].style.filter = 'alpha(opacity=' + step + ')';							// setze die Transparenz des Objekts auf 1/100 von Step
+	obj[counter].style.opacity = step/100;									// setze die Transparenz des Objekts auf 1/100 von Step
+	obj[counter].style.filter = 'alpha(opacity=' + step + ')';				// setze die Transparenz des Objekts auf 1/100 von Step
 
 	step += 2;
 
 	if (step <= 100) {
-		window.setTimeout(function () { fadeIn(step, obj); }, 1);						// Objekt noch nicht ganz sichtbar, ruft sich selbst auf
+		window.setTimeout(function () {
+			fadeIn(step, obj);
+		}, 1);																// Objekt noch nicht ganz sichtbar, ruft sich selbst auf
 	} else {
-		window.setTimeout(slideshow, 8000);												// Objekt jetzt sichtbar, starte naechstes Objekt nach 8000ms
+		window.setTimeout(slideshow, 8000);									// Objekt jetzt sichtbar, starte naechstes Objekt nach 8000ms
 	}
 }
 
 function checkSelect(id) {
-	var element = $(id+"list");									// select mit angegebenem Namen ansprechen
+	var element = $(id+"list");															// select mit angegebenem Namen ansprechen
 	var i = element.selectedIndex;														// hole den Index des aktuell ausgewaehlten Eintrags
 	var selValue = element.options[i].value;											// hole den Text des aktuell ausgewaehlten Eintrags
 	if (selValue === "neuestadt") {														// wenn eine neue Stadt eingetragen werden soll
