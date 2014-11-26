@@ -30,6 +30,14 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}, false);
 	}*/
 
+	var trs = document.getElementsByTagName('tr');
+	for (var x=1; x<trs.length; x++) {
+		var entry = document.getElementById('entry'+x+'list');
+		entry.addEventListener('change', function() {
+			checkSelect('entry'+x);
+		}, false);
+	}
+
 	document.getElementById('newcityformlist').addEventListener('change', function(event) {
 		checkSelect('newcityform');
 	}, false);
