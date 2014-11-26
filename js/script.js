@@ -1,39 +1,32 @@
-//============== Basics ========================//
-
-var $ = function(id) {											// Abkuerzung
-	return document.getElementById(id);
-}
-
-var parent = function(element) {
-	return element.parentNode.parentNode.getAttribute('id');
-}
-
-
 //============== Eventhandler ==================//
 
-window.addEventListener('load', function() {					// warte darauf, dass der Inhalt geladen wurde
-	document.addEventListener('keydown', function(event) {
+$(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
+	$(document).keydown(function(event) {
 		if (event.keyCode === 27) {								// Escape wurde gedrueckt
-			hideZoom();											// verstecke das Bildfenster
+			$('#zoomWrap').hide();								// verstecke das Bildfenster
 		}
-	}, false);
+	});
 
-	$('newcityform').addEventListener('submit', function(event) {
-		var formemail  = $('formemail');
-		var emailerror = $('emailerror');
-		emailerror.style.visibility = 'hidden';
-		if (formemail.value.substring(formemail.value.length-20,
-									  formemail.value.length) != "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
-			emailerror.style.visibility = 'visible';
+	$('#newcityform').submit(function(event) {
+		$('button.submitForm').css('position', 'static');
+		$('button.submitForm').css('top', '0');
+		console.log($('#formemail').val());
+		$('#emailerror').hide();
+		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			event.preventDefault();																// Abbruch
+			$('#emailerror').show();
+			$('button.submitForm').css('position', 'relative');
+			$('button.submitForm').css('top', '-42px');
 		}
-	}, false);
+	});
 
-	$('submitForm').addEventListener('click', function() {
+	$('#submitForm').click(function() {
 		$('cityform').submit();
-	}, false);
+	});
 
-	$('zoom').getElementsByTagName('a')[0].addEventListener('click', hideZoom, false);
+	$('#zoom a').click(function() {
+		$('#zoomWrap').hide();
+	});
 
 	/*var trs = document.getElementsByTagName('tr');
 	for (var x=0; x<trs.length; x++) {
@@ -47,46 +40,44 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}, false);
 	}*/
 
-	var trs = document.getElementsByTagName('tr');
-	for (var x=1; x<trs.length; x++) {
-		var entry = $('entry'+x+'list');
-		var zLink = $('entry'+x+'zoomlink');
-		var eLink = $('entry'+x+'editlink');
-		var sLink = $('entry'+x+'savelink');
-		var dLink1 = $('entry'+x+'deletelink1');
-		var dLink2 = $('entry'+x+'deletelink2');
-		entry.addEventListener('change', function() {
-			var id = parent(this);
-			checkSelect(id);
-		}, false);
-		zLink.addEventListener('click', function() {
-			var image = this.getElementsByTagName('img')[0].src;
-			showZoom(image);
-		}, false);
-		eLink.addEventListener('click', function() {
-			var id = parent(this);
-			editEntry(id);
-		}, false);
-		sLink.addEventListener('click', function() {
-			var id = parent(this);
-			saveEntry(id);
-		}, false);
-		dLink1.addEventListener('click', function() {
-			var id = parent(this);
-			deleteEntry(id);
-		}, false);
-		dLink2.addEventListener('click', function() {
-			var id = parent(this);
-			deleteEntry(id);
-		}, false);
-	}
+	$('select').change(function() {
+		if ($(this).find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
+			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
+			if (userInput !== "" && userInput !== null) {
+				$(this).append(new Option(userInput, formatValue(userInput), true, true));						// erstelle neue Option mit der Benutzereingabe
+			}
+		}
+	});
 
-	$('newcityformlist').addEventListener('change', function(event) {
-		checkSelect('newcityform');
-	}, false);
+	$('.zoomlink').click(function() {
+		var img = $(this).find('img').attr('src');
+		$('#zoomImage').attr('src', img);
+		$('#zoomWrap').show();
+	});
+
+	$('.editlink').click(function() {
+		$(this).parent().parent().find('.editable').hide();
+		$(this).parent().parent().find('.edit').show();
+	});
+
+	$('.savelink').click(function() {
+		var $tr = $(this).parent().parent();
+		$tr.find('.editable.date').text(formatDate($tr.find('input[type=date]').val()));
+		$tr.find('.editable.temp').html($tr.find('input[type=number]').val() + " &deg;C");
+		$tr.find('.editable.city').text($tr.find('select option:selected').text());
+		$tr.find('.editable.comment').text($tr.find('input[type=text]').val());
+		$tr.find('.edit').hide();
+		$tr.find('.editable').show();
+	});
+
+	$('.deletelink').click(function() {
+		if (confirm("Eintrag wirklich löschen?")) {
+			$(this).parent().parent().hide();
+		}
+	});
 
 	initialize();
-}, false);
+});
 
 
 //============== Hauptfunktionen ===============//
@@ -97,122 +88,58 @@ function initialize() {
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
-	var formdate = $('formdate');							// formdate-input ansprechen
-	    formdate.value = yyyy + "-" + mm + "-" + dd;		// formdate auf das heutige Datum setzen
+	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
 	fillLists();											// alle Staedte-Listen auffuellen
 }
 
 function fillLists() {
-	var trs = $('table').getElementsByTagName('tr');
-	for (var i=1; i<trs.length-1; i++) {
-		addCities($('entry'+i+'list'));
-	}
-	addCities($('newcityformlist'));
-}
-
-function editEntry(entry) {
-	var tr = $(entry);										// DIV mit angegebenem Namen ansprechen
-	var td = tr.getElementsByTagName('td');					// dessen td-Elemente ansprechen
-	for (var i = 0; i < td.length; i++) {					// fuer alle td-Elemente
-		if (td[i].className === 'edit') {					// wenn die jeweilige Klasse bearbeitbar ist
-			td[i].style.display = 'table-cell';				// dann zeige sie an
-		} else if (td[i].className === 'editable') {		// wenn die jeweilige Klasse nicht bearbeitbar ist
-			td[i].style.display = 'none';					// dann verstecke sie
-		}
-	}
-}
-
-function saveEntry(entry) {
-	var tr = $(entry);																	// DIV mit angegebenem Namen ansprechen
-	var td = tr.getElementsByTagName('td');												// dessen td-Elemente ansprechen
-	    td[0].innerHTML = formatDate(td[1].getElementsByTagName('input')[0].value);		// td mit Index 0 auf bearbeitetes Feld setzen
-	    td[2].innerHTML = td[3].getElementsByTagName('input')[0].value + " &deg;C";		// usw...
-	var td5 = td[5].getElementsByTagName('select')[0];									// td mit Index 5 abkuerzen
-	    td[4].innerHTML = td5.options[td5.selectedIndex].innerHTML;
-	    td[8].innerHTML = td[9].getElementsByTagName('input')[0].value;
-	for (var i = 0; i < td.length; i++) {												// fuer alle td-Elemente
-		if (td[i].className === 'edit') {												// wenn die jeweilige Klasse bearbeitbar ist
-			td[i].style.display = 'none';												// dann verstecke sie
-		} else if (td[i].className === 'editable') {									// wenn die jeweilige Klasse nicht bearbeitbar ist
-			td[i].style.display = 'table-cell';											// dann zeige sie an
-		}
-	}
-}
-
-function deleteEntry(entry) {
-	if (confirm("Eintrag wirklich löschen?")) {				// Wenn Ja/Nein-Dialog bestaetigt wurde
-		var tr = $(entry);									// DIV mit angegebenem Namen ansprechen
-		var td = tr.getElementsByTagName('td');				// dessen td-Elemente ansprechen
-		for (var i = 0; i < td.length; i++) {				// fuer alle td-Elemente
-			td[i].style.display = 'none';					// verstecke alle Elemente (temporaer -
-		}													//  spaeter werden sie in der DB geloescht)
-	}
+	$('.cities').each(function() {
+		addCities($(this));
+	});
 }
 
 function slideshow() {
-	var images = $('slideshow').getElementsByTagName('img');				// spreche alle Bilder im DIV 'slideshow' an
-	if (typeof(counter) != "number") {										// wenn Counter noch nicht gesetzt
+	var images = $('#slideshow').find('img');								// spreche alle Bilder im DIV 'slideshow' an
+	if (typeof(counter) !== "number") {										// wenn Counter noch nicht gesetzt
 		counter = 0;
 	}
 	counter++;																// Index auf naechstes Bild setzen
 	if (counter < images.length) {											// wenn noch nicht alle Bilder angezeigt werden
 		fadeIn(0, images);													// starte das einblenden des Bildes
 	} else {
-		for (var x = 1; x<images.length; x++) {
-			images[x].style.opacity = 0;
-			images[x].style.filter = 'alpha(opacity=0)';
-		}
+		$('#slideshow').find('img').each(function() {
+			$(this).css('opacity', 0);
+			$(this).css('filter', 'alpha(opacity=0');
+		});
 		counter = 0;
 		fadeIn(0, images);
 	}
 }
 
-function fadeIn(step, obj) {
-	obj[counter].style.opacity = step/100;									// setze die Transparenz des Objekts auf 1/100 von Step
-	obj[counter].style.filter = 'alpha(opacity=' + step + ')';				// setze die Transparenz des Objekts auf 1/100 von Step
+function fadeIn($step, $obj) {
+	$obj[counter].style.opacity = $step/100;									// setze die Transparenz des Objekts auf 1/100 von Step
+	$obj[counter].style.filter = 'alpha(opacity=' + $step + ')';				// setze die Transparenz des Objekts auf 1/100 von Step
 
-	step += 2;
+	$step += 2;
 
-	if (step <= 100) {
+	if ($step <= 100) {
 		window.setTimeout(function () {
-			fadeIn(step, obj);
+			fadeIn($step, $obj);
 		}, 1);																// Objekt noch nicht ganz sichtbar, ruft sich selbst auf
 	} else {
 		window.setTimeout(slideshow, 8000);									// Objekt jetzt sichtbar, starte naechstes Objekt nach 8000ms
 	}
 }
 
-function checkSelect(id) {
-	var element = $(id+"list");															// select mit angegebenem Namen ansprechen
-	var i = element.selectedIndex;														// hole den Index des aktuell ausgewaehlten Eintrags
-	var selValue = element.options[i].value;											// hole den Text des aktuell ausgewaehlten Eintrags
-	if (selValue === "neuestadt") {														// wenn eine neue Stadt eingetragen werden soll
-		var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
-		if (userInput != "" && userInput != null) {
-			var opt = createOption(formatValue(userInput), userInput);					// erstelle neue Option mit der Benutzereingabe
-			element.add(opt, element[i]);												// fuege neue Option hinzu
-			element.options[i].selected = 'selected';									// selektiere den neuen Eintrag
-		}
-	}
-}
-
-function addCities(select) {															// damit man nicht alle Staedte mehrfach eintragen muss
-	select.add(createOption('', 'Stadt', true));
-	select.add(createOption('berlin', 'Berlin'));
-	select.add(createOption('koeln', 'Köln'));
-	select.add(createOption('frankfurt', 'Frankfurt'));
-	select.add(createOption('hamburg', 'Hamburg'));
-	select.add(createOption('muenchen', 'München'));
-	select.add(createOption('neuestadt', 'Neue Stadt...'));
-}
-
-function showZoom(img) {
-	var y = $('zoomImage').src = img;
-	$('zoomwrap').style.visibility = 'visible';
-}
-
-function hideZoom() {
-	var z = $('zoomwrap').style.visibility = 'hidden';
+function addCities($select) {
+	$select.append(new Option("Stadt", "", true));						// damit man nicht alle Staedte mehrfach eintragen muss
+	$('select [value=""]').attr('disabled', true);
+	$select.append(new Option("Berlin", "koeln"));
+	$select.append(new Option("Köln", "berlin"));
+	$select.append(new Option("Frankfurt", "frankfurt"));
+	$select.append(new Option("Hamburg", "hamburg"));
+	$select.append(new Option("München", "muenchen"));
+	$select.append(new Option("Neue Stadt...", "neuestadt"));
 }
 
 
@@ -224,12 +151,4 @@ function formatValue(str) {									// ersetze alle dt. Umlaute und gib das Wort
 
 function formatDate(date) {									// uebersetze ein Datum vom ISO 8601-Format in die dt. Schreibweise und gib es zurueck
 	return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
-}
-
-function createOption(value, text, disabled) {				// neue Option erstellen
-	var option = document.createElement("option");
-	    option.value = value;
-	    option.text = text;
-	    option.disabled = disabled ? true : false;			// kurzform fuer if() {..} else {...}
-	return option;
 }
