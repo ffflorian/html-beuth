@@ -18,6 +18,12 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}
 	}, false);
 
+	document.getElementById('submitForm').addEventListener('click', function() {
+		document.getElementbyId('cityform').submit();
+	}, false);
+
+	document.getElementById('zoom').getElementsByTagName('a')[0].addEventListener('click', hideZoom, false);
+
 	/*var trs = document.getElementsByTagName('tr');
 	for (var x=0; x<trs.length; x++) {
 		trs[x].addEventListener('mouseover', function() {
@@ -33,13 +39,34 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 	var trs = document.getElementsByTagName('tr');
 	for (var x=1; x<trs.length; x++) {
 		var entry = document.getElementById('entry'+x+'list');
-		var link = document.getElementById('entry'+x+'link');
+		var zLink = document.getElementById('entry'+x+'zoomlink');
+		var eLink = document.getElementById('entry'+x+'editlink');
+		var sLink = document.getElementById('entry'+x+'savelink');
+		var dLink1 = document.getElementById('entry'+x+'deletelink1');
+		var dLink2 = document.getElementById('entry'+x+'deletelink2');
 		entry.addEventListener('change', function() {
-			checkSelect('entry'+x);
+			var id = this.parentNode.parentNode.getAttribute('id');
+			checkSelect(id);
 		}, false);
-		link.addEventListener('click', function() {
+		zLink.addEventListener('click', function() {
 			var image = this.getElementsByTagName('img')[0].src;
 			showZoom(image);
+		}, false);
+		eLink.addEventListener('click', function() {
+			var id = this.parentNode.parentNode.getAttribute('id');
+			editEntry(id);
+		}, false);
+		sLink.addEventListener('click', function() {
+			var id = this.parentNode.parentNode.getAttribute('id');
+			saveEntry(id);
+		}, false);
+		dLink1.addEventListener('click', function() {
+			var id = this.parentNode.parentNode.getAttribute('id');
+			deleteEntry(id);
+		}, false);
+		dLink2.addEventListener('click', function() {
+			var id = this.parentNode.parentNode.getAttribute('id');
+			deleteEntry(id);
 		}, false);
 	}
 
@@ -72,7 +99,7 @@ function fillLists() {
 	addCities(document.getElementById('newcityformlist'));
 }
 
-function makeEditable(entry) {
+function editEntry(entry) {
 	var tr = document.getElementById(entry);				// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');					// dessen td-Elemente ansprechen
 	for (var i = 0; i < td.length; i++) {					// fuer alle td-Elemente
@@ -84,7 +111,7 @@ function makeEditable(entry) {
 	}
 }
 
-function save(entry) {
+function saveEntry(entry) {
 	var tr = document.getElementById(entry);											// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');												// dessen td-Elemente ansprechen
 	    td[0].innerHTML = formatDate(td[1].getElementsByTagName('input')[0].value);		// td mit Index 0 auf bearbeitetes Feld setzen

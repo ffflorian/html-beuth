@@ -14,8 +14,8 @@
 			<header>
 				<h1>Wetter</h1>
 				<div class="city"><span>Berlin</span>
-					<form action="form_response.php" name="cityform" id="cityform" method="post">
-						<input type="text" class="searchbox" name="city" placeholder="Stadt suchen..." /><input type="submit" class="invisible" /> <a href="#" onclick="document.cityform.submit()"><i class="fa fa-search"></i></a>
+					<form action="form_response.php" id="cityform" method="post">
+						<input type="text" class="searchbox" name="city" placeholder="Stadt suchen..." /><input type="submit" class="invisible" /> <a href="#" id="submitForm"><i class="fa fa-search"></i></a>
 					</form>
 				</div>
 			</header>
@@ -54,12 +54,12 @@
 							<select name="Orte" id="entry1list">
 							</select>
 						</td>
-						<td class="editable"><a href="#" id="entry1link"><img src="img/mitte20141001.jpg" class="wetterbild" alt="Wetterbild am 01.10.2014" /></a></td>
+						<td class="editable"><a href="#" id="entry1zoomlink"><img src="img/mitte20141001.jpg" class="wetterbild" alt="Wetterbild am 01.10.2014" /></a></td>
 						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
 						<td class="editable">Tolles Wetter!</td>
 						<td class="edit"><input type="text" value="Tolles Wetter!" /></td>
-						<td class="editable"><a href="#" onclick="makeEditable('entry1');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry1');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry1');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry1');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="editable"><a href="#" id="entry1editlink"><i class="fa fa-pencil-square"></i></a><br><a href="#" id="entry1deletelink1"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" id="entry1savelink"><i class="fa fa-check save"></i></a><br><a href="#" id="entry1deletelink2"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry2">
 						<td class="editable">08.10.2014</td>
@@ -71,12 +71,12 @@
 							<select name="Orte" id="entry2list">
 							</select>
 						</td>
-						<td class="editable"><a href="#" id="entry2link"><img src="img/mitte20141008.jpg" class="wetterbild" alt="Wetterbild am 08.10.2014" /></a></td>
+						<td class="editable"><a href="#" id="entry2zoomlink"><img src="img/mitte20141008.jpg" class="wetterbild" alt="Wetterbild am 08.10.2014" /></a></td>
 						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
 						<td class="editable">Es wird langsam kalt</td>
 						<td class="edit"><input type="text" value="Es wird langsam kalt" /></td>
-						<td class="editable"><a href="#" onclick="makeEditable('entry2');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry2');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry2');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry2');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="editable"><a href="#" id="entry2editlink"><i class="fa fa-pencil-square"></i></a><br><a href="#" id="entry2deletelink1"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" id="entry2savelink"><i class="fa fa-check save"></i></a><br><a href="#" id="entry2deletelink2"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry3">
 						<td class="editable">15.10.2014</td>
@@ -88,12 +88,12 @@
 							<select name="Orte" id="entry3list">
 							</select>
 						</td>
-						<td class="editable"><a href="#" id="entry3link"><img src="img/mitte20141015.jpg" class="wetterbild" alt="Wetterbild am 15.10.2014" /></a></td>
+						<td class="editable"><a href="#" id="entry3zoomlink"><img src="img/mitte20141015.jpg" class="wetterbild" alt="Wetterbild am 15.10.2014" /></a></td>
 						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
 						<td class="editable">Das Wetter h&auml;lt sich noch</td>
 						<td class="edit"><input type="text" value="Das Wetter h&auml;lt sich noch" /></td>
-						<td class="editable"><a href="#" onclick="makeEditable('entry3');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry3');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry3');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry3');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="editable"><a href="#" id="entry3editlink"><i class="fa fa-pencil-square"></i></a><br><a href="#" id="entry3deletelink1"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#"id="entry3savelink"><i class="fa fa-check save"></i></a><br><a href="#" id="entry3deletelink2"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry4">
 						<td class="editable">22.10.2014</td>
@@ -105,12 +105,12 @@
 							<select name="Orte" id="entry4list">
 							</select>
 						</td>
-						<td class="editable"><a href="#" id="entry4link"><img src="img/mitte20141022.jpg" class="wetterbild" alt="Wetterbild am 22.10.2014" /></a></td>
+						<td class="editable"><a href="#" id="entry4zoomlink"><img src="img/mitte20141022.jpg" class="wetterbild" alt="Wetterbild am 22.10.2014" /></a></td>
 						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
 						<td class="editable">Es regnet!</td>
 						<td class="edit"><input type="text" value="Es regnet!" /></td>
-						<td class="editable"><a href="#" onclick="makeEditable('entry4');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry4');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry4');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry4');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="editable"><a href="#" id="entry4editlink"><i class="fa fa-pencil-square"></i></a><br><a href="#" id="entry4deletelink1"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" id="entry4savelink"><i class="fa fa-check save"></i></a><br><a href="#" id="entry4deletelink2"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 					<tr id="entry5">
 						<td class="editable">29.10.2014</td>
@@ -122,12 +122,12 @@
 							<select name="Orte" id="entry5list">
 							</select>
 						</td>
-						<td class="editable"><a href="#" id="entry5link"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></a></td>
+						<td class="editable"><a href="#" id="entry5zoomlink"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></a></td>
 						<td class="edit"><a href="#"><i class="fa fa-upload"></i></a></td>
 						<td class="editable">Echtes Herbstwetter</td>
 						<td class="edit"><input type="text" value="Echtes Herbstwetter" /></td>
-						<td class="editable"><a href="#" onclick="makeEditable('entry5');"><i class="fa fa-pencil-square"></i></a><br><a href="#" onclick="deleteEntry('entry5');"><i class="fa fa-remove delete"></i></a></td>
-						<td class="edit"><a href="#" onclick="save('entry5');"><i class="fa fa-check save"></i></a><br><a href="#" onclick="deleteEntry('entry5');"><i class="fa fa-remove delete"></i></a></td>
+						<td class="editable"><a href="#" id="entry5editlink"><i class="fa fa-pencil-square"></i></a><br><a href="#" id="entry5deletelink1"><i class="fa fa-remove delete"></i></a></td>
+						<td class="edit"><a href="#" id="entry5savelink"><i class="fa fa-check save"></i></a><br><a href="#" id="entry5deletelink2"><i class="fa fa-remove delete"></i></a></td>
 					</tr>
 				</table>
 			</div>
@@ -150,7 +150,7 @@
 		<div id="zoomwrap">
 			<div id="zoom">
 				<div class="close">
-					<a href="#" onclick="hideZoom()">&times;</a>
+					<a href="#">&times;</a>
 				</div>
 				<img src="" alt="" id="zoomImage" />
 			</div>
