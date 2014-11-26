@@ -89,10 +89,6 @@ function initialize() {
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
 	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
-	fillLists();											// alle Staedte-Listen auffuellen
-}
-
-function fillLists() {
 	$('.cities').each(function() {
 		addCities($(this));
 	});
