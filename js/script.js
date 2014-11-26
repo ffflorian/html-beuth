@@ -1,6 +1,10 @@
 //============== Eventhandler ==================//
-var byId = function(id) {
+var $ = function(id) {											// Abkuerzung
 	return document.getElementById(id);
+}
+
+var parent = function(element) {
+	return element.parentNode.parentNode.getAttribute('id');
 }
 
 window.addEventListener('load', function() {					// warte darauf, dass der Inhalt geladen wurde
@@ -10,9 +14,9 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}
 	}, false);
 
-	byId('newcityform').addEventListener('submit', function(event) {
-		var formemail  = byId('formemail');
-		var emailerror = byId('emailerror');
+	$('newcityform').addEventListener('submit', function(event) {
+		var formemail  = $('formemail');
+		var emailerror = $('emailerror');
 		emailerror.style.visibility = 'hidden';
 		if (formemail.value.substring(formemail.value.length-20,
 									  formemail.value.length) != "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
@@ -21,11 +25,11 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 		}
 	}, false);
 
-	byId('submitForm').addEventListener('click', function() {
-		byId('cityform').submit();
+	$('submitForm').addEventListener('click', function() {
+		$('cityform').submit();
 	}, false);
 
-	byId('zoom').getElementsByTagName('a')[0].addEventListener('click', hideZoom, false);
+	$('zoom').getElementsByTagName('a')[0].addEventListener('click', hideZoom, false);
 
 	/*var trs = document.getElementsByTagName('tr');
 	for (var x=0; x<trs.length; x++) {
@@ -41,14 +45,14 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 
 	var trs = document.getElementsByTagName('tr');
 	for (var x=1; x<trs.length; x++) {
-		var entry = byId('entry'+x+'list');
-		var zLink = byId('entry'+x+'zoomlink');
-		var eLink = byId('entry'+x+'editlink');
-		var sLink = byId('entry'+x+'savelink');
-		var dLink1 = byId('entry'+x+'deletelink1');
-		var dLink2 = byId('entry'+x+'deletelink2');
+		var entry = $('entry'+x+'list');
+		var zLink = $('entry'+x+'zoomlink');
+		var eLink = $('entry'+x+'editlink');
+		var sLink = $('entry'+x+'savelink');
+		var dLink1 = $('entry'+x+'deletelink1');
+		var dLink2 = $('entry'+x+'deletelink2');
 		entry.addEventListener('change', function() {
-			var id = this.parentNode.parentNode.getAttribute('id');
+			var id = parent(this);
 			checkSelect(id);
 		}, false);
 		zLink.addEventListener('click', function() {
@@ -56,24 +60,24 @@ window.addEventListener('load', function() {					// warte darauf, dass der Inhal
 			showZoom(image);
 		}, false);
 		eLink.addEventListener('click', function() {
-			var id = this.parentNode.parentNode.getAttribute('id');
+			var id = parent(this);
 			editEntry(id);
 		}, false);
 		sLink.addEventListener('click', function() {
-			var id = this.parentNode.parentNode.getAttribute('id');
+			var id = parent(this);
 			saveEntry(id);
 		}, false);
 		dLink1.addEventListener('click', function() {
-			var id = this.parentNode.parentNode.getAttribute('id');
+			var id = parent(this);
 			deleteEntry(id);
 		}, false);
 		dLink2.addEventListener('click', function() {
-			var id = this.parentNode.parentNode.getAttribute('id');
+			var id = parent(this);
 			deleteEntry(id);
 		}, false);
 	}
 
-	byId('newcityformlist').addEventListener('change', function(event) {
+	$('newcityformlist').addEventListener('change', function(event) {
 		checkSelect('newcityform');
 	}, false);
 
@@ -89,21 +93,21 @@ function initialize() {
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
-	var formdate = byId('formdate');		// formdate-input ansprechen
+	var formdate = $('formdate');		// formdate-input ansprechen
 	    formdate.value = yyyy + "-" + mm + "-" + dd;		// formdate auf das heutige Datum setzen
 	fillLists();											// alle Staedte-Listen auffuellen
 }
 
 function fillLists() {
-	var trs = byId('table').getElementsByTagName('tr');
+	var trs = $('table').getElementsByTagName('tr');
 	for (var i=1; i<trs.length-1; i++) {
-		addCities(byId('entry'+i+'list'));
+		addCities($('entry'+i+'list'));
 	}
-	addCities(byId('newcityformlist'));
+	addCities($('newcityformlist'));
 }
 
 function editEntry(entry) {
-	var tr = byId(entry);				// DIV mit angegebenem Namen ansprechen
+	var tr = $(entry);				// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');					// dessen td-Elemente ansprechen
 	for (var i = 0; i < td.length; i++) {					// fuer alle td-Elemente
 		if (td[i].className === 'edit') {					// wenn die jeweilige Klasse bearbeitbar ist
@@ -115,7 +119,7 @@ function editEntry(entry) {
 }
 
 function saveEntry(entry) {
-	var tr = byId(entry);											// DIV mit angegebenem Namen ansprechen
+	var tr = $(entry);											// DIV mit angegebenem Namen ansprechen
 	var td = tr.getElementsByTagName('td');												// dessen td-Elemente ansprechen
 	    td[0].innerHTML = formatDate(td[1].getElementsByTagName('input')[0].value);		// td mit Index 0 auf bearbeitetes Feld setzen
 	    td[2].innerHTML = td[3].getElementsByTagName('input')[0].value + " &deg;C";		// usw...
@@ -133,7 +137,7 @@ function saveEntry(entry) {
 
 function deleteEntry(entry) {
 	if (confirm("Eintrag wirklich löschen?")) {				// Wenn Ja/Nein-Dialog bestaetigt wurde
-		var tr = byId(entry);			// DIV mit angegebenem Namen ansprechen
+		var tr = $(entry);			// DIV mit angegebenem Namen ansprechen
 		var td = tr.getElementsByTagName('td');				// dessen td-Elemente ansprechen
 		for (var i = 0; i < td.length; i++) {				// fuer alle td-Elemente
 			td[i].style.display = 'none';					// verstecke alle Elemente (temporaer -
@@ -142,7 +146,7 @@ function deleteEntry(entry) {
 }
 
 function slideshow() {
-	var images = byId('slideshow').getElementsByTagName('img');		// spreche alle Bilder im DIV 'slideshow' an
+	var images = $('slideshow').getElementsByTagName('img');		// spreche alle Bilder im DIV 'slideshow' an
 	if (typeof(counter) != "number") {													// wenn Counter noch nicht gesetzt
 		counter = 0;
 	}
@@ -173,7 +177,7 @@ function fadeIn(step, obj) {
 }
 
 function checkSelect(id) {
-	var element = byId(id+"list");									// select mit angegebenem Namen ansprechen
+	var element = $(id+"list");									// select mit angegebenem Namen ansprechen
 	var i = element.selectedIndex;														// hole den Index des aktuell ausgewaehlten Eintrags
 	var selValue = element.options[i].value;											// hole den Text des aktuell ausgewaehlten Eintrags
 	if (selValue === "neuestadt") {														// wenn eine neue Stadt eingetragen werden soll
@@ -197,12 +201,12 @@ function addCities(select) {															// damit man nicht alle Staedte mehrf
 }
 
 function showZoom(img) {
-	var y = byId('zoomImage').src = img;
-	byId('zoomwrap').style.visibility = 'visible';
+	var y = $('zoomImage').src = img;
+	$('zoomwrap').style.visibility = 'visible';
 }
 
 function hideZoom() {
-	var z = byId('zoomwrap').style.visibility = 'hidden';
+	var z = $('zoomwrap').style.visibility = 'hidden';
 }
 
 
