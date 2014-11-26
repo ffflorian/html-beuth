@@ -83,7 +83,17 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 //============== Hauptfunktionen ===============//
 
 function initialize() {
-	window.setTimeout(slideshow, 1000);						// Slideshow mit einer Verzoegerung von 1000ms starten.
+	$.backstretch([
+		"img/wetter_bg.jpg",
+		"img/wetter/wetter1.jpg",
+		"img/wetter/wetter2.jpg",
+		"img/wetter/wetter3.jpg",
+		"img/wetter/wetter4.jpg",
+		"img/wetter/wetter5.jpg",
+		"img/wetter/wetter6.jpg",
+		"img/wetter/wetter7.jpg"
+	], {duration: 4000, fade: 750});
+
 	var today = new Date();									// neues Datum erzeugen
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
@@ -92,39 +102,6 @@ function initialize() {
 	$('.cities').each(function() {
 		addCities($(this));
 	});
-}
-
-function slideshow() {
-	var images = $('#slideshow').find('img');								// spreche alle Bilder im DIV 'slideshow' an
-	if (typeof(counter) !== "number") {										// wenn Counter noch nicht gesetzt
-		counter = 0;
-	}
-	counter++;																// Index auf naechstes Bild setzen
-	if (counter < images.length) {											// wenn noch nicht alle Bilder angezeigt werden
-		fadeIn(0, images);													// starte das einblenden des Bildes
-	} else {
-		$('#slideshow').find('img').each(function() {
-			$(this).css('opacity', 0);
-			$(this).css('filter', 'alpha(opacity=0');
-		});
-		counter = 0;
-		fadeIn(0, images);
-	}
-}
-
-function fadeIn($step, $obj) {
-	$obj[counter].style.opacity = $step/100;									// setze die Transparenz des Objekts auf 1/100 von Step
-	$obj[counter].style.filter = 'alpha(opacity=' + $step + ')';				// setze die Transparenz des Objekts auf 1/100 von Step
-
-	$step += 2;
-
-	if ($step <= 100) {
-		window.setTimeout(function () {
-			fadeIn($step, $obj);
-		}, 1);																// Objekt noch nicht ganz sichtbar, ruft sich selbst auf
-	} else {
-		window.setTimeout(slideshow, 8000);									// Objekt jetzt sichtbar, starte naechstes Objekt nach 8000ms
-	}
 }
 
 function addCities($select) {

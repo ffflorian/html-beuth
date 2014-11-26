@@ -3,12 +3,7 @@
 body {
 	height: 100%;
 	font-family: 'Roboto', Arial, sans-serif;
-	background: url('../img/wetter_bg.jpg') no-repeat center top;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-ms-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+	background-color: #000;
 }
 
 #content {
