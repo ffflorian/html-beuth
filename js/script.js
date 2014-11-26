@@ -8,19 +8,19 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('#newcityform').submit(function(event) {
-		$('button.submitForm').css('position', 'static');
-		$('button.submitForm').css('top', '0');
+		$('button.btn-success').css('position', 'static');
+		$('button.btn-success').css('top', '0');
 		console.log($('#formemail').val());
 		$('#emailerror').hide();
 		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			event.preventDefault();																// Abbruch
 			$('#emailerror').show();
-			$('button.submitForm').css('position', 'relative');
-			$('button.submitForm').css('top', '-42px');
+			$('button.btn-success').css('position', 'relative');
+			$('button.btn-success').css('top', '-42px');
 		}
 	});
 
-	$('#submitForm').click(function() {
+	$('.btn-success').click(function() {
 		$('cityform').submit();
 	});
 
@@ -83,7 +83,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 //============== Hauptfunktionen ===============//
 
 function initialize() {
-	$.backstretch([
+	$.backstretch("img/wetter_bg.jpg");
+
+	/*$.backstretch([
 		"img/wetter_bg.jpg",
 		"img/wetter/wetter1.jpg",
 		"img/wetter/wetter2.jpg",
@@ -92,14 +94,14 @@ function initialize() {
 		"img/wetter/wetter5.jpg",
 		"img/wetter/wetter6.jpg",
 		"img/wetter/wetter7.jpg"
-	], {duration: 4000, fade: 750});
+	], {duration: 4000, fade: 750});*/
 
 	var today = new Date();									// neues Datum erzeugen
 	var dd = today.getDate();								// hole den Tag
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
 	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
-	$('.cities').each(function() {
+	$('select').each(function() {
 		addCities($(this));
 	});
 }

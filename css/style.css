@@ -6,8 +6,8 @@ body {
 	background-color: #000;
 }
 
-#content {
-	margin: 20px 50px 0 50px;
+.container-fluid {
+	margin: 20px 50px 0 50px !important;
 }
 
 header {
@@ -44,62 +44,17 @@ div.city form {
 	margin-bottom: 10px;
 }
 
-.input {
-	border: 2px solid #fff;
-	border-radius: 5px;
-	width: 100px;
-}
-
-.searchbox {
-	border: 0;
-}
-
-.fa {
-	color: #000;
-	font-size: 12pt !important;
-}
-
-.fa-search {
-	color: #fff;
-}
-
-.fa:hover, a.fa:hover {
-	color: #000;
-}
-
-#table {
-	width: 700px;
+.col-md-6 {
+	width: 700px !important;
 	text-align: center;
-	padding: 20px 20px 20px 20px;
-	background-color: #fff;
+	padding: 20px 20px 20px 20px !important;
 	border-radius: 10px;
 	background-color: rgba(255,255,255,0.8);
-	min-height: 443px;
-}
-
-#table input, #table select, #cityform input {
-	border: 0;
-	height: 30px;
-	padding: 0;
-	margin: 0;
-	border-left: 10px solid #fff;
-}
-
-#table input[type=date] {
-	margin: 0 0 0 -10px;
-}
-
-#table select {
-	width: 70px;
-}
-
-#table input[type=number] {
-	width: 35px;
 }
 
 table, th, tr, td {
 	vertical-align: top;
-	padding: 10px;
+	padding: 10px !important;
 	max-height: 50px;
 }
 
@@ -107,27 +62,12 @@ table, th, tr, td {
 	background: #fff;
 }*/
 
-#table .img, #table img {
+.col-md-6 .img, .col-md-6 img {
 	width: 50px;
-}
-
-#table tr td:first-child {
-	width: 140px;
 }
 
 .invisible {
 	display: none;
-}
-
-button, input, select {
-	background-color: #fff;
-	color: #000;
-	border: 1px solid #000;
-	border-radius: 5px;
-	margin: 5px;
-	width: 120px;
-	border: 0;
-	border-left: 10px solid #fff;
 }
 
 #formupload {
@@ -135,21 +75,14 @@ button, input, select {
 	border: 0;
 }
 
-button, select, input[type=number], input[type=date] {
-	height: 30px;
-}
-
-#menu {
-	float: right;
-	line-height: 40pt;
-	margin-right: 140px;
-	width: 200px;
-	height: 430px;
-	text-align: left;
-	padding: 25px 20px 20px 70px;
-	background-color: #fff;
+.col-md-2 {
 	border-radius: 10px;
 	background-color:rgba(255,255,255,0.8);
+	line-height: 40pt;
+	width: 200px;
+	height: 430px;
+	padding: 25px 20px 20px 70px;
+	margin-left: 140px;
 }
 
 td .delete:hover {
@@ -160,27 +93,13 @@ td .save:hover {
 	color: #0d0;
 }
 
-input[type=date] {
-	width: 120px;
-	font-family: 'Roboto', Arial, sans-serif;
-}
-
-input[type=number] {
-	width: 78px;	
-}
-
 footer {
 	color: #fff;
 	margin-top: 40px;
 	font-size: 10pt;
 }
 
-button.submitForm {
-	background-color: #0f0;
-	border: 4px solid #0f0;
-}
-
-#table .edit {
+.col-md-6 .edit {
 	display: none;
 }
 
@@ -190,7 +109,7 @@ button.submitForm {
 }
 
 @media screen and (max-width: 1312px) {
-	#content {
+	 {
 		margin: 0;
 	}
 }
@@ -199,32 +118,6 @@ button.submitForm {
 	#content {
 		margin: 0;
 	}
-
-	#menu {
-		margin: 20px 0px 30px 0px;
-		float: none;
-	}
-}
-
-#slideshow, #slideshow img {
-	height: 100%;
-	overflow: hidden;
-	z-index: -1;
-}
-
-#slideshow img {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	overflow: hidden;
-	filter: alpha(opacity=0);
-	opacity: 0;
-}
-
-#slideshow img:first-child {
-	filter: alpha(opacity=1);
-	opacity: 1;
 }
 
 #zoomWrap {
