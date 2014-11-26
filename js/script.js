@@ -1,6 +1,6 @@
 //============== Eventhandler ==================//
 
-document.addEventListener('DOMContentLoaded', function() {		// warte darauf, dass der Inhalt geladen wurde
+window.addEventListener('load', function() {					// warte darauf, dass der Inhalt geladen wurde
 	document.addEventListener('keydown', function(event) {
 		if (event.keyCode === 27) {								// Escape wurde gedrueckt
 			hideZoom();											// verstecke das Bildfenster
@@ -179,4 +179,4 @@ function createOption(value, text, disabled) {				// neue Option erstellen
 	    option.text = text;
 	    option.disabled = disabled ? true : false;			// kurzform fuer if() {..} else {...}
 	return option;
-};
+}
