@@ -7,21 +7,14 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('#newcityform').submit(function(event) {
-		$('button.btn-success').css('position', 'static');
-		$('button.btn-success').css('top', '0');
-		console.log($('#formemail').val());
-		$('#emailerror').hide();
-		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
-			event.preventDefault();																// Abbruch
-			$('#emailerror').show();
-			$('button.btn-success').css('position', 'relative');
-			$('button.btn-success').css('top', '-42px');
-		}
+	$('#cityform .submitForm').click(function() {
+		$('#cityform').submit();
 	});
 
-	$('.btn-success').click(function() {
-		$('cityform').submit();
+	$('#newcityform').submit(function(event) {
+		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
+			event.preventDefault();																// Abbruch
+		}
 	});
 
 	$('#zoom a').click(function() {

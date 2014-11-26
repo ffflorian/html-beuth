@@ -70,17 +70,21 @@ table, th, tr, td {
 	display: none;
 }
 
-#formupload {
-	height: 40px;
-	border: 0;
+#cityform .col-xs-7, #cityform label {
+	padding-right: 0;
+}
+
+#cityform label {
+	padding-left: 10px;
+}
+
+#cityform a, #cityform a:hover {
+	color: #fff;
 }
 
 .col-md-2 {
 	border-radius: 10px;
 	background-color:rgba(255,255,255,0.8);
-	line-height: 40pt;
-	width: 200px;
-	height: 430px;
 	padding: 25px 20px 20px 70px;
 	margin-left: 140px;
 }
@@ -103,7 +107,7 @@ footer {
 	display: none;
 }
 
-.img.editable {
+.editable.img {
 	background-size: 60px;
 	background-repeat: no-repeat;
 }
@@ -150,19 +154,4 @@ footer {
 #zoom a {
 	color: #f00;
 	text-decoration: none;
-}
-
-#emailerror {
-	display: none;
-	position: relative;
-	top: -40px;
-	right: -150px;
-	color: #f00;
-	font-size: 9pt;
-	font-weight: bold;
-	line-height: 10pt;
-	border-radius: 10px;
-	background-color: rgba(255,255,255,0.8);
-	width: 120px;
-	padding: 8px;
 }
