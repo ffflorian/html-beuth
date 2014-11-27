@@ -41,7 +41,7 @@
 									<th>Kommentar</th>
 								</tr>
 							</thead>
-							<tr>
+							<tr id="entry1">
 								<td class="editable date">01.10.2014</td>
 								<td class="edit date"><input type="date" class="form-control" value="2014-10-01" /></td>
 								<td class="editable temp">19 &deg;C</td>
@@ -57,14 +57,14 @@
 								<td class="edit comment"><input type="text" class="form-control" value="Tolles Wetter!" /></td>
 								<td class="editable buttons">
 									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 								<td class="edit buttons">
 									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 							</tr>
-							<tr>
+							<tr id="entry2">
 								<td class="editable date">08.10.2014</td>
 								<td class="edit date"><input type="date" class="form-control" value="2014-10-08" /></td>
 								<td class="editable temp">14 &deg;C</td>
@@ -80,14 +80,14 @@
 								<td class="edit comment"><input type="text" class="form-control" value="Es wird langsam kalt" /></td>
 								<td class="editable buttons">
 									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 								<td class="edit buttons">
 									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 							</tr>
-							<tr>
+							<tr id="entry3">
 								<td class="editable date">15.10.2014</td>
 								<td class="edit date"><input type="date" class="form-control" value="2014-10-16" /></td>
 								<td class="editable temp">14 &deg;C</td>
@@ -103,14 +103,14 @@
 								<td class="edit comment"><input type="text" class="form-control" value="Das Wetter h&auml;lt sich noch" /></td>
 								<td class="editable buttons">
 									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 								<td class="edit buttons">
 									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 							</tr>
-							<tr>
+							<tr id="entry4">
 								<td class="editable date">22.10.2014</td>
 								<td class="edit date"><input type="date" class="form-control" value="2014-10-22" /></td>
 								<td class="editable temp">9 &deg;C</td>
@@ -126,14 +126,14 @@
 								<td class="edit comment"><input type="text" class="form-control" value="Es regnet!" /></td>
 								<td class="editable buttons">
 									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 								<td class="edit buttons">
 									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 							</tr>
-							<tr>
+							<tr id="entry5">
 								<td class="editable date">29.10.2014</td>
 								<td class="edit date"><input type="date" class="form-control" value="2014-10-29" /></td>
 								<td class="editable temp">7 &deg;C</td>
@@ -149,11 +149,11 @@
 								<td class="edit comment"><input type="text" class="form-control" value="Echtes Herbstwetter" /></td>
 								<td class="editable buttons">
 									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 								<td class="edit buttons">
 									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 								</td>
 							</tr>
 						</table>
@@ -221,7 +221,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Schlie&szlig;en</span></button>
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
 						<h4 class="modal-title" id="frm_title">L&ouml;schen?</h4>
 					</div>
 					<div class="modal-body" id="frm_body">M&ouml;chten Sie diesen Eintrag wirklich l&ouml;schen?</div>

@@ -65,10 +65,18 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	$('.deletelink').on('click', function(e) {
 		e.preventDefault();
-		var el = $(this).parent();
-		var title = el.attr('data-title');
-		var msg = el.attr('data-message');
-		var dataForm = el.attr('data-form');
+		//var el = $(this).parent();
+		var id = $(this).parent().parent().attr('id');
+		console.log("id: " + id);
+		var title = $(this).attr('data-title');
+		var msg = $(this).attr('data-message');
+		var type = $(this).attr('data-type');
+		$('#frm_submit').attr('data-form', '#'+id);
+		console.log('data-form: ' + $('#frm_submit').attr('data-form'));
+		if (msg === "" && type === 'delete') {
+			title = "L&ouml;schen?";
+			msg = "Diesen Eintrag wirklich l&ouml;schen?";
+		}
 
 		$('#formConfirm')
 			.find('#frm_body').html(msg)
@@ -81,6 +89,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
 		/*var id = $(this).attr('data-form');
 		$(id).submit();*/
+		var dataForm = $(this).attr('data-form');
+		console.log('dataForm: ' + dataForm);
+		$(dataForm).hide();
 	});
 
 	initialize();
