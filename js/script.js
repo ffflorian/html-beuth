@@ -68,18 +68,18 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('.zoomlink').on('click', function() {
+	$('table').on('click', '.zoomlink', function() {
 		var img = $(this).find('img').attr('src');
 		$('#zoomImage').attr('src', img);
 		$('#zoomWrap').show();
 	});
 
-	$('.editlink').on('click', function() {
+	$('table').on('click', '.editlink', function() {
 		$(this).parent().parent().find('.editable').hide();
 		$(this).parent().parent().find('.edit').show();
 	});
 
-	$('.savelink').on('click', function() {
+	$('table').on('click', '.savelink', function() {
 		var tr = $(this).parent().parent();
 		tr.find('.editable.date').text(formatDate(tr.find('input[type=date]').val()));
 		tr.find('.editable.temp').html(tr.find('input[type=number]').val() + " &deg;C");
@@ -89,7 +89,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		tr.find('.editable').show();
 	});
 
-	$('.deletelink').on('click', function(e) {
+	$('table').on('click', '.deletelink', function(e) {
 		e.preventDefault();
 		//var el = $(this).parent();
 		var id = $(this).parent().parent().attr('id');
@@ -115,8 +115,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
 		/*var id = $(this).attr('data-form');
 		$(id).submit();*/
-		var dataForm = $(this).attr('data-form');
-		$(dataForm).hide();
+		var tr = $(this).attr('data-form');
+		$(tr).remove();
 	});
 
 	initialize();
