@@ -18,7 +18,28 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 		} else {
 			event.preventDefault();
+			var form = $('#newcityform');
+			var formDate = $('#formdate').val();
+			var formTemp = $('#formtemp').val();
+			var formCity = $('#formcity :selected').text();
+			var formComment = $('#formcomment').val();
+			var formEmail = $('#formemail').val();
 			$('#formemail').popover('hide');
+			var entries = $('table tr').length;
+			var entry = $('table tbody').append('<tr id="entry' + entries + '">' +
+				'<td class="editable date">' + formatDate(formDate) + '</td>' + 
+				'<td class="editable temp">' + formTemp + '&deg; C</td>' + 
+				'<td class="editable city">' + formCity + '</td>' +  
+				'<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></a></td>' +
+				'<td class="editable comment">' + formComment + '</td>' + 
+				'<td class="editable buttons">' +
+					'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
+					'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+				'</td>' +
+				'<td class="edit buttons">' +
+					'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
+					'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+				'</td>');
 		}
 	});
 

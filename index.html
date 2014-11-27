@@ -51,7 +51,7 @@
 									<select class="form-control">
 									</select>
 								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141001.jpg" class="wetterbild" alt="Wetterbild am 01.10.2014" /></a></td>
+								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141001.jpg" alt="Wetterbild am 01.10.2014" /></a></td>
 								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
 								<td class="editable comment">Tolles Wetter!</td>
 								<td class="edit comment"><input type="text" class="form-control" value="Tolles Wetter!" /></td>
@@ -74,7 +74,7 @@
 									<select class="form-control">
 									</select>
 								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141008.jpg" class="wetterbild" alt="Wetterbild am 08.10.2014" /></a></td>
+								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141008.jpg" alt="Wetterbild am 08.10.2014" /></a></td>
 								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
 								<td class="editable comment">Es wird langsam kalt</td>
 								<td class="edit comment"><input type="text" class="form-control" value="Es wird langsam kalt" /></td>
@@ -97,7 +97,7 @@
 									<select class="form-control">
 									</select>
 								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141015.jpg" class="wetterbild" alt="Wetterbild am 15.10.2014" /></a></td>
+								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141015.jpg" alt="Wetterbild am 15.10.2014" /></a></td>
 								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
 								<td class="editable comment">Das Wetter h&auml;lt sich noch</td>
 								<td class="edit comment"><input type="text" class="form-control" value="Das Wetter h&auml;lt sich noch" /></td>
@@ -120,7 +120,7 @@
 									<select class="form-control">
 									</select>
 								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141022.jpg" class="wetterbild" alt="Wetterbild am 22.10.2014" /></a></td>
+								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141022.jpg" alt="Wetterbild am 22.10.2014" /></a></td>
 								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
 								<td class="editable comment">Es regnet!</td>
 								<td class="edit comment"><input type="text" class="form-control" value="Es regnet!" /></td>
@@ -143,7 +143,7 @@
 									<select class="form-control">
 									</select>
 								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></a></td>
+								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141029.jpg" alt="Wetterbild am 29.10.2014" /></a></td>
 								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
 								<td class="editable comment">Echtes Herbstwetter</td>
 								<td class="edit comment"><input type="text" class="form-control" value="Echtes Herbstwetter" /></td>
@@ -171,13 +171,13 @@
 						<div class="form-group">
 							<label class="col-xs-4 control-label">Temperatur in &deg;C</label>
 							<div class="col-xs-4">
-								<input type="number" class="form-control" name="temp" max="100" min="-72" placeholder="20" required />
+								<input type="number" id="formtemp" class="form-control" name="temp" max="100" min="-72" placeholder="20" value="20" required />
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-xs-4 control-label">Ort</label>
 							<div class="col-xs-8">
-								<select class="cities form-control" required></select>
+								<select class="cities form-control" id="formcity" required></select>
 							</div>
 						</div>
 						<div class="form-group">
@@ -189,13 +189,13 @@
 						<div class="form-group">
 							<label class="col-xs-4 control-label">Kommentar</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" name="comment" placeholder="Tolles Wetter" required /><br />
+								<input type="text" class="form-control" id="formcomment" name="comment" value="bla" placeholder="Tolles Wetter" required /><br />
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-xs-4 control-label">Email-Adresse</label>
 							<div class="col-sm-8">
-								<input type="email" class="form-control" name="email" id="formemail" placeholder="name@beuth-hochschule.de" required title="Fehler" data-content="Nur Beuth-Hochschul-Adressen erlaubt!" />
+								<input type="email" class="form-control" name="email" id="formemail" value="name@beuth-hochschule.de" placeholder="name@beuth-hochschule.de" required title="Fehler" data-content="Nur Beuth-Hochschul-Adressen erlaubt!" />
 							</div>
 						</div>
 						<button type="submit" class="btn btn-success submitForm">Abspeichern <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
