@@ -54,13 +54,13 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('.savelink').on('click', function() {
-		var $tr = $(this).parent().parent();
-		$tr.find('.editable.date').text(formatDate($tr.find('input[type=date]').val()));
-		$tr.find('.editable.temp').html($tr.find('input[type=number]').val() + " &deg;C");
-		$tr.find('.editable.city').text($tr.find('select option:selected').text());
-		$tr.find('.editable.comment').text($tr.find('input[type=text]').val());
-		$tr.find('.edit').hide();
-		$tr.find('.editable').show();
+		var tr = $(this).parent().parent();
+		tr.find('.editable.date').text(formatDate(tr.find('input[type=date]').val()));
+		tr.find('.editable.temp').html(tr.find('input[type=number]').val() + " &deg;C");
+		tr.find('.editable.city').text(tr.find('select option:selected').text());
+		tr.find('.editable.comment').text(tr.find('input[type=text]').val());
+		tr.find('.edit').hide();
+		tr.find('.editable').show();
 	});
 
 	$('.deletelink').on('click', function(e) {
@@ -113,15 +113,15 @@ function initialize() {
 	});
 }
 
-function addCities($select) {
-	$select.append(new Option("Stadt", "", true));						// damit man nicht alle Staedte mehrfach eintragen muss
+function addCities(select) {
+	select.append(new Option("Stadt", "", true));						// damit man nicht alle Staedte mehrfach eintragen muss
 	$('select [value=""]').attr('disabled', true);
-	$select.append(new Option("Berlin", "koeln"));
-	$select.append(new Option("Köln", "berlin"));
-	$select.append(new Option("Frankfurt", "frankfurt"));
-	$select.append(new Option("Hamburg", "hamburg"));
-	$select.append(new Option("München", "muenchen"));
-	$select.append(new Option("Neue Stadt...", "neuestadt"));
+	select.append(new Option("Berlin", "koeln"));
+	select.append(new Option("Köln", "berlin"));
+	select.append(new Option("Frankfurt", "frankfurt"));
+	select.append(new Option("Hamburg", "hamburg"));
+	select.append(new Option("München", "muenchen"));
+	select.append(new Option("Neue Stadt...", "neuestadt"));
 }
 
 
