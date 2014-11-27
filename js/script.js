@@ -7,7 +7,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('#cityform .submitForm').click(function() {
+	$('#cityform .submitForm').on('click', function() {
 		$('#cityform').submit();
 	});
 
@@ -17,7 +17,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('#zoom a').click(function() {
+	$('#zoom a').on('click', function() {
 		$('#zoomWrap').hide();
 	});
 
@@ -33,7 +33,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}, false);
 	}*/
 
-	$('select').change(function() {
+	$('select').on('change', function() {
 		if ($(this).find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
 			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
 			if (userInput !== "" && userInput !== null) {
@@ -42,18 +42,18 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('.zoomlink').click(function() {
+	$('.zoomlink').on('click', function() {
 		var img = $(this).find('img').attr('src');
 		$('#zoomImage').attr('src', img);
 		$('#zoomWrap').show();
 	});
 
-	$('.editlink').click(function() {
+	$('.editlink').on('click', function() {
 		$(this).parent().parent().find('.editable').hide();
 		$(this).parent().parent().find('.edit').show();
 	});
 
-	$('.savelink').click(function() {
+	$('.savelink').on('click', function() {
 		var $tr = $(this).parent().parent();
 		$tr.find('.editable.date').text(formatDate($tr.find('input[type=date]').val()));
 		$tr.find('.editable.temp').html($tr.find('input[type=number]').val() + " &deg;C");
