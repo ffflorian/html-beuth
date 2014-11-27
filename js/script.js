@@ -14,6 +14,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('#newcityform').submit(function(event) {
 		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			event.preventDefault();																// Abbruch
+			$('#formemail').popover('show');
+
+		} else {
+			event.preventDefault();
+			$('#formemail').popover('hide');
 		}
 	});
 
@@ -67,12 +72,10 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		e.preventDefault();
 		//var el = $(this).parent();
 		var id = $(this).parent().parent().attr('id');
-		console.log("id: " + id);
 		var title = $(this).attr('data-title');
 		var msg = $(this).attr('data-message');
 		var type = $(this).attr('data-type');
 		$('#frm_submit').attr('data-form', '#'+id);
-		console.log('data-form: ' + $('#frm_submit').attr('data-form'));
 		if (msg === "" && type === 'delete') {
 			title = "L&ouml;schen?";
 			msg = "Diesen Eintrag wirklich l&ouml;schen?";
@@ -80,6 +83,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 		$('#formConfirm')
 			.find('#frm_body').html(msg)
+			.end().find('#frm_submit').html("Ja")
+			.end().find('#frm_cancel').html("Nein")
 			.end().find('#frm_title').html(title)
 			.end().modal('show');
 
@@ -90,7 +95,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		/*var id = $(this).attr('data-form');
 		$(id).submit();*/
 		var dataForm = $(this).attr('data-form');
-		console.log('dataForm: ' + dataForm);
 		$(dataForm).hide();
 	});
 
