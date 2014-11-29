@@ -11,14 +11,14 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		$('#cityform').submit();
 	});
 
-	$('#newcityform').submit(function(event) {
+	$('#newdataform').submit(function(event) {
 		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			event.preventDefault();																// Abbruch
 			$('#formemail').popover('show');
 
 		} else {
 			event.preventDefault();
-			var form = $('#newcityform');
+			var form = $('#newdataform');
 			var formDate = $('#formdate').val();
 			var formTemp = $('#formtemp').val();
 			var formCity = $('#formcity :selected').text();

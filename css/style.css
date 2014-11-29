@@ -44,12 +44,16 @@ div.city form {
 	margin-bottom: 10px;
 }
 
-.col-md-6 {
+.data {
 	width: 700px !important;
 	text-align: center;
 	padding: 20px 20px 20px 20px !important;
 	border-radius: 10px;
 	background-color: rgba(255,255,255,0.8);
+}
+
+.data .edit {
+	display: none;
 }
 
 table, th, tr, td {
@@ -62,7 +66,7 @@ table, th, tr, td {
 	background: #fff;
 }*/
 
-.col-md-6 .img, .col-md-6 img {
+td.img, td.img img {
 	width: 50px;
 }
 
@@ -78,14 +82,19 @@ table, th, tr, td {
 	padding-left: 10px;
 }
 
-#cityform a, #cityform a:hover, footer a, footer a:visited {
+#cityform a, footer a {
+	color: #fff;
+	text-decoration: none;
+}
+
+#cityform a:hover, footer a:hover {
 	color: #fff;
 }
 
-.col-md-2 {
+.newdata {
 	border-radius: 10px;
-	background-color:rgba(255,255,255,0.8);
-	padding: 25px 20px 20px 70px;
+	background-color: rgba(255,255,255,0.8);
+	padding-bottom: 20px;
 	margin-left: 140px;
 }
 
@@ -103,24 +112,14 @@ footer {
 	font-size: 10pt;
 }
 
-.col-md-6 .edit {
-	display: none;
-}
-
 .editable.img {
 	background-size: 60px;
 	background-repeat: no-repeat;
 }
 
 @media screen and (max-width: 1312px) {
-	 {
-		margin: 0;
-	}
-}
-
-@media screen and (max-width: 1212px) {
-	#content {
-		margin: 0;
+	 .newdata {
+		margin-left: 20px;
 	}
 }
 
