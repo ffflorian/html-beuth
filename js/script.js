@@ -130,13 +130,13 @@ function initialize() {
 
 	/*$.backstretch([
 		"img/wetter_bg.jpg",
-		"img/wetter/wetter1.jpg",
-		"img/wetter/wetter2.jpg",
-		"img/wetter/wetter3.jpg",
-		"img/wetter/wetter4.jpg",
-		"img/wetter/wetter5.jpg",
-		"img/wetter/wetter6.jpg",
-		"img/wetter/wetter7.jpg"
+		"img/wallpaper/wetter1.jpg",
+		"img/wallpaper/wetter2.jpg",
+		"img/wallpaper/wetter3.jpg",
+		"img/wallpaper/wetter4.jpg",
+		"img/wallpaper/wetter5.jpg",
+		"img/wallpaper/wetter6.jpg",
+		"img/wallpaper/wetter7.jpg"
 	], {duration: 4000, fade: 750});*/
 
 	var today = new Date();									// neues Datum erzeugen
