@@ -78,7 +78,7 @@ table, th, tr, td {
 	padding-left: 10px;
 }
 
-#cityform a, #cityform a:hover {
+#cityform a, #cityform a:hover, footer a, footer a:visited {
 	color: #fff;
 }
 
