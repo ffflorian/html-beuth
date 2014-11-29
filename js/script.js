@@ -1,4 +1,10 @@
-//============== Eventhandler ==================//
+/**
+* File script.js
+*
+* All scripts for the site
+*
+* @author Florian Keller
+*/
 
 $(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
 	$(document).keydown(function(event) {
@@ -12,7 +18,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('#newdataform').submit(function(event) {
-		if ($('#formemail').val().substring($('#formemail').val().length-20, $('#formemail').val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
+		var formEmail = $('#formemail').val();
+		if (formEmail.substring(formEmail.val().length-20,
+								formEmail.val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			event.preventDefault();																// Abbruch
 			$('#formemail').popover('show');
 
@@ -23,7 +31,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			var formTemp = $('#formtemp').val();
 			var formCity = $('#formcity :selected').text();
 			var formComment = $('#formcomment').val();
-			var formEmail = $('#formemail').val();
 			$('#formemail').popover('hide');
 			var entries = $('table tr').length;
 			var entry = $('table tbody').append('<tr id="entry' + entries + '">' +
@@ -119,13 +126,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		$(tr).remove();
 	});
 
-	initialize();
-});
-
-
-//============== Hauptfunktionen ===============//
-
-function initialize() {
 	$.backstretch("img/wetter_bg.jpg");
 
 	/*$.backstretch([
@@ -147,10 +147,10 @@ function initialize() {
 	$('select').each(function() {
 		addCities($(this));
 	});
-}
+});
 
 function addCities(select) {
-	select.append(new Option("Stadt", "", true));						// damit man nicht alle Staedte mehrfach eintragen muss
+	select.append(new Option("Stadt", "", true));			// damit man nicht alle Staedte mehrfach eintragen muss
 	$('select [value=""]').attr('disabled', true);
 	select.append(new Option("Berlin", "koeln"));
 	select.append(new Option("Köln", "berlin"));
@@ -161,11 +161,28 @@ function addCities(select) {
 }
 
 
-//============== Helferfunktionen ==============//
+/**
+* Function formatValue
+*
+* Returns a String with umlauts replaced to ae, oe, etc.
+*
+* @param String str The string with umlauts
+* @return The replaced string without umlauts
+*/
 
 function formatValue(str) {									// ersetze alle dt. Umlaute und gib das Wort in Kleinbuchstaben zurueck
 	return str.toLowerCase().replace(/\u00e4/g, "ae").replace(/\u00f6/g, "oe").replace(/\u00fc/g, "ue").replace(/\u00df/g, "ss").replace(/ /g, "_");
 }
+
+
+/**
+* Function formatDate
+*
+* Returns a date String in the dd.mm.yyyy format
+*
+* @param String date The date in the format yyyy-mm-dd
+* @return The replaced date string
+*/
 
 function formatDate(date) {									// uebersetze ein Datum vom ISO 8601-Format in die dt. Schreibweise und gib es zurueck
 	return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
