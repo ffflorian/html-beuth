@@ -19,14 +19,16 @@
 	$entryGET  = (isset($_GET['entry'])  && is_numeric($_GET['entry']) ? $_GET['entry']  : null);
 	$formatGET = (isset($_GET['format']) && in_array($_GET['format'], $formats) ? $_GET['format']  : null);
 
-	if (in_array($actionGET, $actions)) {
-		switch ($actionGET) {
-			case "getdata":
-				get_data($entryGET, $formatGET);
-				break;
-			case "entries":
-				get_entries();
-		}
+	switch ($actionGET) {
+		case "getdata":
+			get_data($entryGET, $formatGET);
+			break;
+		case "entries":
+			get_entries();
+			break;
+		default:
+			print ("No or wrong action specified! Available actions: ") . implode(", ", $actions);
+			break;
 	}
 
 	/**
@@ -67,12 +69,12 @@
 		$rows = array();
 
 		if ($entry) {
-			$query = "SELECT c.id, c.name, d.id, d.date, d.temp, d.city_id, d.image, d.comment
+			$query = "SELECT c.id, c.name as city, d.id, d.date, d.temp, d.image, d.comment
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  WHERE d.id = " . $entry;
 		} else {
-			$query = "SELECT c.id, c.name,       d.date, d.temp, d.city_id, d.image, d.comment
+			$query = "SELECT c.id, c.name as city,       d.date, d.temp, d.image, d.comment
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)";
 		}
@@ -81,7 +83,7 @@
 			switch ($format) {
 				case "html":
 					while ($r = $result->fetch_object()) {
-						print "Datum: " . $r->date . "<br>\n".
+						echo "Datum: " . $r->date . "<br>\n".
 						"Temperatur: " . $r->temp . " &deg; C<br>\n".
 						"Ort: " . $r->name . "<br>\n".
 						"Bild: <img src=\"../img/data/" . $r->image . "\" /><br>\n".
@@ -90,7 +92,7 @@
 					break;
 				case "text":
 					while ($r = $result->fetch_object()) {
-						print "Datum: " . $r->date . "\n".
+						echo "Datum: " . $r->date . "\n".
 						"Temperatur: " . $r->temp . " ° C\n".
 						"Ort: " . $r->name . "\n".
 						"Bild: ../img/data/" . $r->image . "\n".
@@ -103,7 +105,7 @@
 					}
 
 					//$rows = htmlentities($rows);
-					print json_encode($rows);
+					echo json_encode($rows);
 					break;
 			}
 		}
