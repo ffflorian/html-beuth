@@ -98,6 +98,14 @@ td.img, td.img img {
 	margin-left: 140px;
 }
 
+#status {
+	color: #fff;
+}
+
+.row {
+	display: none;
+}
+
 td .remove:hover {
 	color: #f00;
 }

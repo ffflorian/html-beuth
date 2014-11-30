@@ -137,6 +137,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	var yyyy = today.getFullYear();							// hole das Jahr
 	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
 
+	$('#status').text("Daten werden geladen...");
+
 	$.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
@@ -145,9 +147,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				action: "getdata"
 			},
 			error: function(request, status, error) {
-				console.log("JSON error: " + error);
+				$('#status').text("JSON error: " + error);
 			},
 			success: function(data) {
+				$('#status').hide();
+				$('.row').show();
 				$.each(data, function(i, item) {
 					var entry = data[i];
 					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
@@ -157,7 +161,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	var citiesJSON = {};
-
 	$.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
