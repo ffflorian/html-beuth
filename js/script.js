@@ -13,6 +13,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
+	$.ajaxSetup({ cache: false });
+
 	$('#searchform .submitForm').on('click', function() {
 		$('#searchform').submit();
 	});
@@ -158,88 +160,106 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
+			dataType: 'json',
 			data: {
-				action: 'getdata'
+				action: "getdata"
 			},
 			error: function(request, status, error) {
-				$('#ajax').html('<strong>An error has occurred: </strong>' + error);
+				console.log("JSON error: " + error);
 			},
-			dataType: 'json',
 			success: function(data) {
-				$(data).each(function(id, el) {
+				$.each(data, function(id, item) {
 					var entry = data[id];
 					addEntry(id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 				});
 			}
 			
 	});
-	
-	$('select').each(function() {
-		addCities($(this));
+
+	var citiesJSON = {};
+
+	$.ajax({
+			url: 'php/functions.php',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				action: "getcities"
+			},
+			error: function(request, status, error) {
+				console.log("JSON error: " + error);
+			},
+			success: function(data) {
+				citiesJSON = data;
+				$('select').each(function() {
+					addCities($(this), citiesJSON);
+				});
+				//$(data).each(function(id, item) {
+					
+				//});
+			}
+			
 	});
+
+	function addEntry(id, date, temp, city, image, comment) {
+		$('table tbody').append('<tr id="entry' + id + '">' +
+			'<td class="editable date">' + formatDate(date) + '</td>' +
+			'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
+			'<td class="editable temp">' + temp + '&deg; C</td>' +
+			'<td class="edit temp"><input type="number" class="form-control" value="' + temp + '" min="-72" max="100" /> &deg;C</td>' +
+			'<td class="editable city">' + city + '</td>' +
+			'<td class="edit city">' +
+				'<select class="form-control">' +
+				'</select>' +
+			'</td>' +
+			'<td class="editable img"><a href="#" class="zoomlink"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></a></td>' +
+			'<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>' +
+			'<td class="editable comment">' + comment + '</td>' +
+			'<td class="edit comment"><input type="text" class="form-control" value="' + comment + '" /></td>' +
+			'<td class="editable buttons">' +
+				'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
+				'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+			'</td>' +
+			'<td class="edit buttons">' +
+				'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
+				'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+			'</td>');
+		addCities($('#entry'  + id + ' select'), citiesJSON);
+	}
+
+	function addCities(select, data) {
+		select.append(new Option("Stadt", "", true));			// damit man nicht alle Staedte mehrfach eintragen muss
+		$('select [value=""]').attr('disabled', true);
+
+		$.each(data, function(id, obj) {
+			select.append(new Option(obj.name_long, obj.name_short));
+		});
+	}
+
+
+	/**
+	* Function formatValue
+	*
+	* Returns a String with umlauts replaced to ae, oe, etc.
+	*
+	* @param String str The string with umlauts
+	* @return The replaced string without umlauts
+	*/
+
+	function formatValue(str) {									// ersetze alle dt. Umlaute und gib das Wort in Kleinbuchstaben zurueck
+		return str.toLowerCase().replace(/\u00e4/g, "ae").replace(/\u00f6/g, "oe").replace(/\u00fc/g, "ue").replace(/\u00df/g, "ss").replace(/ /g, "_");
+	}
+
+
+	/**
+	* Function formatDate
+	*
+	* Returns a date String in the dd.mm.yyyy format
+	*
+	* @param String date The date in the format yyyy-mm-dd
+	* @return The replaced date string
+	*/
+
+	function formatDate(date) {									// uebersetze ein Datum vom ISO 8601-Format in die dt. Schreibweise und gib es zurueck
+		return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
+	}
 });
-
-function addEntry(id, date, temp, city, image, comment) {
-	$('table tbody').append('<tr id="entry' + id + '">' +
-		'<td class="editable date">' + formatDate(date) + '</td>' +
-		'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
-		'<td class="editable temp">' + temp + '&deg; C</td>' +
-		'<td class="edit temp"><input type="number" class="form-control" value="' + temp + '" min="-72" max="100" /> &deg;C</td>' +
-		'<td class="editable city">' + city + '</td>' +
-		'<td class="edit city">' +
-			'<select class="form-control">' +
-			'</select>' +
-		'</td>' +
-		'<td class="editable img"><a href="#" class="zoomlink"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></a></td>' +
-		'<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>' +
-		'<td class="editable comment">' + comment + '</td>' +
-		'<td class="edit comment"><input type="text" class="form-control" value="' + comment + '" /></td>' +
-		'<td class="editable buttons">' +
-			'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
-			'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
-		'</td>' +
-		'<td class="edit buttons">' +
-			'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
-			'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
-		'</td>');
-	addCities($('#entry'  + id + ' select'));
-}
-
-function addCities(select) {
-	select.append(new Option("Stadt", "", true));			// damit man nicht alle Staedte mehrfach eintragen muss
-	$('select [value=""]').attr('disabled', true);
-	select.append(new Option("Berlin", "koeln"));
-	select.append(new Option("Köln", "berlin"));
-	select.append(new Option("Frankfurt", "frankfurt"));
-	select.append(new Option("Hamburg", "hamburg"));
-	select.append(new Option("München", "muenchen"));
-	select.append(new Option("Neue Stadt...", "neuestadt"));
-}
-
-
-/**
-* Function formatValue
-*
-* Returns a String with umlauts replaced to ae, oe, etc.
-*
-* @param String str The string with umlauts
-* @return The replaced string without umlauts
-*/
-
-function formatValue(str) {									// ersetze alle dt. Umlaute und gib das Wort in Kleinbuchstaben zurueck
-	return str.toLowerCase().replace(/\u00e4/g, "ae").replace(/\u00f6/g, "oe").replace(/\u00fc/g, "ue").replace(/\u00df/g, "ss").replace(/ /g, "_");
-}
-
-
-/**
-* Function formatDate
-*
-* Returns a date String in the dd.mm.yyyy format
-*
-* @param String date The date in the format yyyy-mm-dd
-* @return The replaced date string
-*/
-
-function formatDate(date) {									// uebersetze ein Datum vom ISO 8601-Format in die dt. Schreibweise und gib es zurueck
-	return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
-}
