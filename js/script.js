@@ -7,12 +7,6 @@
 */
 
 $(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
-	$(document).keydown(function(event) {
-		if (event.keyCode === 27) {								// Escape wurde gedrueckt
-			$('#zoomWrap').hide();								// verstecke das Bildfenster
-		}
-	});
-
 	$.ajaxSetup({ cache: false });
 
 	$('#searchform .submitForm').on('click', function() {
@@ -29,10 +23,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#formemail').popover('hide');
 			sendData('#newdataform');
 		}
-	});
-
-	$('#zoom a').on('click', function() {
-		$('#zoomWrap').hide();
 	});
 
 	/*var trs = document.getElementsByTagName('tr');
@@ -56,10 +46,13 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('table').on('click', '.zoomlink', function() {
-		var img = $(this).find('img').attr('src');
-		$('#zoomImage').attr('src', img);
-		$('#zoomWrap').show();
+	$('table').on('click', '.wetterbild', function() {
+		var img = $(this).attr('src');
+		var text = $(this).attr('alt');
+		$('#zoom')
+			.find('#zoomtitle').html(text)
+			.end().find('#zoombody').html('<img src="' + img + '" alt="Wetterbild" />')
+			.end().modal('show');
 	});
 
 	$('table').on('click', '.editlink', function() {
@@ -195,7 +188,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				'<select class="form-control">' +
 				'</select>' +
 			'</td>' +
-			'<td class="editable img"><a href="#" class="zoomlink"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></a></td>' +
+			'<td class="editable img"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></td>' +
 			'<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>' +
 			'<td class="editable comment">' + comment + '</td>' +
 			'<td class="edit comment"><input type="text" class="form-control" value="' + comment + '" /></td>' +

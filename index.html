@@ -97,12 +97,23 @@
 				<a href="http://floriankeller.de">Florian Keller</a>, Maurice Stolte
 			</footer>
 		</div>
-		<div id="zoomWrap">
+		<!--<div id="zoomWrap">
 			<div id="zoom">
 				<div class="close">
 					<a href="#">&times;</a>
 				</div>
 				<img alt="zoomImage" id="zoomImage" />
+			</div>
+		</div>-->
+		<div class="modal fade" id="zoom" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+						<h4 class="modal-title" id="zoomtitle"></h4>
+					</div>
+					<div class="modal-body" id="zoombody"></div>
+				</div>
 			</div>
 		</div>
 		<div class="modal fade" id="formConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
