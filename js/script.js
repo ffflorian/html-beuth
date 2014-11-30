@@ -25,7 +25,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		if (formEmail.substring(formEmail.length-20,
 								formEmail.length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			$('#formemail').popover('show');
-
 		} else {
 			$('#formemail').popover('hide');
 			sendData('#newdataform');
@@ -81,11 +80,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('table').on('click', '.removelink', function(e) {
 		e.preventDefault();
 		//var el = $(this).parent();
-		var id = $(this).parent().parent().attr('id');
+		var id = $(this).parent().parent().attr('data-id');
 		var title = $(this).attr('data-title');
 		var msg = $(this).attr('data-message');
 		var type = $(this).attr('data-type');
-		$('#frm_submit').attr('data-form', '#'+id);
+		$('#frm_submit').attr('remove-id', id);
 		if (msg === "" && type === 'remove') {
 			title = "L&ouml;schen?";
 			msg = "Diesen Eintrag wirklich l&ouml;schen?";
@@ -102,8 +101,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
-		var tr = $(this).attr('data-form');
-		var entryID = tr.attr('data-id');
+		console.log('remove-id: ' + $(this).attr('remove-id'));
+		var tr = $('table').find('[data-id="' + $(this).attr('remove-id') + '"]');
+		console.log(tr);
+		var entryID = $(tr).attr('data-id');
+		console.log(entryID);
 		$.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
@@ -205,7 +207,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
 				'<button type="button" class="btn btn-danger btn-xs removelink" data-type="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
 			'</td>').appendTo($('table tbody'));
-		//console.log("id: " + id);
+		console.log("id: " + id);
 		addCities(tr.find('select'), citiesJSON);
 	}
 
@@ -213,27 +215,30 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		//console.log(select);
 		$('<option/>', {
 			text: "Stadt",
+			value: "",
 			disabled: true
 		}).appendTo(select);
 
 		$.each(data, function(id, obj) {
 			$('<option/>', {
 				text: obj.name_long,
-				name: obj.id
+				name: obj.name_short,
+				value: obj.id
 			}).appendTo(select);
 		});
 	}
 
 	function sendData(form) {
 		var JSONdata = {};
+		JSONdata['id'] = generateID();
+		JSONdata['user'] = "lkf4vyxn9";
+		JSONdata['image'] = "mitte20141001.jpg";
 		$(form + ' *').filter(':input').each(function(i, obj) {
-			JSONdata['id'] = Math.random().toString(36).substr(2, 9);
-			JSONdata[obj.attr('name')] = obj.val();
+			JSONdata[$(obj).attr('name')] = $(obj).val();
 			delete JSONdata['undefined'];
 		});
-		JSONdata['city'] = $(form + 'option:selected').attr('data-id');
-		var formId = $('table tr').length;
 		//console.log(JSONdata);
+		var formId = $('table tr').length;
 		var request = $.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -250,7 +255,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 
 		request.done(function() {
-			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $(form + ' option:selected').text(), "mitte20141001.jpg", JSONdata['comment']);
+			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $(form + ' option:selected').text(), JSONdata['image'], JSONdata['comment']);
 		});
 
 		request.fail(function(jqXHR, textStatus) {
@@ -287,13 +292,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
 	}
 
-	function htmlEncode(value){
-	//create a in-memory div, set it's inner text(which jQuery automatically encodes)
-	//then grab the encoded contents back out.  The div never exists on the page.
-		return value.html();
-	}
-
-	function htmlDecode(value){
-		return $('<div/>').html(value).text();
+	function generateID() {
+		return Math.random().toString(36).substr(2, 9);
 	}
 });

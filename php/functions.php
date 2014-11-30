@@ -20,10 +20,10 @@
 		exit();
 	}
 
-	$actionGET = (isset($_GET['action']) ?  $_GET['action'] : "");
-	$entryGET  = (isset($_GET['entry'])  && is_numeric($_GET['entry']) ? $_GET['entry']  : null);
+	$actionGET = (isset($_GET['action']) ? $_GET['action'] : "");
+	$entryGET  = (isset($_GET['entry']) ? $mysqli->real_escape_string($_GET['entry']) : null);
 	$formatGET = (isset($_GET['format']) && in_array($_GET['format'], $formats) ? $_GET['format']  : null);
-	$cityGET   = (isset($_GET['city']) && is_numeric($_GET['city']) ? $_GET['city']  : null);
+	$cityGET   = (isset($_GET['city']) ? $mysqli->real_escape_string($_GET['city']) : null);
 
 	switch ($actionGET) {
 		case "getdata":
@@ -83,7 +83,7 @@
 		header('Content-type: application/json');
 		$obj = json_decode($json);
 		$query = "INSERT INTO data (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
-				  VALUES ('" . $obj->id . "', '". date('Y-m-d H:i:s') . "', '". $obj->date . "', '1', '". $obj->temp . "', '1', 'mitte20141001.jpg', '". $obj->comment . "');";
+				  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
 		if ($mysqli->query($query) === TRUE) {
 			echo json_encode(array("status" => "success"));
 		} else {
@@ -139,11 +139,13 @@
 			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
-					  WHERE d.id = " . $entry;
+					  WHERE d.id = $entry
+					  ORDER BY `date` ASC";
 		} else {
 			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
 					  FROM data d
-					  INNER JOIN cities c on (c.id = d.city_id)";
+					  INNER JOIN cities c on (c.id = d.city_id)
+					  ORDER BY `date` ASC";
 		}
 
 		if ($result = $mysqli->query($query)) {
@@ -188,7 +190,7 @@
 
 		if ($entry) {
 			$query = "DELETE FROM data
-					  WHERE id = " . $entry;
+					  WHERE id = '$entry'";
 			if ($mysqli->query($query) === TRUE) {
 				echo json_encode(array("status" => "success"));
 			} else {
