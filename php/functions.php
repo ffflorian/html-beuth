@@ -12,18 +12,18 @@
 
 	require_once('dbconnect.php');
 
-	$actions = array("getdata", "getcities", "entries");
+	$actions = array("getdata", "getcities", "entries", "removeentry", "removecity");
 	$formats = array("json", "text", "html");
-
 
 	if ($json = file_get_contents('php://input')) {
 		put_data($json);
 		exit();
-	};
+	}
 
 	$actionGET = (isset($_GET['action']) ?  $_GET['action'] : "");
 	$entryGET  = (isset($_GET['entry'])  && is_numeric($_GET['entry']) ? $_GET['entry']  : null);
 	$formatGET = (isset($_GET['format']) && in_array($_GET['format'], $formats) ? $_GET['format']  : null);
+	$cityGET   = (isset($_GET['city']) && is_numeric($_GET['city']) ? $_GET['city']  : null);
 
 	switch ($actionGET) {
 		case "getdata":
@@ -34,6 +34,12 @@
 			break;
 		case "entries":
 			get_entries();
+			break;
+		case "removeentry":
+			remove_entry($entryGET);
+			break;
+		case "removecity":
+			remove_city($cityGET);
 			break;
 		default:
 			print ("No or wrong action specified! Available actions: ") . implode(", ", $actions);
@@ -173,6 +179,40 @@
 
 		if ($mysqli->error) {
 			printf("Error: %s\n", $mysqli->error);
+		}
+	}
+
+	function remove_entry($entry) {
+		global $mysqli;
+		
+		if ($entry) {
+			$query = "DELETE FROM data
+					  WHERE id = " . $entry;
+			if ($mysqli->query($query) === TRUE) {
+				echo json_encode(array("status" => "success"));
+			} else {
+				//var_dump($obj);
+				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+			}
+		} else {
+			echo "Remove entry: No entry specified!";
+		}
+	}
+
+	function remove_city($city) {
+		global $mysqli;
+
+		if ($city) {
+			$query = "DELETE FROM cities
+					  WHERE id = " . $city;
+			if ($mysqli->query($query) === TRUE) {
+				echo json_encode(array("status" => "success"));
+			} else {
+				//var_dump($obj);
+				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+			}
+		} else {
+			echo "Remove city: No city specified!";
 		}
 	}
 ?>
