@@ -13,40 +13,25 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	$('#cityform .submitForm').on('click', function() {
-		$('#cityform').submit();
+	$('#searchform .submitForm').on('click', function() {
+		$('#searchform').submit();
 	});
 
-	$('#newdataform').submit(function(event) {
+	$(document).on('submit', '#newdataform', function(event) {
+		event.preventDefault();
 		var formEmail = $('#formemail').val();
-		if (formEmail.substring(formEmail.val().length-20,
-								formEmail.val().length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
-			event.preventDefault();																// Abbruch
+		if (formEmail.substring(formEmail.length-20,
+								formEmail.length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
 			$('#formemail').popover('show');
 
 		} else {
-			event.preventDefault();
-			var form = $('#newdataform');
 			var formDate = $('#formdate').val();
 			var formTemp = $('#formtemp').val();
 			var formCity = $('#formcity :selected').text();
 			var formComment = $('#formcomment').val();
 			$('#formemail').popover('hide');
 			var entries = $('table tr').length;
-			var entry = $('table tbody').append('<tr id="entry' + entries + '">' +
-				'<td class="editable date">' + formatDate(formDate) + '</td>' + 
-				'<td class="editable temp">' + formTemp + '&deg; C</td>' + 
-				'<td class="editable city">' + formCity + '</td>' +  
-				'<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141029.jpg" class="wetterbild" alt="Wetterbild am 29.10.2014" /></a></td>' +
-				'<td class="editable comment">' + formComment + '</td>' + 
-				'<td class="editable buttons">' +
-					'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
-					'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
-				'</td>' +
-				'<td class="edit buttons">' +
-					'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
-					'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
-				'</td>');
+			addEntry(entries, formDate, formTemp, formCity, 0, formComment);
 		}
 	});
 
@@ -147,7 +132,45 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('select').each(function() {
 		addCities($(this));
 	});
+
+	$.ajax({
+			url: 'php/functions.php',
+			data: {
+				action: 'getdata'
+			},
+			error: function(request, status, error) {
+				$('#ajax').html('<strong>An error has occurred: </strong>' + error);
+			},
+			dataType: 'json',
+			success: function(data) {
+				console.log('Success');
+				$(data).each(function(id, el) {
+					var entry = data[id];
+					addEntry(id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
+				});
+			},
+			type: 'GET'
+	});
 });
+
+function addEntry(id, date, temp, city, image, comment) {
+	console.log("comment: " + comment);
+	$('table tbody').append('<tr id="entry' + id + '">');
+	$('table tbody').append('<tr id="entry' + id + '">' +
+		'<td class="editable date">' + formatDate(date) + '</td>' + 
+		'<td class="editable temp">' + temp + '&deg; C</td>' + 
+		'<td class="editable city">' + city + '</td>' +  
+		'<td class="editable img"><a href="#" class="zoomlink"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></a></td>' +
+		'<td class="editable comment">' + comment + '</td>' + 
+		'<td class="editable buttons">' +
+			'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
+			'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+		'</td>' +
+		'<td class="edit buttons">' +
+			'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
+			'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+		'</td>');
+}
 
 function addCities(select) {
 	select.append(new Option("Stadt", "", true));			// damit man nicht alle Staedte mehrfach eintragen muss

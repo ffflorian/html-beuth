@@ -18,7 +18,7 @@
 			<header>
 				<h1>Wetter</h1>
 				<div class="city"><span>Berlin</span>
-					<form action="form_response.php" id="cityform" method="post">
+					<form action="form_response.php" id="searchform" method="post">
 						<div class="form-group">
 							<div class="col-xs-7">
 								<input type="text" class="form-control searchbox" placeholder="Stadt suchen..." />
@@ -42,121 +42,8 @@
 									<th></th>
 								</tr>
 							</thead>
-							<tr id="entry1">
-								<td class="editable date">01.10.2014</td>
-								<td class="edit date"><input type="date" class="form-control" value="2014-10-01" /></td>
-								<td class="editable temp">19 &deg;C</td>
-								<td class="edit temp"><input type="number" class="form-control" value="19" min="-72" max="100" /> &deg;C</td>
-								<td class="editable city">Berlin</td>
-								<td class="edit">
-									<select class="form-control">
-									</select>
-								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141001.jpg" alt="Wetterbild am 01.10.2014" /></a></td>
-								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
-								<td class="editable comment">Tolles Wetter!</td>
-								<td class="edit comment"><input type="text" class="form-control" value="Tolles Wetter!" /></td>
-								<td class="editable buttons">
-									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-								<td class="edit buttons">
-									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-							</tr>
-							<tr id="entry2">
-								<td class="editable date">08.10.2014</td>
-								<td class="edit date"><input type="date" class="form-control" value="2014-10-08" /></td>
-								<td class="editable temp">14 &deg;C</td>
-								<td class="edit temp"><input type="number" class="form-control" value="14" min="-72" max="100" /> &deg;C</td>
-								<td class="editable city">Berlin</td>
-								<td class="edit city">
-									<select class="form-control">
-									</select>
-								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141008.jpg" alt="Wetterbild am 08.10.2014" /></a></td>
-								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
-								<td class="editable comment">Es wird langsam kalt</td>
-								<td class="edit comment"><input type="text" class="form-control" value="Es wird langsam kalt" /></td>
-								<td class="editable buttons">
-									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-								<td class="edit buttons">
-									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-							</tr>
-							<tr id="entry3">
-								<td class="editable date">15.10.2014</td>
-								<td class="edit date"><input type="date" class="form-control" value="2014-10-16" /></td>
-								<td class="editable temp">14 &deg;C</td>
-								<td class="edit temp"><input type="number" class="form-control" value="14" min="-72" max="100" /> &deg;C</td>
-								<td class="editable city">Berlin</td>
-								<td class="edit city">
-									<select class="form-control">
-									</select>
-								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141015.jpg" alt="Wetterbild am 15.10.2014" /></a></td>
-								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
-								<td class="editable comment">Das Wetter h&auml;lt sich noch</td>
-								<td class="edit comment"><input type="text" class="form-control" value="Das Wetter h&auml;lt sich noch" /></td>
-								<td class="editable buttons">
-									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-								<td class="edit buttons">
-									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-							</tr>
-							<tr id="entry4">
-								<td class="editable date">22.10.2014</td>
-								<td class="edit date"><input type="date" class="form-control" value="2014-10-22" /></td>
-								<td class="editable temp">9 &deg;C</td>
-								<td class="edit temp"><input type="number" class="form-control" value="9" min="-72" max="100" /> &deg;C</td>
-								<td class="editable city">Berlin</td>
-								<td class="edit">
-									<select class="form-control">
-									</select>
-								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141022.jpg" alt="Wetterbild am 22.10.2014" /></a></td>
-								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
-								<td class="editable comment">Es regnet!</td>
-								<td class="edit comment"><input type="text" class="form-control" value="Es regnet!" /></td>
-								<td class="editable buttons">
-									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-								<td class="edit buttons">
-									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-							</tr>
-							<tr id="entry5">
-								<td class="editable date">29.10.2014</td>
-								<td class="edit date"><input type="date" class="form-control" value="2014-10-29" /></td>
-								<td class="editable temp">7 &deg;C</td>
-								<td class="edit temp"><input type="number" class="form-control" value="7" min="-72" max="100" /> &deg;C</td>
-								<td class="editable city">Berlin</td>
-								<td class="edit">
-									<select class="form-control">
-									</select>
-								</td>
-								<td class="editable img"><a href="#" class="zoomlink"><img src="img/mitte20141029.jpg" alt="Wetterbild am 29.10.2014" /></a></td>
-								<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>
-								<td class="editable comment">Echtes Herbstwetter</td>
-								<td class="edit comment"><input type="text" class="form-control" value="Echtes Herbstwetter" /></td>
-								<td class="editable buttons">
-									<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-								<td class="edit buttons">
-									<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-									<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-								</td>
-							</tr>
+							<tbody>
+							</tbody>
 						</table>
 					</div>
 				</div>
