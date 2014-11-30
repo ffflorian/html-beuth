@@ -33,16 +33,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			});
 			$('#formemail').popover('hide');
 			var formId = $('table tr').length;
-
-			//console.log("Request: " + JSON.stringify(JSONdata));
+			//console.log(JSONdata);
 			var request = $.ajax({
-				cache: false,
-				url: 'php/functions.php',
 				type: 'POST',
 				dataType: 'json',
-				data: JSONdata,
+				url: 'php/functions.php',
+				data: JSON.stringify(JSONdata),
+				contentType: "application/json",
 				success: function(response) {
-					console.log("Status: " + response.status);
+					//console.log("Status: " + response.status);
 					//console.log(response);
 				},
 				error: function() {
@@ -51,7 +50,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			});
 
 			request.done(function() {
-				addEntry(formId, formDate, formTemp, formCity, 0, formComment);
+				addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['city'], "mitte20141001.jpg", JSONdata['comment']);
 			});
 
 			request.fail(function(jqXHR, textStatus) {

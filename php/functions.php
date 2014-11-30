@@ -16,8 +16,8 @@
 	$formats = array("json", "text", "html");
 
 
-	if ($_POST) {
-		put_data();
+	if ($json = file_get_contents('php://input')) {
+		put_data($json);
 		exit();
 	};
 
@@ -66,11 +66,18 @@
 	* Receives JSON data via POST and saves it to the database
 	*/
 
-	function put_data() {
+	function put_data($json) {
+		global $mysqli;
 		header('Content-type: application/json');
-		$json = file_get_contents('php://input');
-		$obj  = json_decode($json);
-		echo json_encode(array('status' => 'error')); //echo json_encode(array('msg' => 'success', 'postid' => mysql_insert_id())
+		$obj = json_decode($json);
+		$query = "INSERT INTO data (id, created_at, date, user_id, temp, city_id, image, comment)
+				  VALUES (NULL, '". date('Y-m-d H:i:s') . "', '". $obj->date . "', '1', '". $obj->temp . "', '1', 'mitte20141001.jpg', '". $obj->comment . "');";
+		if ($mysqli->query($query) === TRUE) {
+			echo json_encode(array("status" => "success"));
+		} else {
+			//var_dump($obj);
+			echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+		}
 	}
 
 	/**
