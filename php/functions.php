@@ -82,7 +82,7 @@
 		global $mysqli;
 		header('Content-type: application/json');
 		$obj = json_decode($json);
-		$query = "INSERT INTO data (id, created_at, date, user_id, temp, city_id, image, comment)
+		$query = "INSERT INTO data (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
 				  VALUES (NULL, '". date('Y-m-d H:i:s') . "', '". $obj->date . "', '1', '". $obj->temp . "', '1', 'mitte20141001.jpg', '". $obj->comment . "');";
 		if ($mysqli->query($query) === TRUE) {
 			echo json_encode(array("status" => "success"));

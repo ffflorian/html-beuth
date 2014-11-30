@@ -27,6 +27,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#formemail').popover('show');
 
 		} else {
+			$('#formemail').popover('hide');
 			sendData('#newdataform');
 		}
 	});
@@ -77,7 +78,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		tr.find('.editable').show();
 	});
 
-	$('table').on('click', '.deletelink', function(e) {
+	$('table').on('click', '.removelink', function(e) {
 		e.preventDefault();
 		//var el = $(this).parent();
 		var id = $(this).parent().parent().attr('id');
@@ -85,7 +86,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		var msg = $(this).attr('data-message');
 		var type = $(this).attr('data-type');
 		$('#frm_submit').attr('data-form', '#'+id);
-		if (msg === "" && type === 'delete') {
+		if (msg === "" && type === 'remove') {
 			title = "L&ouml;schen?";
 			msg = "Diesen Eintrag wirklich l&ouml;schen?";
 		}
@@ -101,10 +102,25 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
-		/*var id = $(this).attr('data-form');
-		$(id).submit();*/
 		var tr = $(this).attr('data-form');
-		$(tr).remove();
+		var entryID = $(tr).attr('id').substring(5,6);
+		$.ajax({
+			url: 'php/functions.php',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				action: "removeentry",
+				entry: entryID
+			},
+			error: function(request, status, error) {
+				console.log("JSON error: " + error);
+			},
+			success: function(data) {
+				$(tr).remove();
+			}
+			
+		});
+		
 	});
 
 	$.backstretch("img/wetter_bg.jpg");
@@ -162,9 +178,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				$('select').each(function() {
 					addCities($(this), citiesJSON);
 				});
-				//$(data).each(function(id, item) {
-					
-				//});
 			}
 			
 	});
@@ -186,11 +199,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			'<td class="edit comment"><input type="text" class="form-control" value="' + comment + '" /></td>' +
 			'<td class="editable buttons">' +
 				'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
-				'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+				'<button type="button" class="btn btn-danger btn-xs removelink" data-type="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
 			'</td>' +
 			'<td class="edit buttons">' +
 				'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
-				'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+				'<button type="button" class="btn btn-danger btn-xs removelink" data-type="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
 			'</td>');
 		addCities($('#entry'  + id + ' select'), citiesJSON);
 	}
@@ -206,37 +219,36 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	function sendData(form) {
 		var JSONdata = {};
-			$(form).filter(':input').each(function(i, obj) {
-				var input = $(obj);
-				JSONdata[input.attr('name')] = input.val();
-				delete JSONdata['undefined'];
-			});
-			$('#formemail').popover('hide');
-			var formId = $('table tr').length;
-			//console.log(JSONdata);
-			var request = $.ajax({
-				type: 'POST',
-				dataType: 'json',
-				url: 'php/functions.php',
-				data: JSON.stringify(JSONdata),
-				contentType: "application/json",
-				success: function(response) {
-					//console.log("Status: " + response.status);
-					//console.log(response);
-				},
-				error: function() {
-					console.log("jQuery error");
-				}
-			});
+		$(form + ' *').filter(':input').each(function(i, obj) {
+			var input = $(obj);
+			JSONdata[input.attr('name')] = input.val();
+			delete JSONdata['undefined'];
+		});
+		var formId = $('table tr').length;
+		//console.log(JSONdata);
+		var request = $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: 'php/functions.php',
+			data: JSON.stringify(JSONdata),
+			contentType: "application/json",
+			success: function(response) {
+				//console.log("Status: " + response.status);
+				//console.log(response);
+			},
+			error: function() {
+				console.log("jQuery error");
+			}
+		});
 
-			request.done(function() {
-				addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['city'], "mitte20141001.jpg", JSONdata['comment']);
-			});
+		request.done(function() {
+			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['city'], "mitte20141001.jpg", JSONdata['comment']);
+		});
 
-			request.fail(function(jqXHR, textStatus) {
-				console.log("Request failed: " + textStatus);
-				console.log("Received: " + JSON.stringify(jqXHR));
-			});
+		request.fail(function(jqXHR, textStatus) {
+			console.log("Request failed: " + textStatus);
+			console.log("Received: " + JSON.stringify(jqXHR));
+		});
 	}
 
 
