@@ -51,11 +51,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}, false);
 	}*/
 
-	$('select').on('change', function() {
+	$(document).on('change', 'select', function() {
 		if ($(this).find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
 			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
 			if (userInput !== "" && userInput !== null) {
-				$(this).append(new Option(userInput, formatValue(userInput), true, true));						// erstelle neue Option mit der Benutzereingabe
+				$(this).append(new Option(userInput, formatValue(userInput), true, true));			// erstelle neue Option mit der Benutzereingabe
 			}
 		}
 	});
@@ -129,9 +129,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
 	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
-	$('select').each(function() {
-		addCities($(this));
-	});
 
 	$.ajax({
 			url: 'php/functions.php',
@@ -143,7 +140,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			},
 			dataType: 'json',
 			success: function(data) {
-				console.log('Success');
 				$(data).each(function(id, el) {
 					var entry = data[id];
 					addEntry(id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
@@ -151,17 +147,27 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			},
 			type: 'GET'
 	});
+	
+	$('select').each(function() {
+		addCities($(this));
+	});
 });
 
 function addEntry(id, date, temp, city, image, comment) {
-	console.log("comment: " + comment);
-	$('table tbody').append('<tr id="entry' + id + '">');
 	$('table tbody').append('<tr id="entry' + id + '">' +
-		'<td class="editable date">' + formatDate(date) + '</td>' + 
-		'<td class="editable temp">' + temp + '&deg; C</td>' + 
-		'<td class="editable city">' + city + '</td>' +  
+		'<td class="editable date">' + formatDate(date) + '</td>' +
+		'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
+		'<td class="editable temp">' + temp + '&deg; C</td>' +
+		'<td class="edit temp"><input type="number" class="form-control" value="' + temp + '" min="-72" max="100" /> &deg;C</td>' +
+		'<td class="editable city">' + city + '</td>' +
+		'<td class="edit city">' +
+			'<select class="form-control">' +
+			'</select>' +
+		'</td>' +
 		'<td class="editable img"><a href="#" class="zoomlink"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></a></td>' +
-		'<td class="editable comment">' + comment + '</td>' + 
+		'<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>' +
+		'<td class="editable comment">' + comment + '</td>' +
+		'<td class="edit comment"><input type="text" class="form-control" value="' + comment + '" /></td>' +
 		'<td class="editable buttons">' +
 			'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
 			'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
@@ -170,6 +176,7 @@ function addEntry(id, date, temp, city, image, comment) {
 			'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
 			'<button type="button" class="btn btn-danger btn-xs deletelink" data-type="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
 		'</td>');
+	addCities($('#entry'  + id + ' select'));
 }
 
 function addCities(select) {
