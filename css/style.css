@@ -74,20 +74,20 @@ td.img, td.img img {
 	display: none;
 }
 
-#cityform .col-xs-7, #cityform label {
+#searchform .col-xs-7, #searchform label {
 	padding-right: 0;
 }
 
-#cityform label {
+#searchform label {
 	padding-left: 10px;
 }
 
-#cityform a, footer a {
+#searchform a, footer a {
 	color: #fff;
 	text-decoration: none;
 }
 
-#cityform a:hover, footer a:hover {
+#searchform a:hover, footer a:hover {
 	color: #fff;
 }
 
