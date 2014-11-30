@@ -18,7 +18,7 @@
 			<header>
 				<h1>Wetter</h1>
 				<div class="city"><span>Berlin</span>
-					<form action="form_response.php" id="searchform" method="post">
+					<form action="" id="searchform" method="post">
 						<div class="form-group">
 							<div class="col-xs-7">
 								<input type="text" class="form-control searchbox" placeholder="Stadt suchen..." />
@@ -28,67 +28,95 @@
 					</form>
 				</div>
 			</header>
-			<div id="status"></div>
 			<div class="row">
-				<div class="col-md-6 data">
-					<div class="table-responsive">
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th>Datum</th>
-									<th>Temperatur</th>
-									<th>Ort</th>
-									<th>Bild</th>
-									<th>Kommentar</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
+				<div class="col-md-5 found">
+					<div class="panel panel-default" style="min-height: 100px">
+						<div class="panel-heading">
+							<h4 class="panel-title">Gespeicherte Daten</h4>
+						</div>
+						<div class="panel-body">
+							<div id="found">Stadt gefunden: Berlin</div>
+						</div>
 					</div>
 				</div>
-				<div class="col-md-3 newdata">
-					<h4>Neue Daten eingeben</h4>
-					<form class="form-horizontal" role="form" action="form_response.php" method="post" id="newdataform">
-						<div class="form-group">
-							<label class="col-xs-4 control-label">Datum</label>
-							<div class="col-sm-8">
-								<input type="date" class="form-control" id="formdate" name="date" required />
+			</div>
+			<div class="clearfix"></div>
+			<div id="status"></div>
+			<div class="row">
+				<div class="col-md-5">
+					<div class="panel panel-primary data">
+						<div class="panel-heading">
+							<h4 class="panel-title">Gespeicherte Daten</h4>
+						</div>
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>Datum</th>
+											<th>Temperatur</th>
+											<th>Ort</th>
+											<th>Bild</th>
+											<th>Kommentar</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-xs-4 control-label">Temperatur in &deg;C</label>
-							<div class="col-xs-4">
-								<input type="number" id="formtemp" class="form-control" name="temp" max="100" min="-72" placeholder="20" value="20" required />
-							</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-primary newdata">
+						<div class="panel-heading">
+							<h4 class="panel-title">Neue Daten eingeben</h4>
 						</div>
-						<div class="form-group">
-							<label class="col-xs-4 control-label">Ort</label>
-							<div class="col-xs-8">
-								<select class="cities form-control" name="city" id="formcity" required></select>
-							</div>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form" action="" method="post" id="newdataform">
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Datum</label>
+									<div class="col-sm-8">
+										<input type="date" class="form-control" id="formdate" name="date" required />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Temperatur in &deg;C</label>
+									<div class="col-xs-4">
+										<input type="number" id="formtemp" class="form-control" name="temp" max="100" min="-72" placeholder="20" value="20" required />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Ort</label>
+									<div class="col-xs-8">
+										<select class="cities form-control" name="city" id="formcity" required></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Bild</label>
+									<div class="col-xs-4">
+										<input type="hidden" name="image" value="mitte20141001.jpg" />
+										<button type="button" class="btn btn-primary" id="formupload">Hochladen <span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Kommentar</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" id="formcomment" name="comment" value="bla" placeholder="Tolles Wetter" /><br />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Email-Adresse</label>
+									<div class="col-sm-8">
+										<input type="email" class="form-control" name="email" id="formemail" value="name@beuth-hochschule.de" placeholder="name@beuth-hochschule.de" required title="Fehler" data-content="Nur Beuth-Hochschul-Adressen erlaubt!" />
+									</div>
+								</div>
+								<input type="hidden" name="user" value="lkf4vyxn9" />
+								<button type="submit" class="btn btn-success submitForm pull-right">Abspeichern <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+							</form>
 						</div>
-						<div class="form-group">
-							<label class="col-xs-4 control-label">Bild</label>
-							<div class="col-xs-4">
-								<button type="button" class="btn btn-primary" id="formupload">Hochladen <span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-xs-4 control-label">Kommentar</label>
-							<div class="col-sm-8">
-								<input type="text" class="form-control" id="formcomment" name="comment" value="bla" placeholder="Tolles Wetter" /><br />
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-xs-4 control-label">Email-Adresse</label>
-							<div class="col-sm-8">
-								<input type="email" class="form-control" name="email" id="formemail" value="name@beuth-hochschule.de" placeholder="name@beuth-hochschule.de" required title="Fehler" data-content="Nur Beuth-Hochschul-Adressen erlaubt!" />
-							</div>
-						</div>
-						<button type="submit" class="btn btn-success submitForm">Abspeichern <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-					</form>
+					</div>
 				</div>
 			</div>
 			<footer>
@@ -98,14 +126,6 @@
 				<a href="http://floriankeller.de">Florian Keller</a>, Maurice Stolte
 			</footer>
 		</div>
-		<!--<div id="zoomWrap">
-			<div id="zoom">
-				<div class="close">
-					<a href="#">&times;</a>
-				</div>
-				<img alt="zoomImage" id="zoomImage" />
-			</div>
-		</div>-->
 		<div class="modal fade" id="zoom" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">

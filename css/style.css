@@ -12,7 +12,7 @@ body {
 
 header {
 	color: #fff;
-	width: 740px;
+	width: 800px;
 	text-align: left;
 	display: block;
 	height: 50px;
@@ -45,11 +45,8 @@ div.city form {
 }
 
 .data {
-	width: 700px !important;
-	text-align: center;
-	padding: 20px 20px 20px 20px !important;
-	border-radius: 10px;
-	background-color: rgba(255,255,255,0.8);
+	min-height: 431px;
+	background-color: rgba(255,255,255,0.7) !important;
 }
 
 .data .edit {
@@ -60,6 +57,7 @@ table, th, tr, td {
 	vertical-align: top;
 	padding: 10px !important;
 	max-height: 50px;
+	border: 0 !important;
 }
 
 /*tr:nth-child(even) {
@@ -93,16 +91,14 @@ td.img, td.img img {
 
 .newdata {
 	border-radius: 10px;
-	background-color: rgba(255,255,255,0.8);
-	padding-bottom: 20px;
-	margin-left: 140px;
+	background-color: rgba(255,255,255,0.7) !important;
 }
 
 #status {
 	color: #fff;
 }
 
-.row {
+.found, .row {
 	display: none;
 }
 
