@@ -99,7 +99,7 @@
 	function get_cities() {
 		global $mysqli;
 
-		$query = "SELECT id, name_long, name_short
+		$query = "SELECT id, name_long as city, name_short as city_id
 				  FROM cities";
 
 		if ($result = $mysqli->query($query)) {
@@ -129,12 +129,12 @@
 		$rows = array();
 
 		if ($entry) {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
+			$query = "SELECT c.id, c.name_long as city, d.id, d.date, d.temp, d.image, d.comment
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  WHERE d.id = " . $entry;
 		} else {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
+			$query = "SELECT c.id, c.name_long as city,       d.date, d.temp, d.image, d.comment
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)";
 		}
