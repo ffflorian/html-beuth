@@ -103,7 +103,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
 		var tr = $(this).attr('data-form');
-		var entryID = $(tr).attr('id').substring(5,6);
+		var entryID = tr.attr('data-id');
 		$.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
@@ -116,7 +116,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				console.log("JSON error: " + error);
 			},
 			success: function(data) {
-				$(tr).remove();
+				tr.remove();
 			}
 			
 		});
@@ -153,8 +153,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				console.log("JSON error: " + error);
 			},
 			success: function(data) {
-				$.each(data, function(id, item) {
-					var entry = data[id];
+				$.each(data, function(i, item) {
+					var entry = data[i];
 					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 				});
 			}
@@ -183,7 +183,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	function addEntry(id, date, temp, city, image, comment) {
-		$('table tbody').append('<tr id="entry' + id + '">' +
+		var tr = $('<tr class="entry" data-id="' + id + '">' +
 			'<td class="editable date">' + formatDate(date) + '</td>' +
 			'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
 			'<td class="editable temp">' + temp + '&deg; C</td>' +
@@ -204,26 +204,34 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			'<td class="edit buttons">' +
 				'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
 				'<button type="button" class="btn btn-danger btn-xs removelink" data-type="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
-			'</td>');
-		addCities($('#entry'  + id + ' select'), citiesJSON);
+			'</td>').appendTo($('table tbody'));
+		//console.log("id: " + id);
+		addCities(tr.find('select'), citiesJSON);
 	}
 
 	function addCities(select, data) {
-		select.append(new Option("Stadt", "", true));			// damit man nicht alle Staedte mehrfach eintragen muss
-		$('select [value=""]').attr('disabled', true);
+		//console.log(select);
+		$('<option/>', {
+			text: "Stadt",
+			disabled: true
+		}).appendTo(select);
 
 		$.each(data, function(id, obj) {
-			select.append(new Option(obj.name_long, obj.id));
+			$('<option/>', {
+				text: obj.name_long,
+				name: obj.id
+			}).appendTo(select);
 		});
 	}
 
 	function sendData(form) {
 		var JSONdata = {};
 		$(form + ' *').filter(':input').each(function(i, obj) {
-			var input = $(obj);
-			JSONdata[input.attr('name')] = input.val();
+			JSONdata['id'] = Math.random().toString(36).substr(2, 9);
+			JSONdata[obj.attr('name')] = obj.val();
 			delete JSONdata['undefined'];
 		});
+		JSONdata['city'] = $(form + 'option:selected').attr('data-id');
 		var formId = $('table tr').length;
 		//console.log(JSONdata);
 		var request = $.ajax({
@@ -242,7 +250,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 
 		request.done(function() {
-			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['city'], "mitte20141001.jpg", JSONdata['comment']);
+			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $(form + ' option:selected').text(), "mitte20141001.jpg", JSONdata['comment']);
 		});
 
 		request.fail(function(jqXHR, textStatus) {

@@ -83,7 +83,7 @@
 		header('Content-type: application/json');
 		$obj = json_decode($json);
 		$query = "INSERT INTO data (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
-				  VALUES (NULL, '". date('Y-m-d H:i:s') . "', '". $obj->date . "', '1', '". $obj->temp . "', '1', 'mitte20141001.jpg', '". $obj->comment . "');";
+				  VALUES ('" . $obj->id . "', '". date('Y-m-d H:i:s') . "', '". $obj->date . "', '1', '". $obj->temp . "', '1', 'mitte20141001.jpg', '". $obj->comment . "');";
 		if ($mysqli->query($query) === TRUE) {
 			echo json_encode(array("status" => "success"));
 		} else {
@@ -106,7 +106,8 @@
 		global $mysqli;
 
 		$query = "SELECT id, name_long, name_short
-				  FROM cities";
+				  FROM cities
+				  ORDER BY name_short ASC";
 
 		if ($result = $mysqli->query($query)) {
 			while ($r = $result->fetch_object()) {
@@ -150,17 +151,17 @@
 				case "html":
 					while ($r = $result->fetch_object()) {
 						echo "Datum: " . $r->date . "<br>\n".
-						"Temperatur: " . $r->temp . " &deg; C<br>\n".
-						"Ort: " . $r->name . "<br>\n".
+						"Temperatur: " . $r->temp . " &deg;C<br>\n".
+						"Ort: " . htmlentities($r->city) . "<br>\n".
 						"Bild: <img src=\"../img/data/" . $r->image . "\" /><br>\n".
-						"Kommentar: " . $r->comment . "<br>\n<br>\n";
+						"Kommentar: " . htmlentities($r->comment) . "<br>\n<br>\n";
 					}
 					break;
 				case "text":
 					while ($r = $result->fetch_object()) {
 						echo "Datum: " . $r->date . "\n".
-						"Temperatur: " . $r->temp . " ° C\n".
-						"Ort: " . $r->name . "\n".
+						"Temperatur: " . $r->temp . " °C\n".
+						"Ort: " . $r->city . "\n".
 						"Bild: ../img/data/" . $r->image . "\n".
 						"Kommentar: " . $r->comment . "\n\n";
 					}
@@ -184,7 +185,7 @@
 
 	function remove_entry($entry) {
 		global $mysqli;
-		
+
 		if ($entry) {
 			$query = "DELETE FROM data
 					  WHERE id = " . $entry;
