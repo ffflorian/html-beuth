@@ -25,13 +25,39 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#formemail').popover('show');
 
 		} else {
-			var formDate = $('#formdate').val();
-			var formTemp = $('#formtemp').val();
-			var formCity = $('#formcity :selected').text();
-			var formComment = $('#formcomment').val();
+			var JSONdata = {};
+			$('#newdataform *').filter(':input').each(function(i, obj) {
+				var input = $(obj);
+				JSONdata[input.attr('name')] = input.val();
+				delete JSONdata['undefined'];
+			});
 			$('#formemail').popover('hide');
-			var entries = $('table tr').length;
-			addEntry(entries, formDate, formTemp, formCity, 0, formComment);
+			var formId = $('table tr').length;
+
+			//console.log("Request: " + JSON.stringify(JSONdata));
+			var request = $.ajax({
+				cache: false,
+				url: 'php/functions.php',
+				type: 'POST',
+				dataType: 'json',
+				data: JSONdata,
+				success: function(response) {
+					console.log("Status: " + response.status);
+					//console.log(response);
+				},
+				error: function() {
+					console.log("jQuery error");
+				}
+			});
+
+			request.done(function() {
+				addEntry(formId, formDate, formTemp, formCity, 0, formComment);
+			});
+
+			request.fail(function(jqXHR, textStatus) {
+				console.log("Request failed: " + textStatus);
+				console.log("Received: " + JSON.stringify(jqXHR));
+			});
 		}
 	});
 
@@ -132,6 +158,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	$.ajax({
 			url: 'php/functions.php',
+			type: 'GET',
 			data: {
 				action: 'getdata'
 			},
@@ -144,8 +171,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 					var entry = data[id];
 					addEntry(id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 				});
-			},
-			type: 'GET'
+			}
+			
 	});
 	
 	$('select').each(function() {

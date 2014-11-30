@@ -15,6 +15,12 @@
 	$actions = array("getdata", "entries");
 	$formats = array("json", "text", "html");
 
+
+	if ($_POST) {
+		put_data();
+		exit();
+	};
+
 	$actionGET = (isset($_GET['action']) ?  $_GET['action'] : "");
 	$entryGET  = (isset($_GET['entry'])  && is_numeric($_GET['entry']) ? $_GET['entry']  : null);
 	$formatGET = (isset($_GET['format']) && in_array($_GET['format'], $formats) ? $_GET['format']  : null);
@@ -46,11 +52,26 @@
 				  FROM data";
 		if ($result = $mysqli->query($query)) {
 			echo (mysqli_num_rows($result));
-		} else {
-			echo "error";
+		}
+
+		if ($mysqli->error) {
+			printf("Error: %s\n", $mysqli->error);
 		}
 	}
 
+
+	/**
+	* Function put_data
+	*
+	* Receives JSON data via POST and saves it to the database
+	*/
+
+	function put_data() {
+		header('Content-type: application/json');
+		$json = file_get_contents('php://input');
+		$obj  = json_decode($json);
+		echo json_encode(array('status' => 'error')); //echo json_encode(array('msg' => 'success', 'postid' => mysql_insert_id())
+	}
 
 	/**
 	* Function get_data
@@ -105,6 +126,7 @@
 					}
 
 					//$rows = htmlentities($rows);
+					header('Content-type: application/json');
 					echo json_encode($rows);
 					break;
 			}
