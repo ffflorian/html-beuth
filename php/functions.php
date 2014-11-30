@@ -12,7 +12,7 @@
 
 	require_once('dbconnect.php');
 
-	$actions = array("getdata", "entries");
+	$actions = array("getdata", "getcities", "entries");
 	$formats = array("json", "text", "html");
 
 
@@ -28,6 +28,9 @@
 	switch ($actionGET) {
 		case "getdata":
 			get_data($entryGET, $formatGET);
+			break;
+		case "getcities":
+			get_cities();
 			break;
 		case "entries":
 			get_entries();
@@ -50,6 +53,7 @@
 
 		$query = "SELECT id
 				  FROM data";
+
 		if ($result = $mysqli->query($query)) {
 			echo (mysqli_num_rows($result));
 		}
@@ -64,6 +68,8 @@
 	* Function put_data
 	*
 	* Receives JSON data via POST and saves it to the database
+	*
+	*@param JSON $json The JSON object with data
 	*/
 
 	function put_data($json) {
@@ -80,11 +86,37 @@
 		}
 	}
 
+
+	/**
+	* Function get_cities
+	*
+	* Sends a query to the database to receive all cities
+	* and returns the result(s) in JSON format.
+	*
+	* @return The result(s) in JSON.
+	*/
+
+	function get_cities() {
+		global $mysqli;
+
+		$query = "SELECT id, name_long as city, name_short as city_id
+				  FROM cities";
+
+		if ($result = $mysqli->query($query)) {
+			while ($r = $result->fetch_object()) {
+						$rows[] = $r;
+			}
+			header('Content-type: application/json');
+			echo json_encode($rows);
+		}
+	}
+
+
 	/**
 	* Function get_data
 	*
-	* Sends a query to the database and returns the result(s) in
-	* a previously defined format
+	* Sends a query to the database to receive weather data 
+	* and returns the result(s) in a previously defined format.
 	*
 	* @param String $entry If only one entriy should be returned.
 	* @param String $format The desired format.
@@ -97,12 +129,12 @@
 		$rows = array();
 
 		if ($entry) {
-			$query = "SELECT c.id, c.name as city, d.id, d.date, d.temp, d.image, d.comment
+			$query = "SELECT c.id, c.name_long as city, d.id, d.date, d.temp, d.image, d.comment
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  WHERE d.id = " . $entry;
 		} else {
-			$query = "SELECT c.id, c.name as city,       d.date, d.temp, d.image, d.comment
+			$query = "SELECT c.id, c.name_long as city,       d.date, d.temp, d.image, d.comment
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)";
 		}
