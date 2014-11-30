@@ -27,38 +27,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#formemail').popover('show');
 
 		} else {
-			var JSONdata = {};
-			$('#newdataform *').filter(':input').each(function(i, obj) {
-				var input = $(obj);
-				JSONdata[input.attr('name')] = input.val();
-				delete JSONdata['undefined'];
-			});
-			$('#formemail').popover('hide');
-			var formId = $('table tr').length;
-			//console.log(JSONdata);
-			var request = $.ajax({
-				type: 'POST',
-				dataType: 'json',
-				url: 'php/functions.php',
-				data: JSON.stringify(JSONdata),
-				contentType: "application/json",
-				success: function(response) {
-					//console.log("Status: " + response.status);
-					//console.log(response);
-				},
-				error: function() {
-					console.log("jQuery error");
-				}
-			});
-
-			request.done(function() {
-				addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['city'], "mitte20141001.jpg", JSONdata['comment']);
-			});
-
-			request.fail(function(jqXHR, textStatus) {
-				console.log("Request failed: " + textStatus);
-				console.log("Received: " + JSON.stringify(jqXHR));
-			});
+			sendData('#newdataform');
 		}
 	});
 
@@ -170,7 +139,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			success: function(data) {
 				$.each(data, function(id, item) {
 					var entry = data[id];
-					addEntry(id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
+					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 				});
 			}
 			
@@ -231,8 +200,43 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		$('select [value=""]').attr('disabled', true);
 
 		$.each(data, function(id, obj) {
-			select.append(new Option(obj.name_long, obj.name_short));
+			select.append(new Option(obj.name_long, obj.id));
 		});
+	}
+
+	function sendData(form) {
+		var JSONdata = {};
+			$(form).filter(':input').each(function(i, obj) {
+				var input = $(obj);
+				JSONdata[input.attr('name')] = input.val();
+				delete JSONdata['undefined'];
+			});
+			$('#formemail').popover('hide');
+			var formId = $('table tr').length;
+			//console.log(JSONdata);
+			var request = $.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: 'php/functions.php',
+				data: JSON.stringify(JSONdata),
+				contentType: "application/json",
+				success: function(response) {
+					//console.log("Status: " + response.status);
+					//console.log(response);
+				},
+				error: function() {
+					console.log("jQuery error");
+				}
+			});
+
+			request.done(function() {
+				addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['city'], "mitte20141001.jpg", JSONdata['comment']);
+			});
+
+			request.fail(function(jqXHR, textStatus) {
+				console.log("Request failed: " + textStatus);
+				console.log("Received: " + JSON.stringify(jqXHR));
+			});
 	}
 
 
@@ -261,5 +265,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	function formatDate(date) {									// uebersetze ein Datum vom ISO 8601-Format in die dt. Schreibweise und gib es zurueck
 		return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
+	}
+
+	function htmlEncode(value){
+	//create a in-memory div, set it's inner text(which jQuery automatically encodes)
+	//then grab the encoded contents back out.  The div never exists on the page.
+		return value.html();
+	}
+
+	function htmlDecode(value){
+		return $('<div/>').html(value).text();
 	}
 });
