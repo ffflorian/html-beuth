@@ -85,11 +85,19 @@
 
 	function put_data($json) {
 		global $mysqli;
+
 		header('Content-type: application/json');
 		$obj = json_decode($json);
-		$query = "INSERT INTO data (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
-				  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
-		if ($mysqli->query($query) === TRUE) {
+		if ($obj->type === "entries") {
+			$obj = $obj->data;
+			$query = "INSERT INTO `data` (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
+					  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
+		} elseif ($obj->type === "city") {
+			$obj = $obj->data;
+			$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
+						VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->long', '$obj->country', '$obj->country', '$obj->comment');";
+		}
+		if ($mysqli->query($query) === true) {
 			echo json_encode(array("status" => "success"));
 		} else {
 			//var_dump($obj);

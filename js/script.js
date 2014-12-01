@@ -32,23 +32,12 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
-	/*var trs = document.getElementsByTagName('tr');
-	for (var x=0; x<trs.length; x++) {
-		trs[x].addEventListener('mouseover', function() {
-			var tds = this.getElementsByTagName('td');
-			tds[10].style.visibility = 'visible';
-		}, false);
-		trs[x].addEventListener('mouseout', function() {
-			var tds = this.getElementsByTagName('td');
-			tds[10].style.visibility = 'hidden';
-		}, false);
-	}*/
-
 	$(document).on('change', 'select', function() {
 		if ($(this).find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
 			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
 			if (userInput !== "" && userInput !== null) {
 				$(this).append(new Option(userInput, formatValue(userInput), true, true));			// erstelle neue Option mit der Benutzereingabe
+
 			}
 		}
 	});
@@ -101,25 +90,28 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
-		console.log('remove-id: ' + $(this).attr('remove-id'));
+		//console.log('remove-id: ' + $(this).attr('remove-id'));
 		var tr = $('table').find('[data-id="' + $(this).attr('remove-id') + '"]');
 		//console.log(tr);
 		var entryID = $(tr).attr('data-id');
 		//console.log(entryID);
-		$.ajax({
+		var request = $.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
 			dataType: 'json',
 			data: {
 				action: "removeentry",
 				entry: entryID
-			},
-			error: function(request, status, error) {
-				console.log("JSON error: " + error);
-			},
-			success: function(data) {
-				tr.remove();
 			}
+		});
+
+		request.done(function(data) {
+			tr.remove();
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			console.log("Request failed: " + textStatus);
+			console.log("Received: " + JSON.stringify(jqXHR));
 		});
 		
 	});
@@ -142,48 +134,53 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
 	var yyyy = today.getFullYear();							// hole das Jahr
 	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
+	$('#formdate').val(dateString);			// formdate auf das heutige Datum setzen
 
 	$('#status').text("Daten werden geladen...");
 
-	$.ajax({
-			url: 'php/functions.php',
-			type: 'GET',
-			dataType: 'json',
-			data: {
-				action: "getdata"
-			},
-			error: function(request, status, error) {
-				$('#status').text("JSON error: " + error);
-			},
-			success: function(data) {
-				$('#status').hide();
-				$('#datawrap').show();
-				$.each(data, function(i, item) {
-					var entry = data[i];
-					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
-				});
-			}
-			
+	var request1 = $.ajax({
+		url: 'php/functions.php',
+		type: 'GET',
+		dataType: 'json',
+		data: {
+			action: "getdata"
+		}
+	});
+
+	request1.done(function(data) {
+		$('#status').hide();
+		$('#datawrap').show();
+		$.each(data, function(i, item) {
+			var entry = data[i];
+			addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
+		});
+	});
+
+	request1.fail(function(jqXHR, textStatus) {
+		$('#status').text("Request failed: " + textStatus);
+		console.log("Received: " + JSON.stringify(jqXHR));
 	});
 
 	var citiesJSON = {};
-	$.ajax({
-			url: 'php/functions.php',
-			type: 'GET',
-			dataType: 'json',
-			data: {
-				action: "getcities"
-			},
-			error: function(request, status, error) {
-				console.log("JSON error: " + error);
-			},
-			success: function(data) {
-				citiesJSON = data;
-				$('select').each(function() {
-					addCities($(this), citiesJSON);
-				});
-			}
-			
+	var request2 = $.ajax({
+		url: 'php/functions.php',
+		type: 'GET',
+		dataType: 'json',
+		data: {
+			action: "getcities"
+		}
+	});
+
+	request2.done(function(data) {
+		citiesJSON = data;
+		$('select').each(function() {
+			addCities($(this), citiesJSON);
+		});
+	});
+
+	request2.fail(function(jqXHR, textStatus) {
+		console.log("Request failed: " + textStatus);
+		console.log("Received: " + JSON.stringify(jqXHR));
 	});
 
 	function addEntry(id, date, temp, city, image, comment) {
@@ -247,11 +244,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			data: {
 				action: "searchcity",
 				key: keyword
-			},
-			error: function(request, status, error) {
-				console.log("JSON error: " + error);
-			},
-			success: function(data) {
 			}
 		});
 
@@ -286,15 +278,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			type: 'POST',
 			dataType: 'json',
 			url: 'php/functions.php',
-			data: JSON.stringify(JSONdata),
-			contentType: "application/json",
-			success: function(response) {
-				//console.log("Status: " + response.status);
-				//console.log(response);
-			},
-			error: function() {
-				console.log("jQuery error");
-			}
+			data: JSON.stringify({
+				"type": "entries",
+				"data": JSONdata
+			}),
+			contentType: "application/json"
 		});
 
 		request.done(function() {
