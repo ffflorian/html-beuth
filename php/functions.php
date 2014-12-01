@@ -15,8 +15,12 @@
 	$actions = array("getdata", "getcities", "entries", "removeentry", "removecity", "searchcity");
 	$formats = array("json", "text", "html");
 
-	if ($json = file_get_contents('php://input')) {
-		put_data($json);
+	if ($data = file_get_contents('php://input')) {
+		if ($_SERVER['CONTENT_TYPE'] === "application/json") {
+			put_data("JSON", $data);
+		} else {
+			put_data("file", $data);
+		}
 		exit();
 	}
 
@@ -83,25 +87,29 @@
 	*@param JSON $json The JSON object with data
 	*/
 
-	function put_data($json) {
-		global $mysqli;
+	function put_data($type, $data) {
+		if ($type === "JSON") {
+			global $mysqli;
 
-		header('Content-type: application/json');
-		$obj = json_decode($json);
-		if ($obj->type === "entries") {
-			$obj = $obj->data;
-			$query = "INSERT INTO `data` (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
-					  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
-		} elseif ($obj->type === "city") {
-			$obj = $obj->data;
-			$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
-						VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->long', '$obj->country', '$obj->website', '$obj->comment');";
-		}
-		if ($mysqli->query($query) === true) {
-			echo json_encode(array("status" => "success"));
-		} else {
-			//var_dump($obj);
-			echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+			header('Content-type: application/json');
+			$obj = json_decode($data);
+			if ($obj->type === "entries") {
+				$obj = $obj->data;
+				$query = "INSERT INTO `data` (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
+						  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
+			} elseif ($obj->type === "city") {
+				$obj = $obj->data;
+				$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
+							VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->long', '$obj->country', '$obj->website', '$obj->comment');";
+			}
+			if ($mysqli->query($query) === true) {
+				echo json_encode(array("status" => "success"));
+			} else {
+				//var_dump($obj);
+				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+			}
+		} else if ($type === "image") {
+
 		}
 	}
 

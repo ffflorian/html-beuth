@@ -28,7 +28,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#formemail').popover('show');
 		} else {
 			$('#formemail').popover('hide');
-			sendData('#newdataform', "addentries");
+			sendEntries('#newdataform');
 		}
 	});
 
@@ -303,7 +303,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 	}
 
-	function sendData(form) {
+	function sendImage(form) {
+
+	}
+
+	function sendEntries(form) {
 		var JSONdata = {};
 		JSONdata['id'] = generateID();
 		JSONdata['user'] = "lkf4vyxn9";
