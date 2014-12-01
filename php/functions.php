@@ -120,7 +120,8 @@
 		if ($keyword) {
 			global $mysqli;
 			$query = "SELECT name_long FROM cities
-					  WHERE name_long LIKE '%$keyword%'";
+					  WHERE name_long LIKE '%$keyword%'
+					  ORDER BY name_long";
 
 			if ($result = $mysqli->query($query)) {
 				if ($result->num_rows != 0) {

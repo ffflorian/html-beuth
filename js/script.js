@@ -206,9 +206,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	request2.done(function(data) {
-		citiesJSON = data;
 		$('select').each(function() {
-			addCities($(this), citiesJSON);
+			addCities($(this), data);
 		});
 	});
 
@@ -262,6 +261,13 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				value: obj.id
 			}).appendTo(select);
 		});
+
+		/*$(select).sort(function(a, b) {
+			a = a.name;
+			b = b.name;
+
+			return a-b;
+		});*/
 
 		$('<option/>', {
 			text: "Neue Stadt...",
