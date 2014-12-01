@@ -10,7 +10,7 @@
 	error_reporting(E_ALL);
 
 	require_once('credentials.php');
-	$mysqli = new mysqli('localhost', $db_user, $db_pass, 'weather');
+	$mysqli = new mysqli('localhost', $db_user, $db_pass, $db_name);
 	if ($mysqli->connect_errno) {
 		printf("Connect failed: %s\n", $mysqli->connect_error);
 		exit();
