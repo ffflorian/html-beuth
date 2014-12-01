@@ -8,9 +8,16 @@
 
 $(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
 	$.ajaxSetup({ cache: false });
+	$('#datawrap').hide();
+	$('#found').hide();
 
 	$('#searchform .submitForm').on('click', function() {
 		$('#searchform').submit();
+	});
+
+	$(document).on('submit', '#searchform', function(event) {
+		event.preventDefault();
+		searchData();
 	});
 
 	$(document).on('submit', '#newdataform', function(event) {
@@ -21,7 +28,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#formemail').popover('show');
 		} else {
 			$('#formemail').popover('hide');
-			sendData('#newdataform');
+			sendData('#newdataform', "addentries");
 		}
 	});
 
@@ -96,9 +103,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
 		console.log('remove-id: ' + $(this).attr('remove-id'));
 		var tr = $('table').find('[data-id="' + $(this).attr('remove-id') + '"]');
-		console.log(tr);
+		//console.log(tr);
 		var entryID = $(tr).attr('data-id');
-		console.log(entryID);
+		//console.log(entryID);
 		$.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
@@ -113,7 +120,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			success: function(data) {
 				tr.remove();
 			}
-			
 		});
 		
 	});
@@ -151,7 +157,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			},
 			success: function(data) {
 				$('#status').hide();
-				$('.row').show();
+				$('#datawrap').show();
 				$.each(data, function(i, item) {
 					var entry = data[i];
 					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
@@ -182,6 +188,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	function addEntry(id, date, temp, city, image, comment) {
 		var tr = $('<tr class="entry" data-id="' + id + '">' +
+			'<form class="form-horizontal" role="form" action="" method="post" class="editform">' +
 			'<td class="editable date">' + formatDate(date) + '</td>' +
 			'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
 			'<td class="editable temp">' + temp + '&deg; C</td>' +
@@ -202,8 +209,10 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			'<td class="edit buttons">' +
 				'<button type="button" class="btn btn-success btn-xs savelink"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>' +
 				'<button type="button" class="btn btn-danger btn-xs removelink" data-type="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
-			'</td>').appendTo($('table tbody'));
-		console.log("id: " + id);
+			'</td>' +
+			'</form>' +
+			'</tr>').appendTo($('table tbody'));
+		//console.log("id: " + id);
 		addCities(tr.find('select'), citiesJSON);
 	}
 
@@ -221,6 +230,44 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				name: obj.name_short,
 				value: obj.id
 			}).appendTo(select);
+		});
+
+		$('<option/>', {
+			text: "Neue Stadt...",
+			value: "neuestadt"
+		}).appendTo(select);
+	}
+
+	function searchData() {
+		var keyword = $('#searchform .searchbox').val();
+		var request = $.ajax({
+			url: 'php/functions.php',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				action: "searchcity",
+				key: keyword
+			},
+			error: function(request, status, error) {
+				console.log("JSON error: " + error);
+			},
+			success: function(data) {
+			}
+		});
+
+		request.done(function(data) {
+			if (data.status === "success") {
+				data = data.results;
+				$('#found .panel-body').html("Stadt gefunden: " + data.name_long);
+			} else {
+				$('#found .panel-body').html(data.message);
+			}
+			$('#found').slideDown();
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			console.log("Request failed: " + textStatus);
+			console.log("Received: " + JSON.stringify(jqXHR));
 		});
 	}
 

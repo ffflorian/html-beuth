@@ -12,7 +12,7 @@
 
 	require_once('dbconnect.php');
 
-	$actions = array("getdata", "getcities", "entries", "removeentry", "removecity");
+	$actions = array("getdata", "getcities", "entries", "removeentry", "removecity", "searchcity");
 	$formats = array("json", "text", "html");
 
 	if ($json = file_get_contents('php://input')) {
@@ -24,6 +24,7 @@
 	$entryGET  = (isset($_GET['entry']) ? $mysqli->real_escape_string($_GET['entry']) : null);
 	$formatGET = (isset($_GET['format']) && in_array($_GET['format'], $formats) ? $_GET['format']  : null);
 	$cityGET   = (isset($_GET['city']) ? $mysqli->real_escape_string($_GET['city']) : null);
+	$keyGET    = (isset($_GET['key']) ? $mysqli->real_escape_string($_GET['key']) : null);
 
 	switch ($actionGET) {
 		case "getdata":
@@ -41,10 +42,14 @@
 		case "removecity":
 			remove_city($cityGET);
 			break;
+		case "searchcity":
+			search_city($keyGET);
+			break;
 		default:
 			print ("No or wrong action specified! Available actions: ") . implode(", ", $actions);
 			break;
 	}
+
 
 	/**
 	* Function get_entries
@@ -89,6 +94,41 @@
 		} else {
 			//var_dump($obj);
 			echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+		}
+	}
+
+
+	/**
+	* Function search_city
+	*
+	* Searches the database for a specified entry and returns
+	* the results as JSON.
+	*
+	* @param String $keyword The keyword for search
+	* @return The number of entries in plain text
+	*/
+
+	function search_city($keyword) {
+		if ($keyword) {
+			global $mysqli;
+			$query = "SELECT name_long FROM cities
+					  WHERE name_long LIKE '%$keyword%'";
+
+			if ($result = $mysqli->query($query)) {
+				if ($result->num_rows != 0) {
+					$row = ["status" => "success"];
+					while ($r = $result->fetch_object()) {
+						$row['results'] = $r;
+					}
+				} else {
+					$row = ["status"  => "error",
+							  "message" => "Keine Stadt gefunden!"];
+				}
+			}
+			header('Content-type: application/json');
+			echo json_encode($row);
+		} else {
+			echo "Search city: No keyword specified!";
 		}
 	}
 

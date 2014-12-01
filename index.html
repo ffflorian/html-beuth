@@ -21,28 +21,27 @@
 					<form action="" id="searchform" method="post">
 						<div class="form-group">
 							<div class="col-xs-7">
-								<input type="text" class="form-control searchbox" placeholder="Stadt suchen..." />
+								<input type="text" name="keyword" class="form-control searchbox" placeholder="Stadt suchen..." />
 							</div>
 							<label class="col-xs-1 control-label"><a href="#" class="submitForm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></label>
 						</div>
 					</form>
 				</div>
 			</header>
-			<div class="row">
-				<div class="col-md-5 found">
+			<div class="row" id="found">
+				<div class="col-md-5">
 					<div class="panel panel-default" style="min-height: 100px">
 						<div class="panel-heading">
 							<h4 class="panel-title">Gespeicherte Daten</h4>
 						</div>
 						<div class="panel-body">
-							<div id="found">Stadt gefunden: Berlin</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="clearfix"></div>
 			<div id="status"></div>
-			<div class="row">
+			<div class="row" id="datawrap">
 				<div class="col-md-5">
 					<div class="panel panel-primary data">
 						<div class="panel-heading">

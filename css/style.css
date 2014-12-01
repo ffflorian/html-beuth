@@ -12,7 +12,7 @@ body {
 
 header {
 	color: #fff;
-	width: 800px;
+	width: 840px;
 	text-align: left;
 	display: block;
 	height: 50px;
@@ -44,8 +44,12 @@ div.city form {
 	margin-bottom: 10px;
 }
 
+#datawrap .col-md-5 {
+	min-width: 800px !important;
+}
+
 .data {
-	min-height: 431px;
+	min-height: 444px;
 	background-color: rgba(255,255,255,0.7) !important;
 }
 
@@ -96,10 +100,6 @@ td.img, td.img img {
 
 #status {
 	color: #fff;
-}
-
-.found, .row {
-	display: none;
 }
 
 td .remove:hover {
