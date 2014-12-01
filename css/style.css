@@ -111,7 +111,7 @@ td .save:hover {
 }
 
 footer {
-	color: #fff;
+	color: #000;
 	margin-top: 40px;
 	font-size: 10pt;
 }
@@ -136,6 +136,7 @@ footer {
 }
 
 #mapwrap {
+	background-image: url('../img/wetter_bg.jpg');
 	position: fixed;
 	top: 0px;
 	left: 0px;

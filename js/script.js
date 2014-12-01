@@ -151,24 +151,11 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		
 	});
 
-	//$.backstretch("img/wetter_bg.jpg");
-
-	/*$.backstretch([
-		"img/wetter_bg.jpg",
-		"img/wallpaper/wetter1.jpg",
-		"img/wallpaper/wetter2.jpg",
-		"img/wallpaper/wetter3.jpg",
-		"img/wallpaper/wetter4.jpg",
-		"img/wallpaper/wetter5.jpg",
-		"img/wallpaper/wetter6.jpg",
-		"img/wallpaper/wetter7.jpg"
-	], {duration: 4000, fade: 750});*/
-
 	var today = new Date();									// neues Datum erzeugen
 	var dateString = today.getFullYear() + '-'
 		+ ('0' + (today.getMonth()+1)).slice(-2) + '-'
 		+ ('0' + today.getDate()).slice(-2);
-	$('#formdate').val(dateString);			// formdate auf das heutige Datum setzen
+	$('#formdate').val(dateString);							// formdate auf das heutige Datum setzen
 
 	$('#status').text("Daten werden geladen...");
 
