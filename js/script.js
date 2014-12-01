@@ -130,10 +130,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	], {duration: 4000, fade: 750});*/
 
 	var today = new Date();									// neues Datum erzeugen
-	var dd = today.getDate();								// hole den Tag
-	var mm = today.getMonth()+1;							// hole den Monat; +1 weil hier Januar mit 0 gezaehlt wird
-	var yyyy = today.getFullYear();							// hole das Jahr
-	$('#formdate').val(yyyy + "-" + mm + "-" + dd);			// formdate auf das heutige Datum setzen
+	var dateString = today.getFullYear() + '-'
+		+ ('0' + (today.getMonth()+1)).slice(-2) + '-'
+		+ ('0' + today.getDate()).slice(-2);
 	$('#formdate').val(dateString);			// formdate auf das heutige Datum setzen
 
 	$('#status').text("Daten werden geladen...");
