@@ -42,7 +42,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				JSONdata['name_short'] = formatValue(userInput);
 				JSONdata['name_long'] = userInput;
 				JSONdata['lat'] = 5.333;
-				JSONdata['long'] = 1.222;
+				JSONdata['lng'] = 1.222;
 				JSONdata['country'] = "";
 				JSONdata['website'] = "";
 				JSONdata['comment'] = "";
@@ -151,7 +151,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		
 	});
 
-	$.backstretch("img/wetter_bg.jpg");
+	//$.backstretch("img/wetter_bg.jpg");
 
 	/*$.backstretch([
 		"img/wetter_bg.jpg",
@@ -370,4 +370,17 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	function generateID() {
 		return Math.random().toString(36).substr(2, 9);
 	}
+
+	var mapOptions = {
+		center: {
+			lat: 52.5167,
+			lng: 13.3833
+		},
+		zoom: 13,
+		disableDefaultUI: true,
+		draggable: false,
+		scrollwheel: false,
+		disableDoubleClickZoom: true
+	};
+	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 });
