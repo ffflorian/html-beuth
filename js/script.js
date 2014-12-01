@@ -36,8 +36,43 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		if ($(this).find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
 			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
 			if (userInput !== "" && userInput !== null) {
-				$(this).append(new Option(userInput, formatValue(userInput), true, true));			// erstelle neue Option mit der Benutzereingabe
+				var JSONdata = {};
+				JSONdata['id'] = generateID();
+				JSONdata['user'] = "lkf4vyxn9";
+				JSONdata['name_short'] = formatValue(userInput);
+				JSONdata['name_long'] = userInput;
+				JSONdata['lat'] = 5.333;
+				JSONdata['long'] = 1.222;
+				JSONdata['country'] = "";
+				JSONdata['website'] = "";
+				JSONdata['comment'] = "";
+				var request = $.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: 'php/functions.php',
+					data: JSON.stringify({
+						"type": "city",
+						"data": JSONdata
+					}),
+					contentType: "application/json"
+				});
 
+				request.done(function(data) {
+					//console.log(data);
+					$.each($('select'), function(id, obj) {
+						$('<option/>', {
+							text: JSONdata['name_long'],
+							name: JSONdata['name_short'],
+							value: JSONdata['id'],
+							selected: true
+						}).appendTo(obj);
+					});
+				});
+
+				request.fail(function(jqXHR, textStatus) {
+					console.log("Request failed: " + textStatus);
+					console.log("Received: " + JSON.stringify(jqXHR));
+				});
 			}
 		}
 	});
@@ -105,7 +140,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			}
 		});
 
-		request.done(function(data) {
+		request.done(function() {
 			tr.remove();
 		});
 

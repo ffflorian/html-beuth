@@ -95,7 +95,7 @@
 		} elseif ($obj->type === "city") {
 			$obj = $obj->data;
 			$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
-						VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->long', '$obj->country', '$obj->country', '$obj->comment');";
+						VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->long', '$obj->country', '$obj->website', '$obj->comment');";
 		}
 		if ($mysqli->query($query) === true) {
 			echo json_encode(array("status" => "success"));
