@@ -102,7 +102,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$(document).on('submit', '#newdataform', function(event) {
 		event.preventDefault();
 		if (allTrue()) {
-			sendEntries('#newdataform');
+			sendEntry();
 		}
 	});
 
@@ -125,6 +125,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 					dataType: 'json',
 					url: 'php/functions.php',
 					data: JSON.stringify({
+						"action": "insert",
 						"type": "city",
 						"data": JSONdata
 					}),
@@ -132,7 +133,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				});
 
 				request.done(function(data) {
-					//console.log(data);
+					console.log(data);
 					$.each($('select'), function(id, obj) {
 						$('<option/>', {
 							text: JSONdata['name_long'],
@@ -167,12 +168,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	$('table').on('click', '.savelink', function() {
 		var tr = $(this).parent().parent();
-		tr.find('.editable.date').text(formatDate(tr.find('input[type=date]').val()));
-		tr.find('.editable.temp').html(tr.find('input[type=number]').val() + " &deg;C");
-		tr.find('.editable.city').text(tr.find('select option:selected').text());
-		tr.find('.editable.comment').text(tr.find('input[type=text]').val());
-		tr.find('.edit').hide();
-		tr.find('.editable').show();
+		updateEntry(tr.attr('data-id'));
 	});
 
 	$('table').on('click', '.removelink', function(e) {
@@ -212,7 +208,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			}
 		});
 
-		request.done(function() {
+		request.done(function(data) {
+			console.log(data);
 			tr.remove();
 		});
 
@@ -243,6 +240,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	var citiesJSON = {};
 
 	request1.done(function(data) {
+		console.log(data);
 		$('#status').hide();
 		$('#datawrap').show();
 		$.each(data, function(i, item) {
@@ -259,6 +257,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 
 		request2.done(function(data) {
+			console.log(data);
 			$('select').each(function() {
 				addCities($(this), data);
 			});
@@ -279,18 +278,18 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		var tr = $('<tr class="entry" data-id="' + id + '">' +
 			'<form class="form-horizontal" role="form" action="" method="post" class="editform">' +
 			'<td class="editable date">' + formatDate(date) + '</td>' +
-			'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
+			'<td class="edit date"><input type="date" class="form-control" name="date" value="' + date + '" /></td>' +
 			'<td class="editable temp">' + temp + '&deg; C</td>' +
-			'<td class="edit temp"><div class="input-group"><input type="number" class="form-control" value="' + temp + '" min="-72" max="100" /><div class="input-group-addon">&deg;C</div></div></td>' +
+			'<td class="edit temp"><div class="input-group"><input type="number" name="temp" class="form-control" value="' + temp + '" min="-72" max="100" /><div class="input-group-addon">&deg;C</div></div></td>' +
 			'<td class="editable city">' + city + '</td>' +
 			'<td class="edit city">' +
-				'<select class="form-control">' +
+				'<select class="form-control" name="city">' +
 				'</select>' +
 			'</td>' +
-			'<td class="editable img"><img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" /></td>' +
+			'<td class="editable img">' + (image ? '<img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" />' : '') + '</td>' +
 			'<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>' +
 			'<td class="editable comment">' + comment + '</td>' +
-			'<td class="edit comment"><input type="text" class="form-control" value="' + comment + '" /></td>' +
+			'<td class="edit comment"><input type="text" name="comment" class="form-control" value="' + comment + '" /></td>' +
 			'<td class="editable buttons">' +
 				'<button type="button" class="btn btn-primary btn-xs editlink"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' +
 				'<button type="button" class="btn btn-danger btn-xs removelink" data-type="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
@@ -347,6 +346,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 
 		request.done(function(data) {
+			console.log(data);
 			if (data.status === "success") {
 				data = data.results;
 				$('#results .panel-body').html("");
@@ -385,6 +385,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			});
 
 			request.done(function(data, status, result) {
+				console.log(data);
 				$('.btn-file').removeClass('btn-primary');
 				$('.btn-file').addClass('btn-success');
 				$('.btn-file .text').html(filename);
@@ -403,15 +404,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	}
 
-	function sendEntries(form) {
+	function sendEntry() {
 		var JSONdata = {};
 		JSONdata['id'] = generateID();
 		JSONdata['user'] = "lkf4vyxn9";
-		$(form + ' *').filter(':input').each(function(i, obj) {
+		$('#newdataform *').filter(':input').each(function(i, obj) {
 			JSONdata[$(obj).attr('name')] = $(obj).val();
 			delete JSONdata['undefined'];
 		});
-		JSONdata['image'] = $(form + ' input[type=file]').attr('data-filename');
+		JSONdata['image'] = $('#newdataform input[type=file]').attr('data-filename') || "";
 		//console.log(JSONdata);
 		var formId = $('table tr').length;
 		var request = $.ajax({
@@ -419,14 +420,57 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			dataType: 'json',
 			url: 'php/functions.php',
 			data: JSON.stringify({
+				"action": "insert",
 				"type": "entries",
 				"data": JSONdata
 			}),
 			contentType: "application/json"
 		});
 
-		request.done(function() {
-			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $(form + ' option:selected').text(), JSONdata['image'], JSONdata['comment']);
+		request.done(function(data) {
+			console.log(data);
+			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $('#newdataform option:selected').text(), JSONdata['image'], JSONdata['comment']);
+		});
+
+		request.fail(function(result, status) {
+			console.log("Request failed: " + status);
+			console.log("Received: " + JSON.stringify(result));
+		});
+	}
+
+	function updateEntry(id) {
+		var tr = $('table').find('[data-id="' + id + '"] *');
+		var JSONdata = {};
+		JSONdata['id'] = id;
+		JSONdata['user'] = "lkf4vyxn9";
+		$(tr).filter(':input').each(function(i, obj) {
+			JSONdata[$(obj).attr('name')] = $(obj).val();
+			delete JSONdata['undefined'];
+		});
+		JSONdata['image'] = $('tr').find('input[type=file]').attr('data-filename') || '';
+		//console.log(JSONdata);
+		var formId = $('table tr').length;
+		var request = $.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: 'php/functions.php',
+			data: JSON.stringify({
+				"action": "update",
+				"type": "entries",
+				"data": JSONdata
+			}),
+			contentType: "application/json"
+		});
+
+		request.done(function(data) {
+			console.log(data);
+			var tr = $('table').find('[data-id="' + data.id + '"]');
+			tr.find('.editable.date').text(formatDate(tr.find('input[type=date]').val()));
+			tr.find('.editable.temp').html(tr.find('input[type=number]').val() + " &deg;C");
+			tr.find('.editable.city').text(tr.find('select option:selected').text());
+			tr.find('.editable.comment').text(tr.find('input[type=text]').val());
+			tr.find('.edit').hide();
+			tr.find('.editable').show();
 		});
 
 		request.fail(function(result, status) {

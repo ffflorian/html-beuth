@@ -97,28 +97,49 @@
 			header('Content-type: application/json');
 
 			$obj = json_decode($data);
-			if ($obj->type === "entries") {
-				$obj = $obj->data;
-				$query = "INSERT INTO `data` (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
-						  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
-			} elseif ($obj->type === "city") {
-				$obj = $obj->data;
-				$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
-							VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->lng', '$obj->country', '$obj->website', '$obj->comment');";
-			}
-			if ($mysqli->query($query) === true) {
-				echo json_encode(array("status" => "success"));
-			} else {
-				//var_dump($obj);
-				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "\n" . $mysqli->error));
+			if ($obj->action === "insert") {
+				if ($obj->type === "entries") {
+					$obj = $obj->data;
+					$query = "INSERT INTO `data` (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
+							  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
+				} elseif ($obj->type === "city") {
+					$obj = $obj->data;
+					$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
+								VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->lng', '$obj->country', '$obj->website', '$obj->comment');";
+				}
+				if ($mysqli->query($query) === true) {
+					echo json_encode(array("status" => "success",
+										   "id" => $obj->id));
+				} else {
+					//var_dump($obj);
+					echo json_encode(array("status" => "error",
+										   "message" => "Error: " . $query . "\n" . $mysqli->error));
+				}
+			} else if ($obj->action === "update") {
+				if ($obj->type === "entries") {
+					$obj = $obj->data;
+					$query = "UPDATE `data`
+							  SET `date` = '$obj->date', `user_id` = '$obj->user', `temp` = '$obj->temp', `city_id` = '$obj->city', " . ($obj->image != "" ? "`image` = '$obj->image', " : "") . "`comment` = '$obj->comment'
+							  WHERE `id` = '$obj->id';";
+					if ($mysqli->query($query) === true) {
+						echo json_encode(array("status" => "success",
+											   "id" => $obj->id));
+					} else {
+						//var_dump($obj);
+						echo json_encode(array("status" => "error",
+											   "message" => "Error: " . $query . "\n" . $mysqli->error));
+					}
+				}
 			}
 		} else if ($type === "file") {
 			$uploaddir = '../img/data/';
 			$filename = $uploaddir . basename($data['name']);
 			if (move_uploaded_file($data['tmp_name'], $filename)) {
-					echo json_encode(array("status" => "success", ));
+					echo json_encode(array("status" => "success",
+										   "filename" => $filename));
 				} else {
-					echo json_encode(array("status" => "error", "message" => "File error!"));
+					echo json_encode(array("status" => "error",
+										   "message" => "Dateifehler!"));
 				}
 		}
 	}
@@ -245,7 +266,7 @@
 		}
 
 		if ($mysqli->error) {
-			echo json_encode(array("status" => "error", "message" => "Error: " . $mysqli->error));
+			echo json_encode(array("status" => "error", "message" => "Fehler: " . $mysqli->error));
 		}
 	}
 
@@ -257,13 +278,14 @@
 			$query = "DELETE FROM data
 					  WHERE id = '$entry'";
 			if ($mysqli->query($query) === TRUE) {
-				echo json_encode(array("status" => "success"));
+				echo json_encode(array("status" => "success",
+									   "id" => $entry));
 			} else {
 				//var_dump($obj);
-				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "\n" . $mysqli->error));
+				echo json_encode(array("status" => "error", "message" => "Fehler: " . $query . "\n" . $mysqli->error));
 			}
 		} else {
-			echo json_encode(array("status" => "error", "message" => "Error: Keine Stadt angegeben!"));
+			echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt angegeben!"));
 		}
 	}
 
@@ -275,13 +297,14 @@
 			$query = "DELETE FROM cities
 					  WHERE id = " . $city;
 			if ($mysqli->query($query) === TRUE) {
-				echo json_encode(array("status" => "success"));
+				echo json_encode(array("status" => "success",
+										   "id" => $city));
 			} else {
 				//var_dump($obj);
-				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "\n" . $mysqli->error));
+				echo json_encode(array("status" => "error", "message" => "Fehler: " . $query . "\n" . $mysqli->error));
 			}
 		} else {
-			echo json_encode(array("status" => "error", "message" => "Error: Keine Stadt angegeben!"));
+			echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt angegeben!"));
 		}
 	}
 ?>
