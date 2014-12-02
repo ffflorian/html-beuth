@@ -31,7 +31,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			button.find('.glyphicon').addClass('glyphicon-remove');
 			button.attr('disabled', true);
 		}
-		console.log(validation);
 	}
 
 	function allTrue() {
@@ -92,7 +91,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		} else {
 			validation.email = false;
 		}
-		console.log($(this).val().split("@")[1]);
 		validateForm();
 	});
 
