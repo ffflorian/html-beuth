@@ -9,6 +9,40 @@
 $(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
 	$.ajaxSetup({ cache: false });
 
+	var validation = {
+		date: true,
+		temp: false,
+		city: false,
+		email: false
+	};
+
+	function validateForm() {
+		var button = $('#newdataform .submitForm');
+		if (allTrue()) {
+			button.removeClass('btn-default');
+			button.addClass('btn-success');
+			button.find('.glyphicon').removeClass('glyphicon-remove');
+			button.find('.glyphicon').addClass('glyphicon-ok');
+			button.attr('disabled', false);
+		} else {
+			button.removeClass('btn-success');
+			button.addClass('btn-default');
+			button.find('.glyphicon').removeClass('glyphicon-ok');
+			button.find('.glyphicon').addClass('glyphicon-remove');
+			button.attr('disabled', true);
+		}
+		console.log(validation);
+	}
+
+	function allTrue() {
+		for (var i in validation) {
+			if (!validation[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	$('#searchform .submitForm').on('click', function() {
 		$('#searchform').submit();
 	});
@@ -25,6 +59,43 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
+	$('#formdate').on('change', function() {
+		if ($(this).val() != "") {
+			validation.date = true;
+		} else {
+			validation.date = false;
+		}
+		validateForm();
+	});
+
+	$('#formtemp').on('input', function() {
+		if ($(this).val() != "") {
+			validation.temp = true;
+		} else {
+			validation.temp = false;
+		}
+		validateForm();
+	});
+
+	$('#formcity').on('change', function() {
+		if ($(this).val() != "") {
+			validation.city = true;
+		} else {
+			validation.city = false;
+		}
+		validateForm();
+	});
+
+	$('#formemail').on('input', function() {
+		if ($(this).val().split("@")[1] === "beuth-hochschule.de") {
+			validation.email = true;
+		} else {
+			validation.email = false;
+		}
+		console.log($(this).val().split("@")[1]);
+		validateForm();
+	});
+
 	$(document).on('submit', '#searchform', function(event) {
 		event.preventDefault();
 		searchData();
@@ -32,12 +103,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	$(document).on('submit', '#newdataform', function(event) {
 		event.preventDefault();
-		var formEmail = $('#formemail').val();
-		if (formEmail.substring(formEmail.length-20,
-								formEmail.length) !== "@beuth-hochschule.de") {		// wenn die letzten 20 Zeichen nicht dem String entsprechen
-			$('#formemail').popover('show');
-		} else {
-			$('#formemail').popover('hide');
+		if (allTrue()) {
 			sendEntries('#newdataform');
 		}
 	});
