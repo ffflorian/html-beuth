@@ -20,8 +20,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	$('#searchform input').on('keyup', function() {
 		if ($('#searchform input').val() === "") {
 			$('#results').slideUp();
+		} else {
+			$('#searchform').submit();
 		}
-		console.log($('#searchform input').val());
 	});
 
 	$(document).on('submit', '#searchform', function(event) {
