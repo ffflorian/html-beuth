@@ -50,7 +50,7 @@ div.city form {
 }
 
 .data {
-	min-height: 444px;
+	min-height: 398px;
 	background-color: rgba(255,255,255,0.7) !important;
 }
 
@@ -81,6 +81,14 @@ td.img, td.img img {
 
 .invisible {
 	display: none;
+}
+
+.temp .input-group {
+	max-width: 145px;
+}
+
+.form-control {
+	display: inline-block !important;
 }
 
 #searchform .col-xs-7, #searchform label {

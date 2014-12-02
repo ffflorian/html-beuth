@@ -217,7 +217,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			'<td class="editable date">' + formatDate(date) + '</td>' +
 			'<td class="edit date"><input type="date" class="form-control" value="' + date + '" /></td>' +
 			'<td class="editable temp">' + temp + '&deg; C</td>' +
-			'<td class="edit temp"><input type="number" class="form-control" value="' + temp + '" min="-72" max="100" /> &deg;C</td>' +
+			'<td class="edit temp"><div class="input-group"><input type="number" class="form-control" value="' + temp + '" min="-72" max="100" /><div class="input-group-addon">&deg;C</div></div></td>' +
 			'<td class="editable city">' + city + '</td>' +
 			'<td class="edit city">' +
 				'<select class="form-control">' +
