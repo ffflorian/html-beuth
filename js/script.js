@@ -79,9 +79,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 					});
 				});
 
-				request.fail(function(jqXHR, textStatus) {
-					console.log("Request failed: " + textStatus);
-					console.log("Received: " + JSON.stringify(jqXHR));
+				request.fail(function(result, status) {
+					console.log("Request failed: " + status);
+					console.log("Received: " + JSON.stringify(result));
 				});
 			}
 		}
@@ -135,9 +135,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$('#formConfirm').on('click', '#frm_submit', function(e) {
-		//console.log('remove-id: ' + $(this).attr('remove-id'));
 		var tr = $('table').find('[data-id="' + $(this).attr('remove-id') + '"]');
-		//console.log(tr);
 		var entryID = $(tr).attr('data-id');
 		//console.log(entryID);
 		var request = $.ajax({
@@ -154,9 +152,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			tr.remove();
 		});
 
-		request.fail(function(jqXHR, textStatus) {
-			console.log("Request failed: " + textStatus);
-			console.log("Received: " + JSON.stringify(jqXHR));
+		request.fail(function(result, status) {
+			console.log("Request failed: " + status);
+			console.log("Received: " + JSON.stringify(result));
 		});
 		
 	});
@@ -187,9 +185,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 	});
 
-	request1.fail(function(jqXHR, textStatus) {
-		$('#status').text("Request failed: " + textStatus);
-		console.log("Received: " + JSON.stringify(jqXHR));
+	request1.fail(function(result, status) {
+		console.log("Request failed: " + status);
+		console.log("Received: " + JSON.stringify(result));
 	});
 
 	var citiesJSON = {};
@@ -208,9 +206,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 	});
 
-	request2.fail(function(jqXHR, textStatus) {
-		console.log("Request failed: " + textStatus);
-		console.log("Received: " + JSON.stringify(jqXHR));
+	request2.fail(function(result, status) {
+		console.log("Request failed: " + status);
+		console.log("Received: " + JSON.stringify(result));
 	});
 
 	function addEntry(id, date, temp, city, image, comment) {
@@ -298,25 +296,58 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			$('#results').slideDown();
 		});
 
-		request.fail(function(jqXHR, textStatus) {
-			console.log("Request failed: " + textStatus);
-			console.log("Received: " + JSON.stringify(jqXHR));
+		request.fail(function(result, status) {
+			console.log("Request failed: " + status);
+			console.log("Received: " + JSON.stringify(result));
 		});
 	}
 
-	function sendImage(form) {
+	$('input[type=file]').on('change', function() {
+		var filename = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+		var file = new FormData();
+		file.append(0, $(this)[0].files[0]);
+		sendImage(file, filename);
+	});
 
+	function sendImage(myFile, filename) {
+		if (window.File && window.FileReader && window.FileList && window.Blob) {
+			var request = $.ajax({
+				type: 'POST',
+				url: 'php/functions.php?file',
+				data: myFile,
+				dataType: 'json',
+				processData: false,
+				contentType: false
+			});
+
+			request.done(function(data, status, result) {
+				$('.btn-file').removeClass('btn-primary');
+				$('.btn-file').addClass('btn-success');
+				$('.btn-file .text').html(filename);
+				$('.btn-file input').attr('data-filename', filename);
+				$('.btn-file .glyphicon').removeClass('glyphicon-upload');
+				$('.btn-file .glyphicon').addClass('glyphicon-ok');
+			});
+
+			request.fail(function(result, status) {
+				$('#uploadmessage').html("Fehlgeschlagen");
+				console.log("Request failed: " + status);
+				console.log("Received: " + JSON.stringify(result));
+			});
+		} else {
+			console.log("APIs not supported!");
+		}
 	}
 
 	function sendEntries(form) {
 		var JSONdata = {};
 		JSONdata['id'] = generateID();
 		JSONdata['user'] = "lkf4vyxn9";
-		JSONdata['image'] = "mitte20141001.jpg";
 		$(form + ' *').filter(':input').each(function(i, obj) {
 			JSONdata[$(obj).attr('name')] = $(obj).val();
 			delete JSONdata['undefined'];
 		});
+		JSONdata['image'] = $(form + ' input[type=file]').attr('data-filename');
 		//console.log(JSONdata);
 		var formId = $('table tr').length;
 		var request = $.ajax({
@@ -334,9 +365,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $(form + ' option:selected').text(), JSONdata['image'], JSONdata['comment']);
 		});
 
-		request.fail(function(jqXHR, textStatus) {
-			console.log("Request failed: " + textStatus);
-			console.log("Received: " + JSON.stringify(jqXHR));
+		request.fail(function(result, status) {
+			console.log("Request failed: " + status);
+			console.log("Received: " + JSON.stringify(result));
 		});
 	}
 
@@ -383,6 +414,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		scrollwheel: false,
 		disableDoubleClickZoom: true
 	};
-	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	$('#map').fadeIn();
+	//var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	//$('#map').fadeIn();
 });

@@ -15,11 +15,14 @@
 	$actions = array("getdata", "getcities", "entries", "removeentry", "removecity", "searchcity");
 	$formats = array("json", "text", "html");
 
+	if (isset($_GET['file'])) {
+		put_data("file", $_FILES[0]);
+		exit();
+	}
+
 	if ($data = file_get_contents('php://input')) {
 		if ($_SERVER['CONTENT_TYPE'] === "application/json") {
 			put_data("JSON", $data);
-		} else {
-			put_data("file", $data);
 		}
 		exit();
 	}
@@ -92,6 +95,7 @@
 			global $mysqli;
 
 			header('Content-type: application/json');
+
 			$obj = json_decode($data);
 			if ($obj->type === "entries") {
 				$obj = $obj->data;
@@ -106,10 +110,16 @@
 				echo json_encode(array("status" => "success"));
 			} else {
 				//var_dump($obj);
-				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "\n" . $mysqli->error));
 			}
-		} else if ($type === "image") {
-
+		} else if ($type === "file") {
+			$uploaddir = '../img/data/';
+			$filename = $uploaddir . basename($data['name']);
+			if (move_uploaded_file($data['tmp_name'], $filename)) {
+					echo json_encode(array("status" => "success", ));
+				} else {
+					echo json_encode(array("status" => "error", "message" => "File error!"));
+				}
 		}
 	}
 
@@ -185,6 +195,7 @@
 	*/
 
 	function get_data($entry, $format) {
+		header('Content-type: application/json');
 		global $mysqli;
 
 		$rows = array();
@@ -228,20 +239,20 @@
 					}
 
 					//$rows = htmlentities($rows);
-					header('Content-type: application/json');
 					echo json_encode($rows);
 					break;
 			}
 		}
 
 		if ($mysqli->error) {
-			printf("Error: %s\n", $mysqli->error);
+			echo json_encode(array("status" => "error", "message" => "Error: " . $mysqli->error));
 		}
 	}
 
 	function remove_entry($entry) {
 		global $mysqli;
 
+		header('Content-type: application/json');
 		if ($entry) {
 			$query = "DELETE FROM data
 					  WHERE id = '$entry'";
@@ -249,16 +260,17 @@
 				echo json_encode(array("status" => "success"));
 			} else {
 				//var_dump($obj);
-				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "\n" . $mysqli->error));
 			}
 		} else {
-			echo "Remove entry: No entry specified!";
+			echo json_encode(array("status" => "error", "message" => "Error: Keine Stadt angegeben!"));
 		}
 	}
 
 	function remove_city($city) {
 		global $mysqli;
 
+		header('Content-type: application/json');
 		if ($city) {
 			$query = "DELETE FROM cities
 					  WHERE id = " . $city;
@@ -266,10 +278,10 @@
 				echo json_encode(array("status" => "success"));
 			} else {
 				//var_dump($obj);
-				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "<br>" . $mysqli->error));
+				echo json_encode(array("status" => "error", "message" => "Error: " . $query . "\n" . $mysqli->error));
 			}
 		} else {
-			echo "Remove city: No city specified!";
+			echo json_encode(array("status" => "error", "message" => "Error: Keine Stadt angegeben!"));
 		}
 	}
 ?>
