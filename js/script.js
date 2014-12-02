@@ -522,6 +522,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		scrollwheel: false,
 		disableDoubleClickZoom: true
 	};
-	//var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	//$('#map').fadeIn();
+	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	$('#map').fadeIn();
 });
