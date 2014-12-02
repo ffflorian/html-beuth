@@ -176,6 +176,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}
 	});
 
+	var citiesJSON = {};
+
 	request1.done(function(data) {
 		$('#status').hide();
 		$('#datawrap').show();
@@ -183,30 +185,28 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			var entry = data[i];
 			addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 		});
-	});
+		var request2 = $.ajax({
+			url: 'php/functions.php',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				action: "getcities"
+			}
+		});
 
-	request1.fail(function(result, status) {
-		console.log("Request failed: " + status);
-		console.log("Received: " + JSON.stringify(result));
-	});
+		request2.done(function(data) {
+			$('select').each(function() {
+				addCities($(this), data);
+			});
+		});
 
-	var citiesJSON = {};
-	var request2 = $.ajax({
-		url: 'php/functions.php',
-		type: 'GET',
-		dataType: 'json',
-		data: {
-			action: "getcities"
-		}
-	});
-
-	request2.done(function(data) {
-		$('select').each(function() {
-			addCities($(this), data);
+		request2.fail(function(result, status) {
+			console.log("Request failed: " + status);
+			console.log("Received: " + JSON.stringify(result));
 		});
 	});
 
-	request2.fail(function(result, status) {
+	request1.fail(function(result, status) {
 		console.log("Request failed: " + status);
 		console.log("Received: " + JSON.stringify(result));
 	});
@@ -237,8 +237,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			'</td>' +
 			'</form>' +
 			'</tr>').appendTo($('table tbody'));
-		//console.log("id: " + id);
-		addCities(tr.find('select'), citiesJSON);
+		//console.log(tr.find('select'));
+		//console.log(citiesJSON);
 	}
 
 	function addCities(select, data) {
