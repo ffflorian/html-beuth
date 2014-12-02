@@ -58,9 +58,41 @@ div.city form {
 	display: none;
 }
 
+.data .edit, .data .editable {
+	height: 55px;
+}
+
+.data .edit.date, .data .editable.date {
+	width: 170px;
+}
+
+.data .edit.date input {
+	width: 155px;
+}
+
+.data .edit.temp, .data .editable.temp {
+	width: 125px;
+}
+
+.data .edit.city, .data .editable.city {
+	width: 125px;
+}
+
+.data .edit.image, .data .editable.image {
+	width: 125px;
+}
+
+.data .edit.comment, .data .editable.comment {
+	width: 190px;
+}
+
+.editlink, .savelink {
+	margin-right: 5px;
+}
+
 table, th, tr, td {
 	vertical-align: top;
-	padding: 10px !important;
+	padding: 5px !important;
 	max-height: 50px;
 	border: none !important;
 }
@@ -84,7 +116,7 @@ td.img, td.img img {
 }
 
 .temp .input-group {
-	max-width: 145px;
+	max-width: 120px;
 }
 
 .form-control {

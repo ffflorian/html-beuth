@@ -349,9 +349,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		request.done(function(data) {
 			if (data.status === "success") {
 				data = data.results;
-				$('#results .panel-body').html("Suchergebnisse: ");
+				$('#results .panel-body').html("");
 				$.each(data, function(id, obj) {
-					$('#results .panel-body').append(obj.name_long + " ");
+					$('#results .panel-body').append('<a class="btn btn-default" href="#">' + obj.name_long + '</a> ');
 				});
 				//console.log(data);
 			} else {
