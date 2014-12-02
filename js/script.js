@@ -8,11 +8,20 @@
 
 $(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
 	$.ajaxSetup({ cache: false });
-	$('#datawrap').hide();
-	$('#found').hide();
 
 	$('#searchform .submitForm').on('click', function() {
 		$('#searchform').submit();
+	});
+
+	$('#results .close').on('click', function() {
+		$('#results').slideUp();
+	});
+
+	$('#searchform input').on('keyup', function() {
+		if ($('#searchform input').val() === "") {
+			$('#results').slideUp();
+		}
+		console.log($('#searchform input').val());
 	});
 
 	$(document).on('submit', '#searchform', function(event) {
@@ -277,11 +286,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		request.done(function(data) {
 			if (data.status === "success") {
 				data = data.results;
-				$('#found .panel-body').html("Stadt gefunden: " + data.name_long);
+				$('#results .panel-body').html("Suchergebnisse: ");
+				$.each(data, function(id, obj) {
+					$('#results .panel-body').append(obj.name_long + " ");
+				});
+				//console.log(data);
 			} else {
-				$('#found .panel-body').html(data.message);
+				$('#results .panel-body').html(data.message);
 			}
-			$('#found').slideDown();
+			$('#results').slideDown();
 		});
 
 		request.fail(function(jqXHR, textStatus) {
@@ -370,4 +383,5 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		disableDoubleClickZoom: true
 	};
 	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	$('#map').fadeIn();
 });

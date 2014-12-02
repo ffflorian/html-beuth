@@ -125,28 +125,25 @@
 	*/
 
 	function search_city($keyword) {
-		if ($keyword) {
-			global $mysqli;
-			$query = "SELECT name_long FROM cities
-					  WHERE name_long LIKE '%$keyword%'
-					  ORDER BY name_long";
+		header('Content-type: application/json');
+		global $mysqli;
+		$query = "SELECT name_long FROM cities
+				  WHERE name_long LIKE '%$keyword%'
+				  ORDER BY name_long";
 
-			if ($result = $mysqli->query($query)) {
-				if ($result->num_rows != 0) {
-					$row = ["status" => "success"];
-					while ($r = $result->fetch_object()) {
-						$row['results'] = $r;
-					}
-				} else {
-					$row = ["status"  => "error",
-							  "message" => "Keine Stadt gefunden!"];
+		if ($result = $mysqli->query($query)) {
+			if ($result->num_rows != 0) {
+				$row = ["status" => "success"];
+				$row["results"] = [];
+				while ($r = $result->fetch_object()) {
+					array_push($row["results"], $r);
 				}
+			} else {
+				$row = ["status"  => "error",
+						"message" => "Keine Stadt gefunden!"];
 			}
-			header('Content-type: application/json');
-			echo json_encode($row);
-		} else {
-			echo "Search city: No keyword specified!";
 		}
+		echo json_encode($row);
 	}
 
 
