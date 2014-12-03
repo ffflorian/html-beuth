@@ -170,14 +170,14 @@
 
 		if ($result = $mysqli->query($query)) {
 			if ($result->num_rows != 0) {
-				$row = ["status" => "success"];
-				$row["results"] = [];
+				$row = array("status" => "success");
+				$row["results"] = array();
 				while ($r = $result->fetch_object()) {
 					array_push($row["results"], $r);
 				}
 			} else {
-				$row = ["status"  => "error",
-						"message" => "Keine Stadt gefunden!"];
+				$row = array("status"  => "error",
+						"message" => "Keine Stadt gefunden!");
 			}
 		}
 		echo json_encode($row);
