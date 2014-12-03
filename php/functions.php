@@ -109,10 +109,12 @@
 				}
 				if ($mysqli->query($query) === true) {
 					echo json_encode(array("status" => "success",
+										   "action" => "insert",
 										   "id" => $obj->id));
 				} else {
 					//var_dump($obj);
 					echo json_encode(array("status" => "error",
+										   "action" => "insert",
 										   "message" => "Error: " . $query . "\n" . $mysqli->error));
 				}
 			} else if ($obj->action === "update") {
@@ -123,10 +125,12 @@
 							  WHERE `id` = '$obj->id';";
 					if ($mysqli->query($query) === true) {
 						echo json_encode(array("status" => "success",
+											   "action" => "update",
 											   "id" => $obj->id));
 					} else {
 						//var_dump($obj);
 						echo json_encode(array("status" => "error",
+											   "action" => "update",
 											   "message" => "Error: " . $query . "\n" . $mysqli->error));
 					}
 				}
@@ -136,9 +140,11 @@
 			$filename = $uploaddir . basename($data['name']);
 			if (move_uploaded_file($data['tmp_name'], $filename)) {
 					echo json_encode(array("status" => "success",
+										   "action" => "upload",
 										   "filename" => $filename));
 				} else {
 					echo json_encode(array("status" => "error",
+										   "action" => "upload",
 										   "message" => "Dateifehler!"));
 				}
 		}
