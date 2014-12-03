@@ -16,31 +16,9 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		email: false
 	};
 
-	function validateForm() {
-		var button = $('#newdataform .submitForm');
-		if (allTrue()) {
-			button.removeClass('btn-default');
-			button.addClass('btn-success');
-			button.find('.glyphicon').removeClass('glyphicon-remove');
-			button.find('.glyphicon').addClass('glyphicon-ok');
-			button.attr('disabled', false);
-		} else {
-			button.removeClass('btn-success');
-			button.addClass('btn-default');
-			button.find('.glyphicon').removeClass('glyphicon-ok');
-			button.find('.glyphicon').addClass('glyphicon-remove');
-			button.attr('disabled', true);
-		}
-	}
-
-	function allTrue() {
-		for (var i in validation) {
-			if (!validation[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
+	insertDate();
+	loadData();
+	loadCities($('#newdataform select'));
 
 	$('#searchform .submitForm').on('click', function() {
 		$('#searchform').submit();
@@ -222,6 +200,13 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		
 	});
 
+	$(document).on('change', 'input[type=file]', function() {
+		var filename = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+		var file = new FormData();
+		file.append(0, $(this)[0].files[0]);
+		sendImage($(this), file, filename);
+	});
+
 	function insertDate() {
 		var today = new Date();									// neues Datum erzeugen
 		var dateString = today.getFullYear() + '-'
@@ -229,12 +214,6 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			+ ('0' + today.getDate()).slice(-2);
 		$('#formdate').val(dateString);							// formdate auf das heutige Datum setzen
 	}
-
-	insertDate();
-	
-	loadData();
-
-	loadCities($('#newdataform select'));
 
 	function loadData() {
 		$('#status').text("Daten werden geladen...");	
@@ -262,6 +241,32 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
 		});
+	}
+
+	function validateForm() {
+		var button = $('#newdataform .submitForm');
+		if (allTrue()) {
+			button.removeClass('btn-default');
+			button.addClass('btn-success');
+			button.find('.glyphicon').removeClass('glyphicon-remove');
+			button.find('.glyphicon').addClass('glyphicon-ok');
+			button.attr('disabled', false);
+		} else {
+			button.removeClass('btn-success');
+			button.addClass('btn-default');
+			button.find('.glyphicon').removeClass('glyphicon-ok');
+			button.find('.glyphicon').addClass('glyphicon-remove');
+			button.attr('disabled', true);
+		}
+	}
+
+	function allTrue() {
+		for (var i in validation) {
+			if (!validation[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	function addEntry(id, date, temp, city, image, comment) {
@@ -383,16 +388,19 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 	}
 
-	$(document).on('change', 'input[type=file]', function() {
-		var filename = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-		var file = new FormData();
-		file.append(0, $(this)[0].files[0]);
-		sendImage($(this), file, filename);
-	});
-
 	function sendImage(input, myFile, filename) {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			//console.log(myFile.files);
+
+			var button = input.closest('.btn-file');
+
+			button.removeClass('btn-primary');
+			button.addClass('btn-default');
+			button.attr('disabled', true);
+			button.find('.text').html("Lade hoch...");
+			button.find('.glyphicon').removeClass('glyphicon-upload');
+			button.find('.glyphicon').addClass('loading');
+
 			var request = $.ajax({
 				type: 'POST',
 				url: 'php/functions.php?file',
@@ -404,12 +412,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 			request.done(function(data, status, result) {
 				console.log(data);
-				input.closest('.btn-file').removeClass('btn-primary');
-				input.closest('.btn-file').addClass('btn-success');
-				input.closest('.btn-file .text').html(filename);
-				input.closest('.btn-file input').attr('data-filename', filename);
-				input.closest('.btn-file .glyphicon').removeClass('glyphicon-upload');
-				input.closest('.btn-file .glyphicon').addClass('glyphicon-ok');
+				var button = input.closest('.btn-file');
+
+				input.attr('data-filename', filename);
+				button.removeClass('btn-default');
+				button.addClass('btn-success');
+				button.attr('disabled', false);
+				button.find('.text').html(filename);
+				button.find('.glyphicon').removeClass('loading');
+				button.find('.glyphicon').addClass('glyphicon-ok');
 			});
 
 			request.fail(function(result, status) {
