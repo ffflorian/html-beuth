@@ -107,7 +107,8 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 	});
 
 	$(document).on('change', 'select', function() {
-		if ($(this).find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
+		var select = $(this);
+		if (select.find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
 			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
 			if (userInput !== "" && userInput !== null) {
 				var JSONdata = {};
@@ -134,14 +135,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 				request.done(function(data) {
 					console.log(data);
-					$.each($('select'), function(id, obj) {
-						$('<option/>', {
-							text: JSONdata['name_long'],
-							name: JSONdata['name_short'],
-							value: JSONdata['id'],
-							selected: true
-						}).appendTo(obj);
+					var option = $('<option/>', {
+						text: JSONdata['name_long'],
+						name: JSONdata['name_short'],
+						value: JSONdata['id'],
 					});
+					$.each($('select'), function(id, obj) {
+						$(obj).append(option);
+					});
+					select.find(option).attr('selected', true);
 				});
 
 				request.fail(function(result, status) {
@@ -220,59 +222,47 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		
 	});
 
-	var today = new Date();									// neues Datum erzeugen
-	var dateString = today.getFullYear() + '-'
-		+ ('0' + (today.getMonth()+1)).slice(-2) + '-'
-		+ ('0' + today.getDate()).slice(-2);
-	$('#formdate').val(dateString);							// formdate auf das heutige Datum setzen
+	function insertDate() {
+		var today = new Date();									// neues Datum erzeugen
+		var dateString = today.getFullYear() + '-'
+			+ ('0' + (today.getMonth()+1)).slice(-2) + '-'
+			+ ('0' + today.getDate()).slice(-2);
+		$('#formdate').val(dateString);							// formdate auf das heutige Datum setzen
+	}
 
-	$('#status').text("Daten werden geladen...");
+	insertDate();
+	
+	loadData();
 
-	var request1 = $.ajax({
-		url: 'php/functions.php',
-		type: 'GET',
-		dataType: 'json',
-		data: {
-			action: "getdata"
-		}
-	});
+	loadCities($('#newdataform select'));
 
-	var citiesJSON = {};
+	function loadData() {
+		$('#status').text("Daten werden geladen...");	
 
-	request1.done(function(data) {
-		console.log(data);
-		$('#status').hide();
-		$('#datawrap').show();
-		$.each(data, function(i, item) {
-			var entry = data[i];
-			addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
-		});
-		var request2 = $.ajax({
+		var request = $.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
 			dataType: 'json',
 			data: {
-				action: "getcities"
+				action: "getdata"
 			}
 		});
 
-		request2.done(function(data) {
-			console.log(data);
-			$('select').each(function() {
-				addCities($(this), data);
+		request.done(function(data) {
+			//console.log(data);
+			$('#status').hide();
+			$('#datawrap').show();
+			$.each(data, function(i, obj) {
+				var entry = data[i];
+				addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 			});
 		});
 
-		request2.fail(function(result, status) {
+		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
 		});
-	});
-
-	request1.fail(function(result, status) {
-		console.log("Request failed: " + status);
-		console.log("Received: " + JSON.stringify(result));
-	});
+	}
 
 	function addEntry(id, date, temp, city, image, comment) {
 		var tr = $('<tr class="entry" data-id="' + id + '">' +
@@ -287,7 +277,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 				'</select>' +
 			'</td>' +
 			'<td class="editable img">' + (image ? '<img src="img/data/' + image + '" class="wetterbild" alt="Wetterbild am ' + formatDate(date) + '" />' : '') + '</td>' +
-			'<td class="edit img"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button></td>' +
+			'<td class="edit img"><span class="btn btn-primary btn-file"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <input type="file" name="image" /></td>' +
 			'<td class="editable comment">' + comment + '</td>' +
 			'<td class="edit comment"><input type="text" name="comment" class="form-control" value="' + comment + '" /></td>' +
 			'<td class="editable buttons">' +
@@ -300,12 +290,33 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			'</td>' +
 			'</form>' +
 			'</tr>').appendTo($('table tbody'));
-		//console.log(tr.find('select'));
-		//console.log(citiesJSON);
+		loadCities(tr.find('select'), city.toLowerCase());
 	}
 
-	function addCities(select, data) {
-		//console.log(select);
+	function loadCities(select, city) {
+		var citiesJSON = {};
+		var request = $.ajax({
+			url: 'php/functions.php',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				action: "getcities"
+			}
+		});
+
+		request.done(function(data) {
+			//console.log(data);
+			$(select).find('option').remove();
+			addCities(select, data, city);
+		});
+
+		request.fail(function(result, status) {
+			console.log("Request failed: " + status);
+			console.log("Received: " + JSON.stringify(result));
+		});
+	}
+
+	function addCities(select, data, city) {
 		$('<option/>', {
 			text: "Stadt",
 			value: "",
@@ -313,11 +324,17 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		}).appendTo(select);
 
 		$.each(data, function(id, obj) {
-			$('<option/>', {
+			var option = $('<option/>', {
 				text: obj.name_long,
 				name: obj.name_short,
 				value: obj.id
-			}).appendTo(select);
+			});
+			
+			$(select).append(option);
+
+			if (city === option.attr('name')) {
+				option.attr('selected', 'true');
+			}
 		});
 
 		/*$(select).sort(function(a, b) {
@@ -346,7 +363,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 
 		request.done(function(data) {
-			console.log(data);
+			//console.log(data);
 			if (data.status === "success") {
 				data = data.results;
 				$('#results .panel-body').html("");
@@ -366,15 +383,16 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		});
 	}
 
-	$('input[type=file]').on('change', function() {
+	$(document).on('change', 'input[type=file]', function() {
 		var filename = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
 		var file = new FormData();
 		file.append(0, $(this)[0].files[0]);
-		sendImage(file, filename);
+		sendImage($(this), file, filename);
 	});
 
-	function sendImage(myFile, filename) {
+	function sendImage(input, myFile, filename) {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
+			//console.log(myFile.files);
 			var request = $.ajax({
 				type: 'POST',
 				url: 'php/functions.php?file',
@@ -386,16 +404,15 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 			request.done(function(data, status, result) {
 				console.log(data);
-				$('.btn-file').removeClass('btn-primary');
-				$('.btn-file').addClass('btn-success');
-				$('.btn-file .text').html(filename);
-				$('.btn-file input').attr('data-filename', filename);
-				$('.btn-file .glyphicon').removeClass('glyphicon-upload');
-				$('.btn-file .glyphicon').addClass('glyphicon-ok');
+				input.closest('.btn-file').removeClass('btn-primary');
+				input.closest('.btn-file').addClass('btn-success');
+				input.closest('.btn-file .text').html(filename);
+				input.closest('.btn-file input').attr('data-filename', filename);
+				input.closest('.btn-file .glyphicon').removeClass('glyphicon-upload');
+				input.closest('.btn-file .glyphicon').addClass('glyphicon-ok');
 			});
 
 			request.fail(function(result, status) {
-				$('#uploadmessage').html("Fehlgeschlagen");
 				console.log("Request failed: " + status);
 				console.log("Received: " + JSON.stringify(result));
 			});
@@ -429,7 +446,13 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 		request.done(function(data) {
 			console.log(data);
-			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], $('#newdataform option:selected').text(), JSONdata['image'], JSONdata['comment']);
+			var city = $('#newdataform option:selected').text();
+			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['image'], JSONdata['comment']);
+			$('#newdataform *').filter(':input').each(function(i, obj) {
+				$(obj).val('');
+			});
+			insertDate();
+			loadCities(form, city);
 		});
 
 		request.fail(function(result, status) {
@@ -447,8 +470,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 			JSONdata[$(obj).attr('name')] = $(obj).val();
 			delete JSONdata['undefined'];
 		});
-		JSONdata['image'] = $('tr').find('input[type=file]').attr('data-filename') || '';
-		//console.log(JSONdata);
+		JSONdata['image'] = $(tr).find('input[type=file]').attr('data-filename') || '';
 		var formId = $('table tr').length;
 		var request = $.ajax({
 			type: 'POST',
@@ -465,9 +487,12 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		request.done(function(data) {
 			console.log(data);
 			var tr = $('table').find('[data-id="' + data.id + '"]');
-			tr.find('.editable.date').text(formatDate(tr.find('input[type=date]').val()));
+			var imageUploaded = tr.find('input[type=file]').attr('data-filename') || "";
+			var entryDate = formatDate(tr.find('input[type=date]').val());
+			tr.find('.editable.date').text(entryDate);
 			tr.find('.editable.temp').html(tr.find('input[type=number]').val() + " &deg;C");
 			tr.find('.editable.city').text(tr.find('select option:selected').text());
+			(imageUploaded ? tr.find('.editable.img').html('<img src="img/data/' + imageUploaded + '" alt="Wetterbild am ' + entryDate + '" />') : "");
 			tr.find('.editable.comment').text(tr.find('input[type=text]').val());
 			tr.find('.edit').hide();
 			tr.find('.editable').show();
