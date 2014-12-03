@@ -32,16 +32,16 @@ header h1 {
 	padding: 0 10px 0 0;
 }
 
-div.city {
+div#city {
 	text-align: left;
 	vertical-align: bottom;
 }
 
-div.city span {
+div#city span {
 	margin-top: 10px;
 }
 
-div.city form {
+div#city form {
 	float: right;
 }
 

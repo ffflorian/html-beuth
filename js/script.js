@@ -6,7 +6,7 @@
 * @author Florian Keller
 */
 
-$(function() {										// warte darauf, dass der Inhalt geladen wurde
+$(function() {
 	$.ajaxSetup({ cache: false });
 
 	var validation = {
@@ -16,16 +16,30 @@ $(function() {										// warte darauf, dass der Inhalt geladen wurde
 		email: false
 	};
 
+	var selectedCity = "berlin";
+
+	var citiesJSON = {};
+
 	insertDate();
-	loadData();
 	loadCities($('#newdataform select'));
+
+	$(window).on('hashchange', function(e) {
+		e.preventDefault;
+		loadData(citiesJSON[window.location.hash.substring(1)]);
+	});
 
 	$('#searchform .submitForm').on('click', function() {
 		$('#searchform').submit();
 	});
 
+	$('#results').on('click', '.result', function() {
+		$('#results').slideUp();
+		$('#searchform input').val("");
+	});
+
 	$('#results .close').on('click', function() {
 		$('#results').slideUp();
+		$('#searchform input').val("");
 	});
 
 	$('#searchform input').on('keyup', function() {
@@ -215,26 +229,28 @@ $(function() {										// warte darauf, dass der Inhalt geladen wurde
 		$('#formdate').val(dateString);							// formdate auf das heutige Datum setzen
 	}
 
-	function loadData() {
+	function loadData(city) {
+		$('table tbody').empty();
 		$('#status').text("Daten werden geladen...");	
-
 		var request = $.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
 			dataType: 'json',
 			data: {
-				action: "getdata"
+				action: "getdata",
+				city: city
 			}
 		});
 
 		request.done(function(data) {
-			//console.log(data);
+			console.log(data);
 			$('#status').hide();
 			$('#datawrap').show();
 			$.each(data, function(i, obj) {
 				var entry = data[i];
 				addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 			});
+			$('#city .title').html(data[0].city);
 		});
 
 		request.fail(function(result, status) {
@@ -295,11 +311,11 @@ $(function() {										// warte darauf, dass der Inhalt geladen wurde
 			'</td>' +
 			'</form>' +
 			'</tr>').appendTo($('table tbody'));
-		loadCities(tr.find('select'), city.toLowerCase());
+
+		loadCities(tr.find('select'), city.toLowerCase(), true);
 	}
 
-	function loadCities(select, city) {
-		var citiesJSON = {};
+	function loadCities(select, city, noLoad) {
 		var request = $.ajax({
 			url: 'php/functions.php',
 			type: 'GET',
@@ -311,6 +327,13 @@ $(function() {										// warte darauf, dass der Inhalt geladen wurde
 
 		request.done(function(data) {
 			//console.log(data);
+			$(data).each(function(id, obj) {
+				citiesJSON[obj.name_short] = obj.id;
+			});
+			//console.log(citiesJSON);
+			if (!noLoad) {
+				selectCity();
+			}
 			$(select).find('option').remove();
 			addCities(select, data, city);
 		});
@@ -319,6 +342,16 @@ $(function() {										// warte darauf, dass der Inhalt geladen wurde
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
 		});
+	}
+
+	function selectCity() {
+		if (window.location.hash) {
+			selectedCity = window.location.hash.substring(1);
+			selectedCityId = citiesJSON[selectedCity];
+			loadData(selectedCityId);
+		} else {
+			window.location.hash = 'berlin';
+		}
 	}
 
 	function addCities(select, data, city) {
@@ -372,8 +405,9 @@ $(function() {										// warte darauf, dass der Inhalt geladen wurde
 			if (data.status === "success") {
 				data = data.results;
 				$('#results .panel-body').html("");
+				console.log(data);
 				$.each(data, function(id, obj) {
-					$('#results .panel-body').append('<a class="btn btn-default" href="#">' + obj.name_long + '</a> ');
+					$('#results .panel-body').append('<a href="#' + obj.name_short + '" class="btn btn-default result">' + obj.name_long + '</a> ');
 				});
 				//console.log(data);
 			} else {

@@ -35,7 +35,7 @@
 
 	switch ($actionGET) {
 		case "getdata":
-			get_data($entryGET, $formatGET);
+			get_data($entryGET, $formatGET, $cityGET);
 			break;
 		case "getcities":
 			get_cities();
@@ -164,9 +164,9 @@
 	function search_city($keyword) {
 		header('Content-type: application/json');
 		global $mysqli;
-		$query = "SELECT name_long FROM cities
+		$query = "SELECT name_long, name_short FROM cities
 				  WHERE name_long LIKE '%$keyword%'
-				  ORDER BY name_long";
+				  ORDER BY name_short";
 
 		if ($result = $mysqli->query($query)) {
 			if ($result->num_rows != 0) {
@@ -221,17 +221,23 @@
 	* @return The result(s) in different formats.
 	*/
 
-	function get_data($entry, $format) {
+	function get_data($entry, $format, $city) {
 		header('Content-type: application/json');
 		global $mysqli;
 
 		$rows = array();
 
-		if ($entry) {
+		if ($entry && $entry != "undefined") {
 			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
-					  WHERE d.id = $entry
+					  WHERE d.id = '$entry'
+					  ORDER BY `date` ASC";
+		} else if ($city && $city != "undefined") {
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
+					  FROM data d
+					  INNER JOIN cities c on (c.id = d.city_id)
+					  WHERE c.id = '$city'
 					  ORDER BY `date` ASC";
 		} else {
 			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
