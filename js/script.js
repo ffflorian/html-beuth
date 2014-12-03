@@ -447,12 +447,12 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 		request.done(function(data) {
 			console.log(data);
 			var city = $('#newdataform option:selected').text();
-			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], JSONdata['image'], JSONdata['comment']);
+			addEntry(JSONdata['id'], JSONdata['date'], JSONdata['temp'], city, JSONdata['image'], JSONdata['comment']);
 			$('#newdataform *').filter(':input').each(function(i, obj) {
 				$(obj).val('');
 			});
 			insertDate();
-			loadCities(form, city);
+			loadCities($('table').find('[data-id="' + JSONdata['id'] + '"] select'), city.toLowerCase());
 		});
 
 		request.fail(function(result, status) {
