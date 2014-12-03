@@ -6,7 +6,7 @@
 * @author Florian Keller
 */
 
-$(window).load(function() {										// warte darauf, dass der Inhalt geladen wurde
+$(function() {										// warte darauf, dass der Inhalt geladen wurde
 	$.ajaxSetup({ cache: false });
 
 	var validation = {
@@ -271,7 +271,7 @@ $(window).load(function() {										// warte darauf, dass der Inhalt geladen wu
 
 	function addEntry(id, date, temp, city, image, comment) {
 		var tr = $('<tr class="entry" data-id="' + id + '">' +
-			'<form class="form-horizontal" role="form" action="" method="post" class="editform">' +
+			'<form class="form-horizontal" role="form" action="#" method="post" class="editform">' +
 			'<td class="editable date">' + formatDate(date) + '</td>' +
 			'<td class="edit date"><input type="date" class="form-control" name="date" value="' + date + '" /></td>' +
 			'<td class="editable temp">' + temp + '&deg; C</td>' +
