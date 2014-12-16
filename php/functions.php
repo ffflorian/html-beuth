@@ -31,6 +31,7 @@
 	$entryGET  = (isset($_GET['entry']) ? $mysqli->real_escape_string($_GET['entry']) : null);
 	$formatGET = (isset($_GET['format']) && in_array($_GET['format'], $formats) ? $_GET['format']  : null);
 	$cityGET   = (isset($_GET['city']) ? $mysqli->real_escape_string($_GET['city']) : null);
+	$cityIDGET = (isset($_GET['cityID']) ? $mysqli->real_escape_string($_GET['cityID']) : null);
 	$keyGET    = (isset($_GET['key']) ? $mysqli->real_escape_string($_GET['key']) : null);
 
 	switch ($actionGET) {
@@ -38,7 +39,7 @@
 			get_data($entryGET, $formatGET, $cityGET);
 			break;
 		case "getcities":
-			get_cities();
+			get_cities($cityIDGET);
 			break;
 		case "entries":
 			get_entries();
@@ -158,29 +159,28 @@
 	* the results as JSON.
 	*
 	* @param String $keyword The keyword for search
-	* @return The number of entries in plain text
+	* @return The entries in JSON
 	*/
 
 	function search_city($keyword) {
 		header('Content-type: application/json');
 		global $mysqli;
-		$query = "SELECT name_long, name_short FROM cities
+		$query = "SELECT id, name_short, name_long, latitude, longitude, country, website, comment FROM cities
 				  WHERE name_long LIKE '%$keyword%'
 				  ORDER BY name_short";
 
 		if ($result = $mysqli->query($query)) {
 			if ($result->num_rows != 0) {
-				$row = array("status" => "success");
-				$row["results"] = array();
+				$rows = array("status" => "success");
+				$rows["results"] = array();
 				while ($r = $result->fetch_object()) {
-					array_push($row["results"], $r);
+					array_push($rows["results"], $r);
 				}
+				echo json_encode($rows, JSON_NUMERIC_CHECK);
 			} else {
-				$row = array("status"  => "error",
-						"message" => "Keine Stadt gefunden!");
+				echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt gefunden!"));
 			}
 		}
-		echo json_encode($row);
 	}
 
 
@@ -193,19 +193,32 @@
 	* @return The result(s) in JSON.
 	*/
 
-	function get_cities() {
+	function get_cities($cityID) {
+		header('Content-type: application/json');
 		global $mysqli;
 
-		$query = "SELECT id, name_long, name_short, latitude, longitude
-				  FROM cities
-				  ORDER BY name_short ASC";
+		if ($cityID) {
+			$query = "SELECT id, name_long, name_short, latitude, longitude
+					  FROM cities
+					  WHERE id = '$cityID'
+					  ORDER BY name_short ASC";
+		} else {
+			$query = "SELECT id, name_long, name_short, latitude, longitude
+					  FROM cities
+					  ORDER BY name_short ASC";
+		}
 
 		if ($result = $mysqli->query($query)) {
-			while ($r = $result->fetch_object()) {
+			if ($result->num_rows != 0) {
+				/*$rows = array("status" => "success");
+				$rows["results"] = array();*/
+				while ($r = $result->fetch_object()) {
 						$rows[] = $r;
+				}
+				echo json_encode($rows, JSON_NUMERIC_CHECK);
+			} else {
+				echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt gefunden!"));
 			}
-			header('Content-type: application/json');
-			echo json_encode($rows, JSON_NUMERIC_CHECK);
 		}
 	}
 
@@ -221,26 +234,26 @@
 	* @return The result(s) in different formats.
 	*/
 
-	function get_data($entry, $format, $city) {
+	function get_data($entry, $format, $cityID) {
 		header('Content-type: application/json');
 		global $mysqli;
 
 		$rows = array();
 
 		if ($entry && $entry != "undefined") {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long as city
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long, c.name_short
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  WHERE d.id = '$entry'
 					  ORDER BY `date` ASC";
-		} else if ($city && $city != "undefined") {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long as city
+		} else if ($cityID && $cityID != "undefined") {
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long, c.name_short
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
-					  WHERE c.id = '$city'
+					  WHERE c.id = '$cityID'
 					  ORDER BY `date` ASC";
 		} else {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long as city
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long, c.name_short
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  ORDER BY `date` ASC";
@@ -249,30 +262,40 @@
 		if ($result = $mysqli->query($query)) {
 			switch ($format) {
 				case "html":
-					while ($r = $result->fetch_object()) {
-						echo "Datum: " . $r->date . "<br>\n".
-						"Temperatur: " . $r->temp . " &deg;C<br>\n".
-						"Ort: " . htmlentities($r->city) . "<br>\n".
-						"Bild: <img src=\"../img/data/" . $r->image . "\" /><br>\n".
-						"Kommentar: " . htmlentities($r->comment) . "<br>\n<br>\n";
+					if ($result->num_rows != 0) {
+						while ($r = $result->fetch_object()) {
+							echo "Datum: " . $r->date . "<br>\n".
+							"Temperatur: " . $r->temp . " &deg;C<br>\n".
+							"Ort: " . htmlentities($r->city) . "<br>\n".
+							"Bild: <img src=\"../img/data/" . $r->image . "\" /><br>\n".
+							"Kommentar: " . htmlentities($r->comment) . "<br>\n<br>\n";
+						}
+					} else {
+						echo("Keine Daten gefunden!");
 					}
 					break;
 				case "text":
-					while ($r = $result->fetch_object()) {
-						echo "Datum: " . $r->date . "\n".
-						"Temperatur: " . $r->temp . " °C\n".
-						"Ort: " . $r->city . "\n".
-						"Bild: ../img/data/" . $r->image . "\n".
-						"Kommentar: " . $r->comment . "\n\n";
+					if ($result->num_rows != 0) {
+						while ($r = $result->fetch_object()) {
+							echo "Datum: " . $r->date . "\n".
+							"Temperatur: " . $r->temp . " °C\n".
+							"Ort: " . $r->city . "\n".
+							"Bild: ../img/data/" . $r->image . "\n".
+							"Kommentar: " . $r->comment . "\n\n";
+						}
+					} else {
+						echo("Keine Daten gefunden!");
 					}
 					break;
 				default:
-					while ($r = $result->fetch_object()) {
-						$rows[] = $r;
+					if ($result->num_rows != 0) {
+						while ($r = $result->fetch_object()) {
+							$rows[] = $r;
+						}
+						echo json_encode($rows, JSON_NUMERIC_CHECK);
+					} else {
+						get_cities($cityID);
 					}
-
-					//$rows = htmlentities($rows);
-					echo json_encode($rows, JSON_NUMERIC_CHECK);
 					break;
 			}
 		}
@@ -307,7 +330,7 @@
 		header('Content-type: application/json');
 		if ($city) {
 			$query = "DELETE FROM cities
-					  WHERE id = " . $city;
+					  WHERE id = '$city'";
 			if ($mysqli->query($query) === TRUE) {
 				echo json_encode(array("status" => "success",
 										   "id" => $city));

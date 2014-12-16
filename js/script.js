@@ -270,22 +270,20 @@ $(function() {
 		});
 
 		request.done(function(data) {
-			if (data != "") {
-				console.log(data);
+			if (data[0].temp) {
 				$('#status').hide();
 				$('#datawrap').show();
 				$.each(data, function(i, obj) {
 					var entry = data[i];
-					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
+					addEntry(entry.id, entry.date, entry.temp, entry.name_long, entry.image, entry.comment);
 				});
-				$('#city .title').html(data[0].city);
-				showMap(data[0].latitude, data[0].longitude);
 			} else {
 				$('#datawrap').hide();
 				$('#status').text("Keine Daten zur Stadt!");
 				$('#status').show();
-				$('#map').fadeOut();
 			}
+			$('#city .title').html(data[0].name_long);
+			showMap(data[0].latitude, data[0].longitude);
 		});
 
 		request.fail(function(result, status) {
@@ -436,6 +434,7 @@ $(function() {
 		});
 
 		request.done(function(data) {
+			//console.log(data);
 			if (data.status === "success") {
 				data = data.results;
 				$('#results .panel-body').html("");
