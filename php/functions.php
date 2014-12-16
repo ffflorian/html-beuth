@@ -196,7 +196,7 @@
 	function get_cities() {
 		global $mysqli;
 
-		$query = "SELECT id, name_long, name_short
+		$query = "SELECT id, name_long, name_short, latitude, longitude
 				  FROM cities
 				  ORDER BY name_short ASC";
 
@@ -205,7 +205,7 @@
 						$rows[] = $r;
 			}
 			header('Content-type: application/json');
-			echo json_encode($rows);
+			echo json_encode($rows, JSON_NUMERIC_CHECK);
 		}
 	}
 
@@ -228,19 +228,19 @@
 		$rows = array();
 
 		if ($entry && $entry != "undefined") {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long as city
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  WHERE d.id = '$entry'
 					  ORDER BY `date` ASC";
 		} else if ($city && $city != "undefined") {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long as city
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  WHERE c.id = '$city'
 					  ORDER BY `date` ASC";
 		} else {
-			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.name_long as city
+			$query = "SELECT d.id, d.date, d.temp, d.image, d.comment, c.latitude, c.longitude, c.name_long as city
 					  FROM data d
 					  INNER JOIN cities c on (c.id = d.city_id)
 					  ORDER BY `date` ASC";
@@ -272,7 +272,7 @@
 					}
 
 					//$rows = htmlentities($rows);
-					echo json_encode($rows);
+					echo json_encode($rows, JSON_NUMERIC_CHECK);
 					break;
 			}
 		}

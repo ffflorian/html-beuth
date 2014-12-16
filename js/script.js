@@ -251,6 +251,7 @@ $(function() {
 				addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
 			});
 			$('#city .title').html(data[0].city);
+			showMap(data[0].latitude, data[0].longitude);
 		});
 
 		request.fail(function(result, status) {
@@ -573,7 +574,7 @@ $(function() {
 	* @return The replaced date string
 	*/
 
-	function formatDate(date) {									// uebersetze ein Datum vom ISO 8601-Format in die dt. Schreibweise und gib es zurueck
+	function formatDate(date) {
 		return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
 	}
 
@@ -581,17 +582,20 @@ $(function() {
 		return Math.random().toString(36).substr(2, 9);
 	}
 
-	var mapOptions = {
-		center: {
-			lat: 52.5167,
-			lng: 13.3833
-		},
-		zoom: 13,
-		disableDefaultUI: true,
-		draggable: false,
-		scrollwheel: false,
-		disableDoubleClickZoom: true
-	};
-	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	$('#map').fadeIn();
+	function showMap(latitude, longitude) {
+		console.log(longitude);
+		var mapOptions = {
+			center: {
+				lat: latitude,
+				lng: longitude
+			},
+			zoom: 13,
+			disableDefaultUI: true,
+			draggable: false,
+			scrollwheel: false,
+			disableDoubleClickZoom: true
+		};
+		var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+		$('#map').fadeIn();
+	}
 });
