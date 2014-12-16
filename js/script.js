@@ -98,51 +98,78 @@ $(function() {
 		}
 	});
 
+	$(document).on('input', '#newcitynamelong', function(event) {
+		var txt = $(this).val();
+		var button = $('#newcityform .submitForm');
+		$('#newcitynameshort').val(formatValue(txt));
+		if (txt != "") {
+			button.removeClass('btn-default');
+			button.addClass('btn-success');
+			button.find('.glyphicon').removeClass('glyphicon-remove');
+			button.find('.glyphicon').addClass('glyphicon-ok');
+			button.attr('disabled', false);
+		} else {
+			button.removeClass('btn-success');
+			button.addClass('btn-default');
+			button.find('.glyphicon').removeClass('glyphicon-ok');
+			button.find('.glyphicon').addClass('glyphicon-remove');
+			button.attr('disabled', true);
+		}
+	});
+
+	var currentSelect;
+
 	$(document).on('change', 'select', function() {
-		var select = $(this);
-		if (select.find('option:selected').val() === "neuestadt") {								// wenn eine neue Stadt eingetragen werden soll
-			var userInput = prompt("Geben Sie den Namen der neuen Stadt ein:");
-			if (userInput !== "" && userInput !== null) {
-				var JSONdata = {};
-				JSONdata['id'] = generateID();
-				JSONdata['user'] = "lkf4vyxn9";
-				JSONdata['name_short'] = formatValue(userInput);
-				JSONdata['name_long'] = userInput;
-				JSONdata['lat'] = 5.333;
-				JSONdata['lng'] = 1.222;
-				JSONdata['country'] = "";
-				JSONdata['website'] = "";
-				JSONdata['comment'] = "";
-				var request = $.ajax({
-					type: 'POST',
-					dataType: 'json',
-					url: 'php/functions.php',
-					data: JSON.stringify({
-						"action": "insert",
-						"type": "city",
-						"data": JSONdata
-					}),
-					contentType: "application/json"
-				});
+		currentSelect = $(this);
+		if (currentSelect.find('option:selected').val() === "neuestadt") {
+			$('#newcity')
+				.find('#newcitybody')
+				.end().modal('show');
+		}
+	});
 
-				request.done(function(data) {
-					console.log(data);
-					var option = $('<option/>', {
-						text: JSONdata['name_long'],
-						name: JSONdata['name_short'],
-						value: JSONdata['id'],
-					});
-					$.each($('select'), function(id, obj) {
-						$(obj).append(option);
-					});
-					select.find(option).attr('selected', true);
-				});
+	$(document).on('submit', '#newcityform', function(event) {
+		event.preventDefault();
+		if ($('#newcitynamelong').val() != "") {
+			var JSONdata = {};
+			$('#newcityform *').filter(':input').each(function(i, obj) {
+				JSONdata[$(obj).attr('name')] = $(obj).val();
+				delete JSONdata['undefined'];
+			});
+			JSONdata['id'] = generateID();
+			JSONdata['user'] = "lkf4vyxn9";
+			JSONdata['lat'] = 5.333;
+			JSONdata['lng'] = 1.222;
+			console.log(JSONdata);
+			var request = $.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: 'php/functions.php',
+				data: JSON.stringify({
+					"action": "insert",
+					"type": "city",
+					"data": JSONdata
+				}),
+				contentType: "application/json"
+			});
 
-				request.fail(function(result, status) {
-					console.log("Request failed: " + status);
-					console.log("Received: " + JSON.stringify(result));
+			request.done(function(data) {
+				var option = $('<option/>', {
+					text: JSONdata['name_long'],
+					name: JSONdata['name_short'],
+					value: JSONdata['id'],
 				});
-			}
+				$.each($('select'), function(id, obj) {
+					$(obj).append(option);
+				});
+				currentSelect.find(option).attr('selected', true);
+				$('#newcity').modal('hide');
+			});
+
+			request.fail(function(result, status) {
+				console.log("Request failed: " + status);
+				console.log("Received: " + JSON.stringify(result));
+			});
 		}
 	});
 
@@ -243,15 +270,22 @@ $(function() {
 		});
 
 		request.done(function(data) {
-			console.log(data);
-			$('#status').hide();
-			$('#datawrap').show();
-			$.each(data, function(i, obj) {
-				var entry = data[i];
-				addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
-			});
-			$('#city .title').html(data[0].city);
-			showMap(data[0].latitude, data[0].longitude);
+			if (data != "") {
+				console.log(data);
+				$('#status').hide();
+				$('#datawrap').show();
+				$.each(data, function(i, obj) {
+					var entry = data[i];
+					addEntry(entry.id, entry.date, entry.temp, entry.city, entry.image, entry.comment);
+				});
+				$('#city .title').html(data[0].city);
+				showMap(data[0].latitude, data[0].longitude);
+			} else {
+				$('#datawrap').hide();
+				$('#status').text("Keine Daten zur Stadt!");
+				$('#status').show();
+				$('#map').fadeOut();
+			}
 		});
 
 		request.fail(function(result, status) {
@@ -402,7 +436,6 @@ $(function() {
 		});
 
 		request.done(function(data) {
-			//console.log(data);
 			if (data.status === "success") {
 				data = data.results;
 				$('#results .panel-body').html("");
@@ -410,7 +443,6 @@ $(function() {
 				$.each(data, function(id, obj) {
 					$('#results .panel-body').append('<a href="#' + obj.name_short + '" class="btn btn-default result">' + obj.name_long + '</a> ');
 				});
-				//console.log(data);
 			} else {
 				$('#results .panel-body').html(data.message);
 			}
@@ -583,19 +615,20 @@ $(function() {
 	}
 
 	function showMap(latitude, longitude) {
-		console.log(longitude);
-		var mapOptions = {
-			center: {
-				lat: latitude,
-				lng: longitude
-			},
-			zoom: 13,
-			disableDefaultUI: true,
-			draggable: false,
-			scrollwheel: false,
-			disableDoubleClickZoom: true
-		};
-		var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-		$('#map').fadeIn();
+		if (latitude && longitude) {
+			var mapOptions = {
+				center: {
+					lat: latitude,
+					lng: longitude
+				},
+				zoom: 13,
+				disableDefaultUI: true,
+				draggable: false,
+				scrollwheel: false,
+				disableDoubleClickZoom: true
+			};
+			var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+			$('#map').fadeIn();
+		}
 	}
 });

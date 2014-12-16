@@ -141,6 +141,61 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal fade" id="newcity" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+						<h4 class="modal-title" id="newcitytitle">Neue Stadt eintragen</h4>
+					</div>
+					<div class="modal-body" id="newcitybody">
+						<form class="form-horizontal" role="form" action="#" method="post" id="newcityform">
+							<div class="form-group">
+								<label class="col-xs-4 control-label">Name</label>
+								<div class="col-xs-4">
+									<input type="text" class="form-control" id="newcitynamelong" name="name_long" placeholder="Berlin" /><br />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">Kurzname</label>
+								<div class="col-xs-4">
+									<div class="input-group">
+										<input type="text" class="form-control" id="newcitynameshort" name="name_short" placeholder="berlin" disabled /><br />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">Position</label>
+								<div class="col-xs-4">
+									<input type="number" class="form-control" id="newcityposition" name="position" placeholder="123" /><br />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">Land</label>
+								<div class="col-xs-4">
+									<input type="text" class="form-control" id="newcitycountry" name="country" placeholder="Deutschland" /><br />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">Website</label>
+								<div class="col-xs-4">
+									<input type="text" class="form-control" id="newcitywebsite" name="website" placeholder="http://www.berlin.de" /><br />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-4 control-label">Kommentar</label>
+								<div class="col-xs-4">
+									<input type="text" class="form-control" id="newcitycomment" name="comment" placeholder="Die Hauptstadt." /><br />
+								</div>
+							</div>
+							<input type="hidden" name="user" value="lkf4vyxn9" />
+							<button type="submit" class="btn btn-default submitForm pull-right" disabled>Eintragen <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+						</form><br>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="modal fade" id="formConfirm" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
