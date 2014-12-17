@@ -25,7 +25,14 @@ $(function() {
 
 	$(window).on('hashchange', function(e) {
 		e.preventDefault;
-		loadData(citiesJSON[window.location.hash.substring(1)]);
+		var hash = window.location.hash.substring(1);
+		if (citiesJSON.hasOwnProperty(hash)) {
+			loadData(citiesJSON[hash]);
+			selectedCity = hash;
+		} else {
+			selectedCity = "berlin";
+			window.location.hash = selectedCity;
+		}
 	});
 
 	$('#searchform .submitForm').on('click', function() {
@@ -43,10 +50,12 @@ $(function() {
 	});
 
 	$('#newcitynamelong').on('blur', function() {
+		$(this).val($(this).val().trim());
 		updateModalMap();
 	});
 
 	$('#newcitycountry').on('blur', function() {
+		$(this).val($(this).val().trim());
 		updateModalMap();
 	});
 
@@ -107,7 +116,7 @@ $(function() {
 	});
 
 	$(document).on('input', '#newcitynamelong', function(event) {
-		var txt = $(this).val();
+		var txt = $(this).val().trim();
 		var button = $('#newcityform .submitForm');
 		$('#newcitynameshort').val(formatValue(txt));
 		if (txt != "") {
@@ -136,8 +145,9 @@ $(function() {
 			$(obj).val("");
 		});
 		$('#smallmap').empty();
-		var option = $(currentSelect).find('option:first');
-		option.attr('selected', 'true');
+		if (currentSelect.find('option:selected').val() === "neuestadt") {
+			$(currentSelect).find('option:first').attr('selected', true);
+		}
 	});
 
 	$(document).on('change', 'select', function() {
@@ -146,7 +156,6 @@ $(function() {
 			$('#newcity')
 				.find('#newcitybody')
 				.end().modal('show');
-
 		}
 	});
 
@@ -160,8 +169,6 @@ $(function() {
 			});
 			JSONdata['id'] = generateID();
 			JSONdata['user'] = "lkf4vyxn9";
-			JSONdata['lat'] = 5.333;
-			JSONdata['lng'] = 1.222;
 			console.log(JSONdata);
 			var request = $.ajax({
 				type: 'POST',
@@ -400,12 +407,14 @@ $(function() {
 	}
 
 	function selectCity() {
-		if (window.location.hash) {
-			selectedCity = window.location.hash.substring(1);
+		var hash = window.location.hash.substring(1);
+		if (hash && citiesJSON.hasOwnProperty(hash)) {
+			selectedCity = hash;
 			selectedCityId = citiesJSON[selectedCity];
 			loadData(selectedCityId);
 		} else {
-			window.location.hash = 'berlin';
+			selectedCity = "berlin";
+			window.location.hash = selectedCity;
 		}
 	}
 
@@ -426,7 +435,7 @@ $(function() {
 			$(select).append(option);
 
 			if (city === option.attr('name')) {
-				option.attr('selected', 'true');
+				option.attr('selected', true);
 			}
 		});
 
@@ -468,6 +477,7 @@ $(function() {
 				$('#results .panel-body').html(data.message);
 			}
 			$('#results').slideDown();
+			loadCities();
 		});
 
 		request.fail(function(result, status) {
@@ -614,7 +624,7 @@ $(function() {
 	*/
 
 	function formatValue(str) {									// ersetze alle dt. Umlaute und gib das Wort in Kleinbuchstaben zurueck
-		return str.toLowerCase().replace(/\u00e4/g, "ae").replace(/\u00f6/g, "oe").replace(/\u00fc/g, "ue").replace(/\u00df/g, "ss").replace(/ /g, "_");
+		return str.toLowerCase().replace(/\u00e4/g, "ae").replace(/\u00f6/g, "oe").replace(/\u00fc/g, "ue").replace(/\u00df/g, "ss").replace(/ /g, "_").replace(/\./g, "_");
 	}
 
 
@@ -697,7 +707,7 @@ $(function() {
 				modalMap.setCenter(results[0].geometry.location);
 				marker.setPosition(results[0].geometry.location);
 			} else {
-				alert("Geocode was not successful for the following reason: " + status);
+				console.log("Geocode was not successful: " + status);
 			}
 		});
 	}
