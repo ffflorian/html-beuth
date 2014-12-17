@@ -163,6 +163,10 @@ td.img img {
 	background-color: rgba(255,255,255,0.7) !important;
 }
 
+#newcitybody .input-group-addon.latlng {
+	min-width: 88px;
+}
+
 #status {
 	color: #000;
 }
@@ -220,6 +224,12 @@ footer {
 	position: absolute;
 	top: 0px;
 	left: 0px;
+	overflow: hidden;
+}
+
+#smallmap {
+	width: 300px;
+	height: 300px;
 	overflow: hidden;
 }
 

@@ -11,7 +11,7 @@
 		<script src="js/jquery-2.1.1.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/script.js"></script>
-		<script src="https://maps.googleapis.com/maps/api/js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&amp;language=de-DE"></script>
 	</head>
 	<body>
 		<div class="container-fluid">
@@ -151,41 +151,49 @@
 					<div class="modal-body" id="newcitybody">
 						<form class="form-horizontal" role="form" action="#" method="post" id="newcityform">
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Name</label>
+								<label class="col-xs-3 control-label">Name</label>
 								<div class="col-xs-4">
 									<input type="text" class="form-control" id="newcitynamelong" name="name_long" placeholder="Berlin" /><br />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Kurzname</label>
+								<label class="col-xs-3 control-label">Kurzname</label>
 								<div class="col-xs-4">
-									<div class="input-group">
-										<input type="text" class="form-control" id="newcitynameshort" name="name_short" placeholder="berlin" disabled /><br />
-									</div>
+									<input type="text" class="form-control" id="newcitynameshort" name="name_short" placeholder="berlin" disabled /><br />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Position</label>
-								<div class="col-xs-4">
-									<input type="number" class="form-control" id="newcityposition" name="position" placeholder="123" /><br />
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Land</label>
+								<label class="col-xs-3 control-label">Land</label>
 								<div class="col-xs-4">
 									<input type="text" class="form-control" id="newcitycountry" name="country" placeholder="Deutschland" /><br />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Website</label>
+								<label class="col-xs-3 control-label">Website</label>
 								<div class="col-xs-4">
 									<input type="text" class="form-control" id="newcitywebsite" name="website" placeholder="http://www.berlin.de" /><br />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Kommentar</label>
+								<label class="col-xs-3 control-label">Kommentar</label>
 								<div class="col-xs-4">
 									<input type="text" class="form-control" id="newcitycomment" name="comment" placeholder="Die Hauptstadt." /><br />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3 control-label">Position</label>
+								<div class="col-xs-5">
+									<div class="input-group">
+										<div class="input-group-addon latlng">Latitude</div>
+										<input type="number" id="newcitylat" class="form-control" name="latitude" pattern="[0-9]+([\,|\.][0-9]+)?" step="any" max="90" min="-90" placeholder="52,5167" />
+										<div class="input-group-addon">&deg;</div>
+									</div><br>
+									<div class="input-group">
+										<div class="input-group-addon latlng">Longitude</div>
+										<input type="number" id="newcitylng" class="form-control" name="longitude" pattern="[0-9]+([\,|\.][0-9]+)?" step="any" max="90" min="-90" placeholder="13,3833" />
+										<div class="input-group-addon">&deg;</div>
+									</div><br>
+									<div id="smallmap"></div>
 								</div>
 							</div>
 							<input type="hidden" name="user" value="lkf4vyxn9" />

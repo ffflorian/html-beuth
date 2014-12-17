@@ -42,6 +42,14 @@ $(function() {
 		$('#searchform input').val("");
 	});
 
+	$('#newcitynamelong').on('blur', function() {
+		updateModalMap();
+	});
+
+	$('#newcitycountry').on('blur', function() {
+		updateModalMap();
+	});
+
 	$('#searchform input').on('keyup', function() {
 		if ($('#searchform input').val() === "") {
 			$('#results').slideUp();
@@ -119,12 +127,26 @@ $(function() {
 
 	var currentSelect;
 
+	$('#newcity').on('shown.bs.modal', function(e) {
+		showModalMap();
+	});
+
+	$('#newcity').on('hidden.bs.modal', function(e) {
+		$('#newcityform *').filter(':input').each(function(i, obj) {
+			$(obj).val("");
+		});
+		$('#smallmap').empty();
+		var option = $(currentSelect).find('option:first');
+		option.attr('selected', 'true');
+	});
+
 	$(document).on('change', 'select', function() {
 		currentSelect = $(this);
 		if (currentSelect.find('option:selected').val() === "neuestadt") {
 			$('#newcity')
 				.find('#newcitybody')
 				.end().modal('show');
+
 		}
 	});
 
@@ -283,7 +305,7 @@ $(function() {
 				$('#status').show();
 			}
 			$('#city .title').html(data[0].name_long);
-			showMap(data[0].latitude, data[0].longitude);
+			showBackgroundMap(data[0].latitude, data[0].longitude);
 		});
 
 		request.fail(function(result, status) {
@@ -613,7 +635,7 @@ $(function() {
 		return Math.random().toString(36).substr(2, 9);
 	}
 
-	function showMap(latitude, longitude) {
+	function showBackgroundMap(latitude, longitude) {
 		if (latitude && longitude) {
 			var mapOptions = {
 				center: {
@@ -629,5 +651,54 @@ $(function() {
 			var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 			$('#map').fadeIn();
 		}
+	}
+
+	var geocoder;
+	var modalMap;
+	var marker;
+
+	showModalMap = function() {
+		var mapOptions = {
+			center: {
+				lat: 52.5167,
+				lng: 13.3833
+			},
+			zoom: 10
+		};
+		modalMap = new google.maps.Map(document.getElementById('smallmap'), mapOptions);
+		marker = new google.maps.Marker({
+			position: new google.maps.LatLng(52.5167, 13.3833),
+			draggable: true
+		});
+
+		marker.setMap(modalMap);
+
+		google.maps.event.addListener(marker, 'dragend', function(e){
+			var point = marker.getPosition();
+			modalMap.panTo(point);
+			$('#newcitylat').val(modalMap.getCenter().lat().toFixed(4));
+			$('#newcitylng').val(modalMap.getCenter().lng().toFixed(4));
+		});
+
+		google.maps.event.addListener(modalMap, 'idle', function(e){
+			var center = modalMap.getCenter();
+			marker.setPosition(center);
+			marker.setMap(modalMap);
+			$('#newcitylat').val(modalMap.getCenter().lat().toFixed(4));
+			$('#newcitylng').val(modalMap.getCenter().lng().toFixed(4));
+		});
+	}
+
+	function updateModalMap() {
+		geocoder = new google.maps.Geocoder();
+		var address = $('#newcitynamelong').val() + ", " + $('#newcitycountry').val();
+		geocoder.geocode( { 'address': address}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				modalMap.setCenter(results[0].geometry.location);
+				marker.setPosition(results[0].geometry.location);
+			} else {
+				alert("Geocode was not successful for the following reason: " + status);
+			}
+		});
 	}
 });
