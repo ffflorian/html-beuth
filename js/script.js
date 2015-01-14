@@ -193,6 +193,7 @@ $(function() {
 				});
 				currentSelect.find(option).attr('selected', true);
 				$('#newcity').modal('hide');
+				loadCities();
 			});
 
 			request.fail(function(result, status) {
@@ -447,9 +448,19 @@ $(function() {
 		});*/
 
 		$('<option/>', {
+			text: "---------------",
+			disabled: true
+		}).appendTo(select);
+
+		$('<option/>', {
 			text: "Neue Stadt...",
 			value: "neuestadt"
 		}).appendTo(select);
+
+		/*$('<option/>', {
+			text: "Stadt bearbeiten...",
+			value: "stadtbearbeiten"
+		}).appendTo(select);*/
 	}
 
 	function searchData() {
@@ -477,7 +488,6 @@ $(function() {
 				$('#results .panel-body').html(data.message);
 			}
 			$('#results').slideDown();
-			loadCities();
 		});
 
 		request.fail(function(result, status) {
@@ -601,7 +611,7 @@ $(function() {
 			tr.find('.editable.date').text(entryDate);
 			tr.find('.editable.temp').html(tr.find('input[type=number]').val() + " &deg;C");
 			tr.find('.editable.city').text(tr.find('select option:selected').text());
-			(imageUploaded ? tr.find('.editable.img').html('<img src="img/data/' + imageUploaded + '" alt="Wetterbild am ' + entryDate + '" />') : "");
+			(imageUploaded ? tr.find('.editable.img').html('<img src="img/data/' + imageUploaded + '" class="wetterbild" alt="Wetterbild am ' + entryDate + '" />') : "");
 			tr.find('.editable.comment').text(tr.find('input[type=text]').val());
 			tr.find('.edit').hide();
 			tr.find('.editable').show();

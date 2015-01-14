@@ -7,7 +7,7 @@
 	* @author Florian Keller
 	*/
 
-	error_reporting(E_ALL);	
+	error_reporting(E_ALL);
 	date_default_timezone_set('Europe/Berlin');
 
 	require_once('dbconnect.php');
@@ -106,7 +106,7 @@
 				} elseif ($obj->type === "city") {
 					$obj = $obj->data;
 					$query = "INSERT INTO `cities` (`id`, `created_at`, `user_id`, `name_short`, `name_long`, `latitude`, `longitude`, `country`, `website`, `comment`)
-								VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->lat', '$obj->lng', '$obj->country', '$obj->website', '$obj->comment');";
+								VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->user', '$obj->name_short', '$obj->name_long', '$obj->latitude', '$obj->longitude', '$obj->country', '$obj->website', '$obj->comment');";
 				}
 				if ($mysqli->query($query) === true) {
 					echo json_encode(array("status" => "success",
@@ -176,7 +176,7 @@
 				while ($r = $result->fetch_object()) {
 					array_push($rows["results"], $r);
 				}
-				echo json_encode($rows, JSON_NUMERIC_CHECK);
+				echo json_encode($rows, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
 			} else {
 				echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt gefunden!"));
 			}
@@ -215,7 +215,7 @@
 				while ($r = $result->fetch_object()) {
 						$rows[] = $r;
 				}
-				echo json_encode($rows, JSON_NUMERIC_CHECK);
+				echo json_encode($rows, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
 			} else {
 				echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt gefunden!"));
 			}
@@ -292,7 +292,7 @@
 						while ($r = $result->fetch_object()) {
 							$rows[] = $r;
 						}
-						echo json_encode($rows, JSON_NUMERIC_CHECK);
+						echo json_encode($rows, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
 					} else {
 						get_cities($cityID);
 					}
