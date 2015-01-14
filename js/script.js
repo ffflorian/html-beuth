@@ -521,14 +521,22 @@ $(function() {
 			request.done(function(data, status, result) {
 				console.log(data);
 				var button = input.closest('.btn-file');
-
-				input.attr('data-filename', filename);
-				button.removeClass('btn-default');
-				button.addClass('btn-success');
-				button.attr('disabled', false);
-				button.find('.text').html(filename);
-				button.find('.glyphicon').removeClass('loading');
-				button.find('.glyphicon').addClass('glyphicon-ok');
+				if (data.status === "success") {
+					input.attr('data-filename', filename);
+					button.removeClass('btn-default');
+					button.addClass('btn-success');
+					button.attr('disabled', false);
+					button.find('.text').html(filename);
+					button.find('.glyphicon').removeClass('loading');
+					button.find('.glyphicon').addClass('glyphicon-ok');
+				} else {
+					button.removeClass('btn-default');
+					button.addClass('btn-danger');
+					button.attr('disabled', false);
+					button.find('.text').html(filename);
+					button.find('.glyphicon').removeClass('loading');
+					button.find('.glyphicon').addClass('glyphicon-remove');
+				}
 			});
 
 			request.fail(function(result, status) {

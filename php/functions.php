@@ -139,7 +139,12 @@
 		} else if ($type === "file") {
 			$uploaddir = '../img/data/';
 			$filename = $uploaddir . basename($data['name']);
-			if (move_uploaded_file($data['tmp_name'], $filename)) {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$filetype = finfo_file($finfo, $filename);
+			finfo_close($finfo);
+			if (substr($filetype, 0, 5) === "image") {
+				if (move_uploaded_file($data['tmp_name'], $filename)) {
+					chmod($filename, 0644);
 					echo json_encode(array("status" => "success",
 										   "action" => "upload",
 										   "filename" => $filename));
@@ -148,6 +153,11 @@
 										   "action" => "upload",
 										   "message" => "Dateifehler!"));
 				}
+			} else {
+				echo json_encode(array("status" => "error",
+									   "action" => "upload",
+									   "message" => "Dateifehler!"));
+			}
 		}
 	}
 
