@@ -320,13 +320,13 @@ $(function() {
 		request.done(function(data) {
 			if (data[0].temp) {
 				$('#status').hide();
-				$('#datawrap .col-md-5').show();
+				$('#datawrap').show();
 				$.each(data, function(i, obj) {
 					var entry = data[i];
 					addEntry(entry.id, entry.date, entry.temp, entry.name_long, entry.image, entry.comment);
 				});
 			} else {
-				$('#datawrap .col-md-5').hide();
+				$('#datawrap').hide();
 				$('#status').text("Keine Daten zur Stadt!");
 				$('#status').show();
 			}
