@@ -86,7 +86,7 @@
 	/**
 	* Function put_data
 	*
-	* Receives JSON data via POST and saves it to the database
+	* Receives JSON data via POST and writes it to the database
 	*
 	*@param JSON $json The JSON object with data
 	*/
@@ -101,6 +101,7 @@
 			if ($obj->action === "insert") {
 				if ($obj->type === "entries") {
 					$obj = $obj->data;
+					//$stmt = $mysqli->prepare("INSERT INTO (id) VALUES (?)")))
 					$query = "INSERT INTO `data` (`id`, `created_at`, `date`, `user_id`, `temp`, `city_id`, `image`, `comment`)
 							  VALUES ('$obj->id', '". date('Y-m-d H:i:s') . "', '$obj->date', '$obj->user', '$obj->temp', '$obj->city', '$obj->image', '$obj->comment');";
 				} elseif ($obj->type === "city") {

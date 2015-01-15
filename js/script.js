@@ -59,8 +59,8 @@ $(function() {
 		updateModalMap();
 	});
 
-	$('#searchform input').on('keyup', function() {
-		if ($('#searchform input').val() === "") {
+	$('#searchform input').on('keyup', function(e) {
+		if ((e.which != 13) && $('#searchform input').val() === "") {
 			$('#results').slideUp();
 		} else {
 			$('#searchform').submit();
@@ -95,13 +95,18 @@ $(function() {
 	});
 
 	$('#formemail').on('input', function() {
-		if ($(this).val().split("@")[1] === "beuth-hochschule.de") {
+		if (validateEmail($(this).val())) {
 			validation.email = true;
 		} else {
 			validation.email = false;
 		}
 		validateForm();
 	});
+
+	function validateEmail(email) {
+		var re = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9][a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+		return re.test(email);
+	}
 
 	$(document).on('submit', '#searchform', function(event) {
 		event.preventDefault();
@@ -199,6 +204,12 @@ $(function() {
 			request.fail(function(result, status) {
 				console.log("Request failed: " + status);
 				console.log("Received: " + JSON.stringify(result));
+				$('#modConfirm')
+					.find('#frm_body').html("Es ist ein Fehler beim eintragen der Stadt aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+					.end().find('#frm_submit').hide()
+					.end().find('#frm_cancel').html("OK")
+					.end().find('#frm_title').html("Fehler")
+					.end().modal('show');
 			});
 		}
 	});
@@ -235,17 +246,17 @@ $(function() {
 			msg = "Diesen Eintrag wirklich l&ouml;schen?";
 		}
 
-		$('#formConfirm')
+		$('#modConfirm')
 			.find('#frm_body').html(msg)
 			.end().find('#frm_submit').html("Ja")
 			.end().find('#frm_cancel').html("Nein")
 			.end().find('#frm_title').html(title)
 			.end().modal('show');
 
-		//$('#formConfirm').find('#frm_submit').attr('data-form', dataForm);
+		//$('#modConfirm').find('#frm_submit').attr('data-form', dataForm);
 	});
 
-	$('#formConfirm').on('click', '#frm_submit', function(e) {
+	$('#modConfirm').on('click', '#frm_submit', function(e) {
 		var tr = $('table').find('[data-id="' + $(this).attr('remove-id') + '"]');
 		var entryID = $(tr).attr('data-id');
 		//console.log(entryID);
@@ -267,6 +278,12 @@ $(function() {
 		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
+			$('#modConfirm')
+				.find('#frm_body').html("Es ist ein Fehler beim aktualisieren aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+				.end().find('#frm_submit').hide()
+				.end().find('#frm_cancel').html("OK")
+				.end().find('#frm_title').html("Fehler")
+				.end().modal('show');
 		});
 		
 	});
@@ -279,15 +296,16 @@ $(function() {
 	});
 
 	function insertDate() {
-		var today = new Date();									// neues Datum erzeugen
+		var today = new Date();
 		var dateString = today.getFullYear() + '-'
 			+ ('0' + (today.getMonth()+1)).slice(-2) + '-'
 			+ ('0' + today.getDate()).slice(-2);
-		$('#formdate').val(dateString);							// formdate auf das heutige Datum setzen
+		$('#formdate').val(dateString);
 	}
 
 	function loadData(city) {
 		$('table tbody').empty();
+		$('#status').css('color', '#000')
 		$('#status').text("Daten werden geladen...");	
 		var request = $.ajax({
 			url: 'php/functions.php',
@@ -302,13 +320,13 @@ $(function() {
 		request.done(function(data) {
 			if (data[0].temp) {
 				$('#status').hide();
-				$('#datawrap').show();
+				$('#datawrap .col-md-5').show();
 				$.each(data, function(i, obj) {
 					var entry = data[i];
 					addEntry(entry.id, entry.date, entry.temp, entry.name_long, entry.image, entry.comment);
 				});
 			} else {
-				$('#datawrap').hide();
+				$('#datawrap .col-md-5').hide();
 				$('#status').text("Keine Daten zur Stadt!");
 				$('#status').show();
 			}
@@ -319,6 +337,12 @@ $(function() {
 		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
+			$('#modConfirm')
+				.find('#frm_body').html("Es ist ein Fehler mit der Datenbank aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+				.end().find('#frm_submit').hide()
+				.end().find('#frm_cancel').html("OK")
+				.end().find('#frm_title').html("Fehler")
+				.end().modal('show');
 		});
 	}
 
@@ -404,6 +428,12 @@ $(function() {
 		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
+			$('#modConfirm')
+				.find('#frm_body').html("Es ist ein Fehler mit der Datenbank aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+				.end().find('#frm_submit').hide()
+				.end().find('#frm_cancel').html("OK")
+				.end().find('#frm_title').html("Fehler")
+				.end().modal('show');
 		});
 	}
 
@@ -493,6 +523,12 @@ $(function() {
 		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
+			$('#modConfirm')
+				.find('#frm_body').html("Es ist ein Fehler bei der Suche aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+				.end().find('#frm_submit').hide()
+				.end().find('#frm_cancel').html("OK")
+				.end().find('#frm_title').html("Fehler")
+				.end().modal('show');
 		});
 	}
 
@@ -542,6 +578,12 @@ $(function() {
 			request.fail(function(result, status) {
 				console.log("Request failed: " + status);
 				console.log("Received: " + JSON.stringify(result));
+				$('#modConfirm')
+					.find('#frm_body').html("Es ist ein Fehler beim hochladen der Datei aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+					.end().find('#frm_submit').hide()
+					.end().find('#frm_cancel').html("OK")
+					.end().find('#frm_title').html("Fehler")
+					.end().modal('show');
 			});
 		} else {
 			console.log("APIs not supported!");
@@ -585,6 +627,12 @@ $(function() {
 		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
+			$('#modConfirm')
+				.find('#frm_body').html("Es ist ein Fehler beim Eintragen aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+				.end().find('#frm_submit').hide()
+				.end().find('#frm_cancel').html("OK")
+				.end().find('#frm_title').html("Fehler")
+				.end().modal('show');
 		});
 	}
 
@@ -628,6 +676,12 @@ $(function() {
 		request.fail(function(result, status) {
 			console.log("Request failed: " + status);
 			console.log("Received: " + JSON.stringify(result));
+			$('#modConfirm')
+				.find('#frm_body').html("Es ist ein Fehler beim aktualisieren aufgetreten. Bitte wenden Sie sich an den/die Entwickler und teilen Sie folgenden Inhalt mit:<br><br><pre>" + result.responseText + "</pre>")
+				.end().find('#frm_submit').hide()
+				.end().find('#frm_cancel').html("OK")
+				.end().find('#frm_title').html("Fehler")
+				.end().modal('show');
 		});
 	}
 
