@@ -50,10 +50,6 @@ div#city form {
 	margin-bottom: 10px;
 }
 
-#datawrap .col-md-5 {
-	min-width: 800px !important;
-}
-
 .data {
 	min-height: 411px;
 	background-color: rgba(255,255,255,0.7) !important;
@@ -233,8 +229,12 @@ footer {
 	overflow: hidden;
 }
 
-#datawrap, #map {
+#map { /*#datawrap .col-md-5*/
 	display: none;
+}
+
+#datawrap .col-md-5 {
+	min-width: 800px !important;
 }
 
 .btn-file {

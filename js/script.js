@@ -17,10 +17,11 @@ $(function() {
 	};
 
 	var selectedCity = "berlin";
-
 	var citiesJSON = {};
+	var currentSelect;
 
 	insertDate();
+
 	loadCities($('#newdataform select'));
 
 	$(window).on('hashchange', function(e) {
@@ -139,8 +140,6 @@ $(function() {
 		}
 	});
 
-	var currentSelect;
-
 	$('#newcity').on('shown.bs.modal', function(e) {
 		showModalMap();
 	});
@@ -188,17 +187,26 @@ $(function() {
 			});
 
 			request.done(function(data) {
-				var option = $('<option/>', {
-					text: JSONdata['name_long'],
-					name: JSONdata['name_short'],
-					value: JSONdata['id'],
-				});
-				$.each($('select'), function(id, obj) {
-					$(obj).append(option);
-				});
-				currentSelect.find(option).attr('selected', true);
-				$('#newcity').modal('hide');
-				loadCities();
+				if (data.status === "success") {
+					var option = $('<option/>', {
+						text: JSONdata['name_long'],
+						name: JSONdata['name_short'],
+						value: JSONdata['id'],
+					});
+					$.each($('select'), function(id, obj) {
+						$(obj).append(option);
+					});
+					currentSelect.find(option).attr('selected', true);
+					$('#newcity').modal('hide');
+					loadCities();
+				} else {
+				$('#modConfirm')
+					.find('#frm_body').html("Diese Stadt existiert bereits!")
+					.end().find('#frm_submit').hide()
+					.end().find('#frm_cancel').html("OK")
+					.end().find('#frm_title').html("Fehler")
+					.end().modal('show');
+				}
 			});
 
 			request.fail(function(result, status) {
@@ -235,7 +243,6 @@ $(function() {
 
 	$('table').on('click', '.removelink', function(e) {
 		e.preventDefault();
-		//var el = $(this).parent();
 		var id = $(this).parent().parent().attr('data-id');
 		var title = $(this).attr('data-title');
 		var msg = $(this).attr('data-message');
@@ -252,8 +259,6 @@ $(function() {
 			.end().find('#frm_cancel').html("Nein")
 			.end().find('#frm_title').html(title)
 			.end().modal('show');
-
-		//$('#modConfirm').find('#frm_submit').attr('data-form', dataForm);
 	});
 
 	$('#modConfirm').on('click', '#frm_submit', function(e) {
@@ -318,18 +323,18 @@ $(function() {
 		});
 
 		request.done(function(data) {
-			if (data[0].temp) {
+			//if (data[0].temp) {
 				$('#status').hide();
-				$('#datawrap').show();
+				//$('#datawrap .col-md-5').show();
 				$.each(data, function(i, obj) {
 					var entry = data[i];
 					addEntry(entry.id, entry.date, entry.temp, entry.name_long, entry.image, entry.comment);
 				});
-			} else {
-				$('#datawrap').hide();
+			/*} else {
+				$('#datawrap .col-md-5').hide();
 				$('#status').text("Keine Daten zur Stadt!");
 				$('#status').show();
-			}
+			}*/
 			$('#city .title').html(data[0].name_long);
 			showBackgroundMap(data[0].latitude, data[0].longitude);
 		});
@@ -695,7 +700,7 @@ $(function() {
 	* @return The replaced string without umlauts
 	*/
 
-	function formatValue(str) {									// ersetze alle dt. Umlaute und gib das Wort in Kleinbuchstaben zurueck
+	function formatValue(str) {
 		return str.toLowerCase().replace(/\u00e4/g, "ae").replace(/\u00f6/g, "oe").replace(/\u00fc/g, "ue").replace(/\u00df/g, "ss").replace(/ /g, "_").replace(/\./g, "_");
 	}
 
@@ -712,6 +717,15 @@ $(function() {
 	function formatDate(date) {
 		return date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)/i, "$3.$2.$1");
 	}
+
+
+	/**
+	* Function generateID
+	*
+	* Generates an ID for a database entry
+	*
+	* @return The generated ID
+	*/
 
 	function generateID() {
 		return Math.random().toString(36).substr(2, 9);
