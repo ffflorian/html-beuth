@@ -88,7 +88,8 @@
 	*
 	* Receives JSON data via POST and writes it to the database
 	*
-	*@param JSON $json The JSON object with data
+	* @param String $type The object type (e.g. "file", "JSON")
+	* @param $data The data to be processed
 	*/
 
 	function put_data($type, $data) {
@@ -201,6 +202,7 @@
 	* Sends a query to the database to receive all cities
 	* and returns the result(s) in JSON format.
 	*
+	* @param String $cityID The ID of the city to be used
 	* @return The result(s) in JSON.
 	*/
 
@@ -240,9 +242,10 @@
 	* Sends a query to the database to receive weather data 
 	* and returns the result(s) in a previously defined format.
 	*
-	* @param String $entry If only one entriy should be returned.
+	* @param String $entry If only one entry should be returned.
 	* @param String $format The desired format.
-	* @return The result(s) in different formats.
+	* @param String $cityID The ID of the city to be used
+	* @return The result(s) in various formats.
 	*/
 
 	function get_data($entry, $format, $cityID) {
@@ -316,6 +319,15 @@
 		}
 	}
 
+
+	/**
+	* Function remove_entry
+	*
+	* Sends a query to the database to remove an entry.
+	*
+	* @param String $entry If only one entry should be returned.
+	*/
+
 	function remove_entry($entry) {
 		global $mysqli;
 
@@ -334,6 +346,15 @@
 			echo json_encode(array("status" => "error", "message" => "Fehler: Keine Stadt angegeben!"));
 		}
 	}
+
+
+	/**
+	* Function remove_entry
+	*
+	* Sends a query to the database to remove a particular city.
+	*
+	* @param String $city The name of the city to be deleted.
+	*/
 
 	function remove_city($city) {
 		global $mysqli;
