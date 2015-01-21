@@ -82,6 +82,16 @@
 		}
 	}
 
+
+	/**
+	* Function execute_query
+	*
+	* Execute a standard MySQLi query.
+	*
+	* @param String $query The query to be executed
+	* @param Object $obj The original data object
+	*/
+
 	function execute_query($query, $obj) {
 		global $mysqli;
 		if ($mysqli->query($query) === true) {
