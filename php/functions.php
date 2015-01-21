@@ -157,7 +157,7 @@
 			$uploaddir = '../img/data/';
 			$filename = $uploaddir . basename($data['name']);
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$filetype = finfo_file($finfo, $filename);
+			$filetype = finfo_file($finfo, $data['tmp_name']);
 			finfo_close($finfo);
 			if (substr($filetype, 0, 5) === "image") {
 				if (move_uploaded_file($data['tmp_name'], $filename)) {
