@@ -2,7 +2,20 @@
 	/**
 	* dbconnect.php
 	*
-	* Establish a database connection
+	* Establish a database connection.
+	*
+	* To make the connection work, a file 'credentials.php'
+	* is needed with the following variables set:
+	*
+	* $db_user The name of the database user
+	* $db_pass The password for the database user
+	* $db_name The database name
+	*
+	*
+	* Example:
+	* $db_user = "florian";
+	* $db_pass = "mypassword";
+	* $db_name = "weather";
 	*
 	* @author Florian Keller
 	*/

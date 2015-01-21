@@ -2,7 +2,7 @@
 	/**
 	* File functions.php
 	*
-	* General PHP functions for AJAX
+	* All PHP functions for AJAX
 	*
 	* @author Florian Keller
 	*/
